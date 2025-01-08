@@ -14,7 +14,7 @@
   },
   "type": "module",
   "scripts": {
-    "client": "vite --debug --config ./src/client/vite.config.js"
+    "client": "vite --debug --config ./client/vite.config.js"
   },
   "dependencies": {
     "pixi.js": "^8.6.6"
