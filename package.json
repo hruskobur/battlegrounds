@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hruskobur/warmonger.git"
+    "url": "git+https://github.com/hruskobur/battlegrounds.git"
   },
   "author": "hrusko.bur@gmail.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hruskobur/warmonger/issues"
+    "url": "https://github.com/hruskobur/battlegrounds/issues"
   },
-  "homepage": "https://github.com/hruskobur/warmonger#readme",
+  "homepage": "https://github.com/hruskobur/battlegrounds#readme",
   "description": "",
   "dependencies": {
     "pixi.js": "^8.6.6"
