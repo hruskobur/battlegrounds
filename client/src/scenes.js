@@ -7,7 +7,8 @@ import { TestScene } from './scenes/test.js';
 import { GameScene } from './scenes/game.js';
 
 const Events = Object.freeze({
-    Load: 'scenes.load'
+    Load: 'scenes.load',
+    Unload: 'scene.unload'
 });
 
 /**
@@ -64,6 +65,8 @@ function scene (id) {
 
     if(ActiveScene !== null) {
         ActiveScene.on_unload(Stage);
+
+        Messenger.emit(Events.Unload, ActiveScene);
     }
 
     ActiveScene = Scenes.get(id);

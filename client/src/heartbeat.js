@@ -27,7 +27,7 @@ function init (cfg) {
  */
 function start () {
     if(Heartbeat.started === true) {
-        throw new Error();
+        return;
     }
 
     Heartbeat.start();
@@ -41,12 +41,26 @@ function start () {
  */
 function stop () {
     if(Heartbeat.started === false) {
-        throw new Error();
+        return;
     }
 
     Heartbeat.stop();
 
     Messenger.emit(Events.Stop);
+}
+
+/**
+ * 
+ * @returns {Boolean}
+ */
+function pause () {
+    console.log('Heartbeat.pause', !Heartbeat.started);
+
+    if(Heartbeat.started === true) {
+        Heartbeat.stop();
+    } else {
+        Heartbeat.start();
+    }
 }
 
 /**
@@ -61,5 +75,5 @@ function on_heartbeat_tick (ticker) {
 
 export {
     init, Events,
-    start, stop
+    start, stop, pause
 };
