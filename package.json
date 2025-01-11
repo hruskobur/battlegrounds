@@ -17,6 +17,7 @@
     "client": "vite --debug --config ./client/vite.config.js"
   },
   "dependencies": {
+    "eventemitter3": "^5.0.1",
     "pixi.js": "^8.6.6"
   },
   "devDependencies": {
