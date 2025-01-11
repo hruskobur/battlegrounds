@@ -1,5 +1,6 @@
-import { Messenger } from '../messenger.js';
 import * as Pixi from 'pixi.js';
+
+import { Messenger } from '../messenger.js';
 import { Scene } from '../scene.js';
 
 class GameScene extends Scene {
@@ -17,29 +18,6 @@ class GameScene extends Scene {
      */
     on_build () {
         console.log('build GameScene UI here!');
-    }
-
-    /**
-     * @override
-     * @param {Object} data 
-     * @param {Pixi.Container} stage 
-     * @returns {Scene} this
-     */
-    on_load (data, stage) {
-        super.on_load(data, stage);
-
-        return this;
-    }
-
-    /**
-     * @virtual
-     * @param {Pixi.Container} stage 
-     * @returns {GameScene} this
-     */
-    on_unload (stage) {
-        super.on_unload(stage);
-
-        return this;
     }
 
     /**

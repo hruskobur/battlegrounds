@@ -1,5 +1,4 @@
 import * as Pixi from 'pixi.js';
-import { Messenger } from './messenger.js';
 
 class Scene {
     static Events = {};

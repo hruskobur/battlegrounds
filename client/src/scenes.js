@@ -1,4 +1,5 @@
 import * as Pixi from 'pixi.js';
+
 import { Messenger } from './messenger.js';
 import { Scene } from './scene.js';
 
