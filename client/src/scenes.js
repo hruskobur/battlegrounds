@@ -2,8 +2,9 @@ import * as Pixi from 'pixi.js';
 import { Messenger } from './messenger.js';
 import { Scene } from './scene.js';
 
-// dev!1
+// imports: all available scenes
 import { TestScene } from './scenes/test.js';
+import { GameScene } from './scenes/game.js';
 
 const Events = Object.freeze({
     Load: 'scenes.load'
@@ -48,6 +49,7 @@ async function init (cfg) {
 
     // todo: create all scenes here!
     Scenes.set('test', new TestScene());
+    Scenes.set('game', new GameScene());
 }
 
 /**

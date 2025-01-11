@@ -56,7 +56,7 @@ class Scene {
      * @param {Pixi.Container} stage 
      * @returns {Scene} this
      */
-    on_unload (stage, ) {
+    on_unload (stage) {
         while(this.container.children.length > 0) {
             this.container.removeChildAt(0);
         }

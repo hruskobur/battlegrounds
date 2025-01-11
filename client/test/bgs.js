@@ -22,6 +22,7 @@ import {
 import { 
     TestScene
 } from '../src/scenes/test.js';
+import { GameScene } from '../src/scenes/game.js';
 
 /* the "main" function ********************************************************/
 window.addEventListener(
@@ -55,8 +56,24 @@ function test_heartbeat () {
 function test_scenes () {
     Messenger.on(
         TestScene.Events.LoadBtn,
-        e => console.log('a button on TestScene has been clicked!')
+        e => {
+            // note: this will load the 'game' scene (GameScene)
+            scene('game');
+        }
     );
 
+    Messenger.on(
+        SceneEvents.Load,
+        e => {
+            console.log('scene loaded', e.id, e);
+        }
+    );
+
+    Messenger.on(
+        GameScene.Events.Quit,
+        e => {
+            scene('test');
+        }
+    )
     window.scene = scene;
 }
