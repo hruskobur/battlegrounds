@@ -3,10 +3,6 @@ import * as Pixi from 'pixi.js';
 import { Messenger } from './messenger.js';
 import { Scene } from './scene.js';
 
-// imports: all available scenes
-import { TestScene } from './scenes/test.js';
-import { GameScene } from './scenes/game.js';
-
 const Events = Object.freeze({
     Load: 'scenes.load',
     Unload: 'scene.unload'
@@ -34,11 +30,12 @@ let ActiveScene = null;
 
 /**
  * 
- * @param {*} cfg 
+ * @param {{
+ *  scenes: Array<Scene>
+ * }} cfg 
  */
 async function init (cfg) {
-    console.info('todo: scene cfg');
-
+    // pixi: init
     await Application.init(
         {
             width: 1024,
@@ -49,9 +46,14 @@ async function init (cfg) {
 
     document.body.appendChild(Application.canvas);
 
-    // todo: create all scenes here!
-    Scenes.set('test', new TestScene());
-    Scenes.set('game', new GameScene());
+    // scenes: create
+    cfg.scenes.forEach(scene => {
+        Scenes.set(scene.id, scene)
+    });
+
+    // scenes: initial scene (this avoids the load/unload event)
+    ActiveScene = Scenes.get('world');
+    ActiveScene.on_load(Stage);
 }
 
 /**
@@ -60,25 +62,22 @@ async function init (cfg) {
  * @returns {Scene} 
  */
 function scene (id) {
+    // checks
     if(Scenes.has(id) === false) {
         throw new Error();
     }
 
-    if(ActiveScene !== null) {
-        ActiveScene.on_unload(Stage);
-
-        Messenger.emit(Events.Unload, ActiveScene);
+    if(ActiveScene.id === id) {
+        throw new Error();
     }
 
-    ActiveScene = Scenes.get(id);
-    ActiveScene.on_load(
-        // note: i dont know how data will be provided for the scene
-        // cache? fixed? will this even be needed?
-        // for now: empty object, just as a demo
-        {},
-        Stage
-    );
+    // unload
+    ActiveScene.on_unload(Stage);
+    Messenger.emit(Events.Unload, ActiveScene);
 
+    // load & build
+    ActiveScene = Scenes.get(id);
+    ActiveScene.on_load(Stage);
     Messenger.emit(Events.Load, ActiveScene);
 
     return ActiveScene;

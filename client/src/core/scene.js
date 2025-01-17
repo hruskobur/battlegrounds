@@ -9,11 +9,6 @@ class Scene {
     container;
 
     /**
-     * @type {Object}
-     */
-    data;
-
-    /**
      * 
      * @param {String} id 
      */
@@ -21,9 +16,6 @@ class Scene {
         this.container = new Pixi.Container({
             label: id
         });
-
-        this.events = {};
-        this.data = {};
     }
 
     get id () {
@@ -38,12 +30,10 @@ class Scene {
 
     /**
      * @virtual
-     * @param {Object} data 
      * @param {Pixi.Container} stage 
      * @returns {Scene} this
      */
-    on_load (data, stage) {
-        this.data = data;
+    on_load (stage) {
         this.on_build();
         stage.addChild(this.container);
 
@@ -60,7 +50,6 @@ class Scene {
             this.container.removeChildAt(0);
         }
         this.container.removeFromParent();
-        this.data = {};
 
         return this;
     }
