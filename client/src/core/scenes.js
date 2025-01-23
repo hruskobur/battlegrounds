@@ -14,11 +14,6 @@ const Events = Object.freeze({
 const Application = new Pixi.Application();
 
 /**
- * @type {Pixi.Container}
- */
-const Stage = Application.stage;
-
-/**
  * @type {Map<String, Scene>}
  */
 const Scenes = new Map();
@@ -33,8 +28,15 @@ let ActiveScene = null;
  * @param {{
  *  scenes: Array<Scene>
  * }} cfg 
+ * @returns {Promise<void>}
  */
 async function init (cfg) {
+    // note: ref. to Application injection
+    Scene.Application = Application;
+
+    // note: dev / debug
+    globalThis.__PIXI_APP__ = Application;
+
     // pixi: init
     await Application.init(
         {
@@ -46,14 +48,12 @@ async function init (cfg) {
 
     document.body.appendChild(Application.canvas);
 
-    // scenes: create
+    // scenes: create & load the initial one
     cfg.scenes.forEach(scene => {
-        Scenes.set(scene.id, scene)
+        Scenes.set(scene.constructor.Id, scene);
     });
 
-    // scenes: initial scene (this avoids the load/unload event)
-    ActiveScene = Scenes.get('world');
-    ActiveScene.on_load(Stage);
+    this.scene(cfg.scenes[0].constructor.Id);
 }
 
 /**
@@ -62,22 +62,31 @@ async function init (cfg) {
  * @returns {Scene} 
  */
 function scene (id) {
-    // checks
+    // checks: valid scene id
     if(Scenes.has(id) === false) {
         throw new Error();
     }
 
-    if(ActiveScene.id === id) {
+    // check: prevent scene reloading
+    if(ActiveScene != null && ActiveScene.constructor.Id === id) {
         throw new Error();
     }
 
     // unload
-    ActiveScene.on_unload(Stage);
-    Messenger.emit(Events.Unload, ActiveScene);
+    if(ActiveScene != null) {
+        ActiveScene
+        .on_disconnect(Messenger, Application.ticker)
+        .on_destroy(Application.stage, Application.renderer);
+        
+        Messenger.emit(Events.Unload, ActiveScene);
+    }
 
-    // load & build
-    ActiveScene = Scenes.get(id);
-    ActiveScene.on_load(Stage);
+    // load
+    ActiveScene = Scenes
+    .get(id)
+    .on_create(Application.stage, Application.renderer)
+    .on_connect(Messenger, Application.ticker);
+
     Messenger.emit(Events.Load, ActiveScene);
 
     return ActiveScene;

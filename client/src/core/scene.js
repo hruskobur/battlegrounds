@@ -1,6 +1,9 @@
 import * as Pixi from 'pixi.js';
+import EventEmitter from 'eventemitter3';
 
 class Scene {
+    static Id = '';
+
     static Events = {};
 
     /**
@@ -9,32 +12,18 @@ class Scene {
     container;
 
     /**
-     * 
-     * @param {String} id 
      */
-    constructor (id) {
-        this.container = new Pixi.Container({
-            label: id
-        });
-    }
-
-    get id () {
-        return this.container.label;
+    constructor () {
+        this.container = null;
     }
 
     /**
-     * @abstract
-     * @returns {void}
-     */
-    on_build () {}
-
-    /**
-     * @virtual
+     * @virutal
      * @param {Pixi.Container} stage 
+     * @param {Pixi.Renderer} renderer
      * @returns {Scene} this
      */
-    on_load (stage) {
-        this.on_build();
+    on_create (stage, renderer) {
         stage.addChild(this.container);
 
         return this;
@@ -43,13 +32,46 @@ class Scene {
     /**
      * @virtual
      * @param {Pixi.Container} stage 
+     * @param {Pixi.Renderer} renderer 
      * @returns {Scene} this
      */
-    on_unload (stage) {
-        while(this.container.children.length > 0) {
-            this.container.removeChildAt(0);
-        }
+    on_destroy (stage, renderer) {
         this.container.removeFromParent();
+        this.container.destroy(
+            {
+                children: true
+            }
+        );
+        this.container = null;
+
+        return this;
+    }
+
+    /**
+     * @abstract
+     * @param {EventEmitter} messenger 
+     * @param {Pixi.Ticker} ticker
+     * @returns {Scene} this
+     */
+    on_connect (messenger, ticker) {
+        return this;
+    }
+
+    /**
+     * @abstract
+     * @param {EventEmitter} messenger 
+     * @param {Pixi.Ticker} ticker
+     * @returns {Scene} this
+     */
+    on_disconnect (messenger, ticker) {
+        Object
+        .values(this.constructor.Events)
+        .forEach(event => {
+            // dev
+            console.log('on_disconnect', Scene.constructor.Id, event);
+
+            messenger.removeAllListeners(event)
+        });
 
         return this;
     }

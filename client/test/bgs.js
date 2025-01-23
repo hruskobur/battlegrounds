@@ -5,7 +5,7 @@ import * as ScenesManager from '../src/core/scenes.js';
 
 // scenes
 import { WorldScene } from '../src/scenes/world.js';
-import { TestScene } from './scene/test.js';
+import { BattlegroundScene } from '../src/scenes/battleground.js';
 
 /* the "main" function ********************************************************/
 window.addEventListener(
@@ -14,24 +14,19 @@ window.addEventListener(
         await ScenesManager.init(
             {
                 scenes: [
+                    // note: first here is first to load
                     new WorldScene(),
-                    new TestScene(
-                        {
-                            a: 'model.a',
-                            x: 1000000
-                        }
-                    )
+                    new BattlegroundScene(),
                 ]
             }
         );
 
         // note: development
         DEVELOPMENT_scene_manager();
-        DEVELOPMENT_test_scene();
     }
 );
 
-/* development ****************************************************************/
+/* sandbox / development ******************************************************/
 function DEVELOPMENT_scene_manager () {
     window.scene = ScenesManager.scene;
 
@@ -43,12 +38,5 @@ function DEVELOPMENT_scene_manager () {
     Messenger.on(
         ScenesManager.Events.Unload,
         e => console.log(ScenesManager.Events.Unload, e)
-    );
-}
-
-function DEVELOPMENT_test_scene () {
-    Messenger.on(
-        TestScene.Events.LoadBtn,
-        e => console.log(TestScene.Events.LoadBtn, 'event from scene!')
     );
 }
