@@ -20,7 +20,7 @@ let ActiveScene = null;
  * @public
  * @param {{
  *  scenes: Array<Scene>,
- *  initial: String
+ *  parent: HTMLElement
  * }} cfg 
  * @returns {Promise<void>}
  */
@@ -34,18 +34,30 @@ async function init (cfg) {
     // pixi: init
     await PixiApp.init(
         {
-            width: 1024,
-            height: 1024,
             background: 0x203F75
         }
     );
 
-    document.body.appendChild(PixiApp.canvas);
+    // observer: resize handler
+    new ResizeObserver(
+        (entries) => {
+            // note: let's rely on the fact, that only cfg.parent is observed
+            const parent = entries[0].target;
+
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+
+            PixiApp.renderer.resize(width, height);
+        }
+    ).observe(cfg.parent);
 
     // scenes: scenes here are constructors, not instances
     cfg.scenes.forEach(scene => {
         Scenes.set(scene.Id, scene);
     });
+
+    // pixi: "display" canvas
+    cfg.parent.appendChild(PixiApp.canvas);
 }
 
 /**

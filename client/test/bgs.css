@@ -5,4 +5,11 @@ html body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    padding: 10px;
+}
+
+#bg-app {
+    width: 1000px;
+    height: 1000px;
+    border: 1px solid red;
 }

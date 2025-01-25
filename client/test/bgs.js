@@ -27,7 +27,8 @@ window.addEventListener(
                 scenes: [
                     WorldScene,
                     BattlegroundScene,
-                ]
+                ],
+                parent: document.querySelector('#bg-app')
             }
         );
 
@@ -79,15 +80,15 @@ function on_game_save () {
  * @param {String} id 
  */
 function on_scene_load (id) {
-    // note: if ads are to be displayed between scenes, this is how it should
-    // be done
-    // note: let's, for example, apply this only for hte Battleground scene 
-    // transition
-    if(id === BattlegroundScene.Id) {
-        on_show_add(id, 5000);
+    // // note: if ads are to be displayed between scenes, this is how it should
+    // // be done
+    // // note: let's, for example, apply this only for hte Battleground scene 
+    // // transition
+    // if(id === BattlegroundScene.Id) {
+    //     on_show_add(id, 5000);
 
-        return;
-    }
+    //     return;
+    // }
 
     Scenes.scene(id, Game);
 }

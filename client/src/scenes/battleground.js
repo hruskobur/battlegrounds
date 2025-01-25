@@ -34,15 +34,22 @@ class BattlegroundScene extends Scene {
             {
                 worldHeight: 2048,
                 worldWidth: 2048,
-                screenHeight: 1024,
-                screenWidth: 1024,
                 events: renderer.events
             }
         ).drag();
 
         const entity_dev = new Pixi.Sprite(Pixi.Texture.WHITE);
         entity_dev.width = entity_dev.height = 64;
-        entity_dev.x = entity_dev.y = 128;
+        entity_dev.x = entity_dev.y = 512;
+
+        const border = new Pixi.Graphics();
+        border.rect(0, 0, 2048, 2048);
+        border.stroke({
+            width: 2,
+            color: 'red'
+        })
+
+        this.container.addChild(border)
 
         this.container.addChild(entity_dev);
 
