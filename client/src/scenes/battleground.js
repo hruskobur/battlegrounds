@@ -1,17 +1,18 @@
 import * as Pixi from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
-
 import { Scene } from '../core/scene.js';
 
 class BattlegroundScene extends Scene {
     static Id = 'bg';
 
-    static Events = Object.freeze(
-        {}
-    );
+    /**
+     * 
+     * @param {*} data 
+     */
+    constructor (data) {
+        super(data);
 
-    constructor () {
-        super();
+        console.log('BattlegroundScene.constructor', this.data);
     }
 
     /**
@@ -25,9 +26,10 @@ class BattlegroundScene extends Scene {
      * @override
      * @param {Pixi.Container} stage 
      * @param {Pixi.Renderer} renderer 
-     * @returns {BattlegroundScene} this
+     * @param {Pixi.Ticker} ticker 
+     * @returns {Scene} this
      */
-    on_create (stage, renderer) {
+    on_create (stage, renderer, ticker) {
         this.container = new Viewport(
             {
                 worldHeight: 2048,
@@ -44,7 +46,7 @@ class BattlegroundScene extends Scene {
 
         this.container.addChild(entity_dev);
 
-        return super.on_create(stage, renderer);
+        return super.on_create(stage, renderer, ticker);
     }
 }
 

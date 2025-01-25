@@ -1,17 +1,10 @@
 import * as Pixi from 'pixi.js';
-
-import { Messenger } from './messenger.js';
 import { Scene } from './scene.js';
-
-const Events = Object.freeze({
-    Load: 'scenes.load',
-    Unload: 'scene.unload'
-});
 
 /**
  * @type {Pixi.Application}
  */
-const Application = new Pixi.Application();
+const PixiApp = new Pixi.Application();
 
 /**
  * @type {Map<String, Scene>}
@@ -24,21 +17,22 @@ const Scenes = new Map();
 let ActiveScene = null;
 
 /**
- * 
+ * @public
  * @param {{
- *  scenes: Array<Scene>
+ *  scenes: Array<Scene>,
+ *  initial: String
  * }} cfg 
  * @returns {Promise<void>}
  */
 async function init (cfg) {
     // note: ref. to Application injection
-    Scene.Application = Application;
+    Scene.Application = PixiApp;
 
     // note: dev / debug
-    globalThis.__PIXI_APP__ = Application;
+    globalThis.__PIXI_APP__ = PixiApp;
 
     // pixi: init
-    await Application.init(
+    await PixiApp.init(
         {
             width: 1024,
             height: 1024,
@@ -46,22 +40,21 @@ async function init (cfg) {
         }
     );
 
-    document.body.appendChild(Application.canvas);
+    document.body.appendChild(PixiApp.canvas);
 
-    // scenes: create & load the initial one
+    // scenes: scenes here are constructors, not instances
     cfg.scenes.forEach(scene => {
-        Scenes.set(scene.constructor.Id, scene);
+        Scenes.set(scene.Id, scene);
     });
-
-    this.scene(cfg.scenes[0].constructor.Id);
 }
 
 /**
- * 
- * @param {String} id 
+ * @public
+ * @param {String} id id of the scene to load
+ * @param {*} data scene-relevant data
  * @returns {Scene} 
  */
-function scene (id) {
+function scene (id, data) {
     // checks: valid scene id
     if(Scenes.has(id) === false) {
         throw new Error();
@@ -72,27 +65,24 @@ function scene (id) {
         throw new Error();
     }
 
-    // unload
+    // destroy old scene
     if(ActiveScene != null) {
         ActiveScene
-        .on_disconnect(Messenger, Application.ticker)
-        .on_destroy(Application.stage, Application.renderer);
+        .on_destroy(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
         
-        Messenger.emit(Events.Unload, ActiveScene);
+        ActiveScene = null;
     }
 
-    // load
-    ActiveScene = Scenes
-    .get(id)
-    .on_create(Application.stage, Application.renderer)
-    .on_connect(Messenger, Application.ticker);
+    // create new scene
+    const CTOR = Scenes.get(id);
 
-    Messenger.emit(Events.Load, ActiveScene);
+    ActiveScene = new CTOR(data)
+    .on_create(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
 
     return ActiveScene;
 }
 
 export {
-    init, Events,
+    init, 
     scene
 };
