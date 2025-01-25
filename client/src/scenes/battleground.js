@@ -30,28 +30,32 @@ class BattlegroundScene extends Scene {
      * @returns {Scene} this
      */
     on_create (stage, renderer, ticker) {
+        const SIZE = 64;
         this.container = new Viewport(
             {
-                worldHeight: 2048,
-                worldWidth: 2048,
+                worldHeight: SIZE * 64,
+                worldWidth: SIZE * 64,
+                screenHeight: 1000,
+                screenWidth: 1000,
                 events: renderer.events
             }
         ).drag();
 
-        const entity_dev = new Pixi.Sprite(Pixi.Texture.WHITE);
-        entity_dev.width = entity_dev.height = 64;
-        entity_dev.x = entity_dev.y = 512;
+        for(let y = 0; y < SIZE; ++y) {
+            for(let x = 0; x < SIZE; ++x) {
+                const area = new Pixi.Sprite(Pixi.Texture.WHITE);
+                area.width = 128;
+                area.height= 128;
+                area.x = x * 128;
+                area.y = y * 128;
+                
+                area._data = {
+                    pos:{ x, y }
+                };
 
-        const border = new Pixi.Graphics();
-        border.rect(0, 0, 2048, 2048);
-        border.stroke({
-            width: 2,
-            color: 'red'
-        })
-
-        this.container.addChild(border)
-
-        this.container.addChild(entity_dev);
+                this.container.addChild(area);
+            }
+        }
 
         return super.on_create(stage, renderer, ticker);
     }
