@@ -8,9 +8,7 @@ const StorageKey = 'battlegrounds';
  * @public
  * @async
  */
-async function init () {
-    
-}
+async function init () {}
 
 /**
  * @public

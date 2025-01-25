@@ -20,10 +20,8 @@ const Game = new DummyData();
 window.addEventListener(
     'load',
     async event => {
-
-
         // initialize: managers
-        await Persistency.init()
+        await Persistency.init();
         await Scenes.init(
             {
                 scenes: [
@@ -81,6 +79,29 @@ function on_game_save () {
  * @param {String} id 
  */
 function on_scene_load (id) {
-    // note: loads requested scene
+    // note: if ads are to be displayed between scenes, this is how it should
+    // be done
+    // note: let's, for example, apply this only for hte Battleground scene 
+    // transition
+    if(id === BattlegroundScene.Id) {
+        on_show_add(id, 5000);
+
+        return;
+    }
+
     Scenes.scene(id, Game);
+}
+
+/**
+ * 
+ * @param {String} id scene to load after the ad is displayed for given duration
+ * @param {Number} duration how long should ad be desipalyed
+ */
+function on_show_add (id, duration) {
+    console.log('ads.show');
+
+    setTimeout(() => {
+        // note: loads requested scene
+        Scenes.scene(id, Game);
+    }, duration);
 }
