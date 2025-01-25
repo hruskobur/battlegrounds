@@ -43,18 +43,11 @@ function load () {
 
         // dev: if the data are corrupted; just clear the saved (cached) data
         // ... not sure if it should be like that in prod.
-        purge();
+        localStorage.clear();
     }
-}
-
-/**
- * @public
- */
-function purge () {
-    localStorage.clear();
 }
 
 export {
     init,
-    StorageStrategy, load, save, purge
+    StorageStrategy, load, save
 };

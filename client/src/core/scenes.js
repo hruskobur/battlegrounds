@@ -81,6 +81,7 @@ function scene (id, data) {
 }
 
 export {
+    PixiApp,
     init, 
     scene
 };
