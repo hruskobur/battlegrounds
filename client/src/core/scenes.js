@@ -74,9 +74,7 @@ function scene (id, data) {
     }
 
     // create new scene
-    const CTOR = Scenes.get(id);
-
-    ActiveScene = new CTOR(data)
+    ActiveScene = new (Scenes.get(id))(data)
     .on_create(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
 
     return ActiveScene;
