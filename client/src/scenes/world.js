@@ -15,23 +15,27 @@ class WorldScene extends Scene {
     }
 
     /**
-     * @returns {Viewport}
-     */
-    get container () {
-        return this.container;
-    }
-
-    /**
-     * @override
+     * @virutal
      * @param {Pixi.Container} stage 
      * @param {Pixi.Renderer} renderer 
      * @param {Pixi.Ticker} ticker 
      * @returns {Scene} this
      */
     on_create (stage, renderer, ticker) {
-        this.container = new Pixi.Container();
+        super.on_create(stage, renderer, ticker);
 
-        return super.on_create(stage, renderer, ticker);
+        // dev: scene-local button trigers app-wide event
+        const sprite = new Pixi.Sprite(Pixi.Texture.WHITE);
+        sprite.x = 256; sprite.y = 256;
+        sprite.width = 128; sprite.height = 128;
+        sprite.eventMode = 'static';
+        sprite.on(
+            'pointerup',
+            e => this.message(Scene.Requests.SceneLoad, 'bg')
+        );
+        this.container.addChild(sprite);
+
+        return this;
     }
 }
 

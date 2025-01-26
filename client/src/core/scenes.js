@@ -34,13 +34,20 @@ async function init (cfg) {
     // pixi: init
     await PixiApp.init(
         {
-            background: 0x203F75
+            background: 0x203F75,
+            // note: default - correct dimensions
+            width: cfg.parent.clientWidth,
+            height: cfg.parent.clientHeight
         }
     );
 
     // observer: resize handler
     new ResizeObserver(
         (entries) => {
+            console.info(
+                'TODO: use ASPECT-PRESERVED SCALING here'
+            );
+
             // note: let's rely on the fact, that only cfg.parent is observed
             const parent = entries[0].target;
 
@@ -48,6 +55,10 @@ async function init (cfg) {
             const height = parent.clientHeight;
 
             PixiApp.renderer.resize(width, height);
+
+            if(ActiveScene != null) {
+                ActiveScene.on_resize(width, height);
+            }
         }
     ).observe(cfg.parent);
 
@@ -77,17 +88,19 @@ function scene (id, data) {
         throw new Error();
     }
 
-    // destroy old scene
+    // old scene: remove from stage & destroy
     if(ActiveScene != null) {
-        ActiveScene
-        .on_destroy(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
+        ActiveScene.container.removeFromParent();
+        ActiveScene.on_destroy(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
         
         ActiveScene = null;
     }
 
-    // create new scene
+    // new scene: create & add to stage
     ActiveScene = new (Scenes.get(id))(data)
     .on_create(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
+    
+    PixiApp.stage.addChild(ActiveScene.container);
 
     return ActiveScene;
 }

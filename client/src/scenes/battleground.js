@@ -30,24 +30,25 @@ class BattlegroundScene extends Scene {
      * @returns {Scene} this
      */
     on_create (stage, renderer, ticker) {
-        const SIZE = 64;
+        const SIZE = 16;
         this.container = new Viewport(
             {
-                worldHeight: SIZE * 64,
-                worldWidth: SIZE * 64,
-                screenHeight: 1000,
-                screenWidth: 1000,
+                worldHeight: SIZE * 64 + 8 + SIZE * 8,
+                worldWidth: SIZE * 64 + 8 + SIZE * 8,
+                screenHeight: renderer.width,
+                screenWidth: renderer.height,
                 events: renderer.events
             }
-        ).drag();
+        )
+        .drag().wheel();
 
         for(let y = 0; y < SIZE; ++y) {
             for(let x = 0; x < SIZE; ++x) {
                 const area = new Pixi.Sprite(Pixi.Texture.WHITE);
                 area.width = 128;
                 area.height= 128;
-                area.x = x * 128;
-                area.y = y * 128;
+                area.x = x * 128 + 8 + x * 8;
+                area.y = y * 128 + 8 + y * 8;
                 
                 area._data = {
                     pos:{ x, y }
@@ -57,7 +58,24 @@ class BattlegroundScene extends Scene {
             }
         }
 
-        return super.on_create(stage, renderer, ticker);
+        return this;
+    }
+
+    /**
+     * @override
+     * @param {Number} width 
+     * @param {Number} height 
+     */
+    on_resize (width, height) {
+        this.container.screenWidth = width;
+        this.container.screenHeight = height;
+
+        console.log(
+            `${this.constructor.Id}.on_resize`,
+            this.container.x, this.container.y,
+            this.container.width, this.container.height,
+            this.container.getVisibleBounds()
+        );
     }
 }
 
