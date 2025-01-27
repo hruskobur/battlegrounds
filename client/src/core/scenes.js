@@ -35,32 +35,15 @@ async function init (cfg) {
     await PixiApp.init(
         {
             background: 0x203F75,
-            // note: default - correct dimensions
+            // note: correct initial dimensions
             width: cfg.parent.clientWidth,
-            height: cfg.parent.clientHeight
+            height: cfg.parent.clientHeight,
+            resizeTo: cfg.parent
         }
     );
 
-    // observer: resize handler
-    new ResizeObserver(
-        (entries) => {
-            console.info(
-                'TODO: use ASPECT-PRESERVED SCALING here'
-            );
-
-            // note: let's rely on the fact, that only cfg.parent is observed
-            const parent = entries[0].target;
-
-            const width = parent.clientWidth;
-            const height = parent.clientHeight;
-
-            PixiApp.renderer.resize(width, height);
-
-            if(ActiveScene != null) {
-                ActiveScene.on_resize(width, height);
-            }
-        }
-    ).observe(cfg.parent);
+    // note: dev / debug ?
+    PixiApp.stage.label = 'stage';
 
     // scenes: scenes here are constructors, not instances
     cfg.scenes.forEach(scene => {
@@ -90,15 +73,21 @@ function scene (id, data) {
 
     // old scene: remove from stage & destroy
     if(ActiveScene != null) {
-        ActiveScene.container.removeFromParent();
-        ActiveScene.on_destroy(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
+        while(PixiApp.stage.children.length > 0) {
+            PixiApp.stage.removeChildAt(0);
+        }
+
+        ActiveScene
+        .on_disconnect(PixiApp)
+        .on_destroy(PixiApp);
         
         ActiveScene = null;
     }
 
     // new scene: create & add to stage
     ActiveScene = new (Scenes.get(id))(data)
-    .on_create(PixiApp.stage, PixiApp.renderer, PixiApp.ticker);
+    .on_create(PixiApp)
+    .on_connect(PixiApp);
     
     PixiApp.stage.addChild(ActiveScene.container);
 

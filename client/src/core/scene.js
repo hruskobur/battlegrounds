@@ -1,6 +1,11 @@
 import * as Pixi from 'pixi.js';
 import { Emitter, Requests } from '../core/messenger.js';
 
+Pixi.Container.prototype.resize = function (width, height) {
+    this.width = width;
+    this.height = height;
+}
+
 class Scene {
     static Requests = Requests;
 
@@ -36,49 +41,35 @@ class Scene {
     }
 
     /**
-     * @virutal
-     * @param {Pixi.Container} stage 
-     * @param {Pixi.Renderer} renderer 
-     * @param {Pixi.Ticker} ticker 
+     * @virtual
+     * @param {Pixi.Application} application
      * @returns {Scene} this
      */
-    on_create (stage, renderer, ticker) {
+    on_create (application) {
         this.container = new Pixi.Container(
             {
                 x: 0,
                 y: 0,
                 boundsArea: new Pixi.Rectangle(
                     0, 0,
-                    renderer.width, renderer.height
+                    application.renderer.width, application.renderer.height
                 ),
                 hitArea: new Pixi.Rectangle(
                     0, 0,
-                    renderer.width, renderer.height
+                    application.renderer.width, application.renderer.height
                 )
             }
         );
-
-        // dev: to test correctness of container's dimensions
-        // this.container.eventMode = 'static';
-        // this.container.on('pointerdown', e => console.log(e));
-
-        // dev: to test correct scaling
-        // const sprite = new Pixi.Sprite(Pixi.Texture.WHITE);
-        // sprite.x = 256; sprite.y = 256;
-        // sprite.width = 128; sprite.height = 128;
-        // this.container.addChild(sprite);
 
         return this;
     }
 
     /**
      * @virtual
-     * @param {Pixi.Container} stage 
-     * @param {Pixi.Renderer} renderer 
-     * @param {Pixi.Ticker} ticker 
+     * @param {Pixi.Application} application
      * @returns {Scene} this
      */
-    on_destroy (stage, renderer, ticker) {
+    on_destroy (application) {
         this.container.destroy(
             {
                 children: true
@@ -93,21 +84,32 @@ class Scene {
 
     /**
      * @virtual
-     * @param {Number} width 
-     * @param {Number} height 
+     * @param {Pixi.Application} application
+     * @returns {Scene} this
      */
-    on_resize (width, height) {
-        this.container.width = width;
-        this.container.height = height;
-        this.container.boundsArea = new Pixi.Rectangle(0, 0, width, height);
+    on_connect (application) {
+        application.renderer.on(
+            'resize',
+            this.container.resize,
+            this.container
+        );
 
-        // dev: resize debug
-        // console.log(
-        //     `${this.constructor.Id}.on_resize`,
-        //     this.container.x, this.container.y,
-        //     this.container.width, this.container.height,
-        //     this.container.boundsArea
-        // );
+        return this;
+    }
+    
+    /**
+     * @virtual
+     * @param {Pixi.Application} application
+     * @returns {Scene} this
+     */
+    on_disconnect (application) {
+        application.renderer.off(
+            'resize',
+            this.container.resize,
+            this.container
+        );
+        
+        return this;
     }
 }
 

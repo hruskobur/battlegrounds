@@ -40,10 +40,12 @@ window.addEventListener(
         .emit(Messages.Requests.GameLoad);
 
         // development
-        window.Battlegrounds = Object.freeze({
-            Messages, Persistency, Scenes,
-            Game
-        });
+        window.Battlegrounds = Object.freeze(
+            {
+                Messages, Persistency, Scenes,
+                Game
+            }
+        );
     }
 );
 

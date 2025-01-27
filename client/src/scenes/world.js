@@ -15,14 +15,12 @@ class WorldScene extends Scene {
     }
 
     /**
-     * @virutal
-     * @param {Pixi.Container} stage 
-     * @param {Pixi.Renderer} renderer 
-     * @param {Pixi.Ticker} ticker 
+     * @override
+     * @param {Pixi.Application} application
      * @returns {Scene} this
      */
-    on_create (stage, renderer, ticker) {
-        super.on_create(stage, renderer, ticker);
+    on_create (application) {
+        super.on_create(application);
 
         // dev: scene-local button trigers app-wide event
         const sprite = new Pixi.Sprite(Pixi.Texture.WHITE);

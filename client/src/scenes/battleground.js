@@ -23,21 +23,21 @@ class BattlegroundScene extends Scene {
     }
 
     /**
-     * @override
-     * @param {Pixi.Container} stage 
-     * @param {Pixi.Renderer} renderer 
-     * @param {Pixi.Ticker} ticker 
+     * @virtual
+     * @param {Pixi.Application} application
      * @returns {Scene} this
      */
-    on_create (stage, renderer, ticker) {
-        const SIZE = 16;
+    on_create (application) {
+        super.on_create(application);
+
+        const SIZE = 10;
         this.container = new Viewport(
             {
-                worldHeight: SIZE * 64 + 8 + SIZE * 8,
-                worldWidth: SIZE * 64 + 8 + SIZE * 8,
-                screenHeight: renderer.width,
-                screenWidth: renderer.height,
-                events: renderer.events
+                worldHeight: SIZE * 128 + 8 * (SIZE + 1),
+                worldWidth: SIZE * 128 + 8 * (SIZE + 1),
+                screenHeight: application.screen.width,
+                screenWidth: application.screen.height,
+                events: application.renderer.events,
             }
         )
         .drag().wheel();
@@ -47,8 +47,8 @@ class BattlegroundScene extends Scene {
                 const area = new Pixi.Sprite(Pixi.Texture.WHITE);
                 area.width = 128;
                 area.height= 128;
-                area.x = x * 128 + 8 + x * 8;
-                area.y = y * 128 + 8 + y * 8;
+                area.x = x * 128 + 8 * (x + 1);
+                area.y = y * 128 + 8 * (y + 1);
                 
                 area._data = {
                     pos:{ x, y }
@@ -59,23 +59,6 @@ class BattlegroundScene extends Scene {
         }
 
         return this;
-    }
-
-    /**
-     * @override
-     * @param {Number} width 
-     * @param {Number} height 
-     */
-    on_resize (width, height) {
-        this.container.screenWidth = width;
-        this.container.screenHeight = height;
-
-        console.log(
-            `${this.constructor.Id}.on_resize`,
-            this.container.x, this.container.y,
-            this.container.width, this.container.height,
-            this.container.getVisibleBounds()
-        );
     }
 }
 
