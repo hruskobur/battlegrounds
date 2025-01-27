@@ -57,17 +57,12 @@ async function init (cfg) {
 /**
  * @public
  * @param {String} id id of the scene to load
- * @param {*} data scene-relevant data
+ * @param {...any} payload scene-relevant payload
  * @returns {Scene} 
  */
-function scene (id, data) {
+function scene (id, ...payload) {
     // checks: valid scene id
     if(Scenes.has(id) === false) {
-        throw new Error();
-    }
-
-    // check: prevent scene reloading
-    if(ActiveScene != null && ActiveScene.constructor.Id === id) {
         throw new Error();
     }
 
@@ -85,7 +80,7 @@ function scene (id, data) {
     }
 
     // new scene: create & add to stage
-    ActiveScene = new (Scenes.get(id))(data)
+    ActiveScene = new (Scenes.get(id))(...payload)
     .on_create(PixiApp)
     .on_connect(PixiApp);
     

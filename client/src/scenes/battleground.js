@@ -1,21 +1,37 @@
 import * as Pixi from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
 import { Scene } from '../core/scene.js';
+import { WorldModel } from '../model/world.js';
+import { BattlegroundModel } from '../model/battleground.js';
 
 class BattlegroundScene extends Scene {
     static Id = 'bg';
 
     /**
-     * 
-     * @param {*} data 
+     * @type {BattlegroundModel}
      */
-    constructor (data) {
-        super(data);
+    bg;
 
-        console.log('BattlegroundScene.constructor', this.data);
+    /**
+     * 
+     * @param {WorldModel} world 
+     * @param {BattlegroundModel} id
+     */
+    constructor (world, bg) {
+        super(world);
+
+        this.bg = bg;
     }
 
     /**
+     * @returns {WorldModel}
+     */
+    get model () {
+        return this.model;
+    }
+
+    /**
+     * @override
      * @returns {Viewport}
      */
     get container () {
@@ -28,32 +44,26 @@ class BattlegroundScene extends Scene {
      * @returns {Scene} this
      */
     on_create (application) {
-        super.on_create(application);
-
-        const SIZE = 10;
         this.container = new Viewport(
             {
-                worldHeight: SIZE * 128 + 8 * (SIZE + 1),
-                worldWidth: SIZE * 128 + 8 * (SIZE + 1),
-                screenHeight: application.screen.width,
-                screenWidth: application.screen.height,
-                events: application.renderer.events,
+                worldHeight: this.bg.height * 128 + 8 * (this.bg.height + 1),
+                worldWidth: this.bg.width * 128 + 8 * (this.bg.width + 1),
+                screenHeight: application.renderer.height,
+                screenWidth: application.renderer.width,
+                events: application.renderer.events
             }
         )
-        .drag().wheel();
+        .drag()
+        .wheel();
 
-        for(let y = 0; y < SIZE; ++y) {
-            for(let x = 0; x < SIZE; ++x) {
+        for(let y = 0; y < this.bg.height; ++y) {
+            for(let x = 0; x < this.bg.width; ++x) {
                 const area = new Pixi.Sprite(Pixi.Texture.WHITE);
                 area.width = 128;
                 area.height= 128;
                 area.x = x * 128 + 8 * (x + 1);
                 area.y = y * 128 + 8 * (y + 1);
                 
-                area._data = {
-                    pos:{ x, y }
-                };
-
                 this.container.addChild(area);
             }
         }

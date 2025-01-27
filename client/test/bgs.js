@@ -8,14 +8,18 @@ import * as Scenes from '../src/core/scenes.js';
 import { WorldScene } from '../src/scenes/world.js';
 import { BattlegroundScene } from '../src/scenes/battleground.js';
 
-// development
-import { DummyData } from '../src/model/dummy.js';
+// models
+import { WorldModel } from '../src/model/world.js';
 
 /* the "main" function ********************************************************/
-
-// development: dummy data are defined here, just to demonstrate
-// independent life-time & management    
-const Game = new DummyData();
+const World = new WorldModel();
+World.battlegrounds.push(
+    {
+        name: 'Site Under Development',
+        world_x: 256, world_y: 256,
+        width: 10, height: 10
+    }
+);
 
 window.addEventListener(
     'load',
@@ -34,7 +38,8 @@ window.addEventListener(
 
         // initialize: event handling & start the world (via emit)
         Messages.Emitter
-        .on(Messages.Requests.SceneLoad, on_scene_load)
+        .on(Messages.Requests.EnterBg, on_enter_bg)
+        .on(Messages.Requests.EnterWorld, on_enter_world)
         .on(Messages.Requests.GameSave, on_game_save)
         .on(Messages.Requests.GameLoad, on_game_load)
         .emit(Messages.Requests.GameLoad);
@@ -43,7 +48,7 @@ window.addEventListener(
         window.Battlegrounds = Object.freeze(
             {
                 Messages, Persistency, Scenes,
-                Game
+                World
             }
         );
     }
@@ -51,60 +56,33 @@ window.addEventListener(
 
 /* logic **********************************************************************/
 function on_game_load () {
-    // note: ... this will read the game data (dummy for now) from cache
-    // aka load-the-game
-    Game.fromJSON(
-        Persistency.load()
-    );
+    console.log('on_game_load');
+    console.info('TODO', 'persistency.load');
 
-    // note: sends a request to load the (initial )world scene with loaded game
-    // data
-    // note: this operates on global game data
-    Messages.Emitter.emit(
-        Messages.Requests.SceneLoad,
-        'world', Game
-    );
+    Messages.Emitter.emit(Messages.Requests.EnterWorld);
 }
 
-/**
- * 
- */
 function on_game_save () {
-    // note: saves provided data to the cache
-    Persistency.save(
-        Game,
-        Persistency.StorageStrategy.Cache
-    );
+    console.log('on_game_load');
+    console.info('TODO', 'persistency.save');
+}
+
+function on_enter_world () {
+    console.log('on_game_world');
+    Scenes.scene('world', World);
 }
 
 /**
  * 
  * @param {String} id 
  */
-function on_scene_load (id) {
-    // // note: if ads are to be displayed between scenes, this is how it should
-    // // be done
-    // // note: let's, for example, apply this only for hte Battleground scene 
-    // // transition
-    // if(id === BattlegroundScene.Id) {
-    //     on_show_add(id, 5000);
+function on_enter_bg (id) {
+    console.log('on_game_bg');
 
-    //     return;
-    // }
+    const bg = World.battlegrounds.find(bg => bg.name === id);
+    if(bg == null) {
+        throw new Error();
+    }
 
-    Scenes.scene(id, Game);
-}
-
-/**
- * 
- * @param {String} id scene to load after the ad is displayed for given duration
- * @param {Number} duration how long should ad be desipalyed
- */
-function on_show_add (id, duration) {
-    console.log('ads.show');
-
-    setTimeout(() => {
-        // note: loads requested scene
-        Scenes.scene(id, Game);
-    }, duration);
+    Scenes.scene('bg', World, bg);
 }

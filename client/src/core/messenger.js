@@ -9,7 +9,8 @@ const Emitter = new EventEmitter();
  * 
  */
 const Requests = Object.freeze({
-    SceneLoad: 'scene.load',
+    EnterBg: 'enter.bg',
+    EnterWorld: 'enter.world',
     GameSave: 'game.save',
     GameLoad: 'game.load'
 });

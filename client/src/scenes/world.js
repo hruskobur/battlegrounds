@@ -1,17 +1,23 @@
 import * as Pixi from 'pixi.js';
 import { Scene } from '../core/scene.js';
+import { WorldModel } from '../model/world.js';
 
 class WorldScene extends Scene {
     static Id = 'world';
 
     /**
      * 
-     * @param {*} data 
+     * @param {WorldModel} model 
      */
-    constructor (data) {
-        super(data);
+    constructor (model) {
+        super(model);
+    }
 
-        console.log('WorldScene.constructor', this.data);
+    /**
+     * @returns {WorldModel}
+     */
+    get model () {
+        return this.model;
     }
 
     /**
@@ -22,16 +28,26 @@ class WorldScene extends Scene {
     on_create (application) {
         super.on_create(application);
 
-        // dev: scene-local button trigers app-wide event
-        const sprite = new Pixi.Sprite(Pixi.Texture.WHITE);
-        sprite.x = 256; sprite.y = 256;
-        sprite.width = 128; sprite.height = 128;
-        sprite.eventMode = 'static';
-        sprite.on(
-            'pointerup',
-            e => this.message(Scene.Requests.SceneLoad, 'bg')
-        );
-        this.container.addChild(sprite);
+        // note: dev only
+        this.model.battlegrounds
+        .forEach(
+            bg => {
+                const entity = new Pixi.Sprite(Pixi.Texture.WHITE);
+                entity.x = bg.world_x;
+                entity.y = bg.world_y;
+                entity.width = 128;
+                entity.height = 128;
+                entity.eventMode = 'static';
+
+                entity.on(
+                    'pointerup',
+                    e => {
+                        this.message(Scene.Requests.EnterBg, bg.name);
+                    }
+                );
+                
+                this.container.addChild(entity);
+        });
 
         return this;
     }

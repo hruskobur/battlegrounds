@@ -20,15 +20,17 @@ class Scene {
     container;
 
     /**
+     * Scene relevat model.
+     * 
      * @type {*}
      */
-    data;
+    model;
 
     /**
-     * @param {*} data 
+     * @param {*} model 
      */
-    constructor (data) {
-        this.data = data;
+    constructor (model) {
+        this.model = model;
     }
 
     /**
@@ -77,7 +79,7 @@ class Scene {
         );
         this.container = null;
         
-        this.data = null;
+        this.model = null;
 
         return this;
     }
