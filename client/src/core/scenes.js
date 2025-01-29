@@ -1,5 +1,5 @@
 import * as Pixi from 'pixi.js';
-import { Scene } from './scene.js';
+import { SceneBase } from './scene.js';
 
 /**
  * @type {Pixi.Application}
@@ -7,30 +7,24 @@ import { Scene } from './scene.js';
 const PixiApp = new Pixi.Application();
 
 /**
- * @type {Map<String, Scene>}
+ * @type {Map<String, SceneBase>}
  */
 const Scenes = new Map();
 
 /**
- * @type {Scene}
+ * @type {SceneBase}
  */
 let ActiveScene = null;
 
 /**
  * @public
  * @param {{
- *  scenes: Array<Scene>,
+ *  scenes: Array<SceneBase>,
  *  parent: HTMLElement
  * }} cfg 
  * @returns {Promise<void>}
  */
 async function init (cfg) {
-    // note: ref. to Application injection
-    Scene.Application = PixiApp;
-
-    // note: dev / debug
-    globalThis.__PIXI_APP__ = PixiApp;
-
     // pixi: init
     await PixiApp.init(
         {
@@ -41,8 +35,6 @@ async function init (cfg) {
             resizeTo: cfg.parent
         }
     );
-
-    // note: dev / debug ?
     PixiApp.stage.label = 'stage';
 
     // scenes: scenes here are constructors, not instances
@@ -58,7 +50,7 @@ async function init (cfg) {
  * @public
  * @param {String} id id of the scene to load
  * @param {...any} payload scene-relevant payload
- * @returns {Scene} 
+ * @returns {SceneBase} 
  */
 function scene (id, ...payload) {
     // checks: valid scene id
@@ -72,18 +64,12 @@ function scene (id, ...payload) {
             PixiApp.stage.removeChildAt(0);
         }
 
-        ActiveScene
-        .on_disconnect(PixiApp)
-        .on_destroy(PixiApp);
-        
+        ActiveScene.on_destroy(PixiApp);
         ActiveScene = null;
     }
 
     // new scene: create & add to stage
-    ActiveScene = new (Scenes.get(id))(...payload)
-    .on_create(PixiApp)
-    .on_connect(PixiApp);
-    
+    ActiveScene = new (Scenes.get(id))(...payload).on_create(PixiApp);
     PixiApp.stage.addChild(ActiveScene.container);
 
     return ActiveScene;

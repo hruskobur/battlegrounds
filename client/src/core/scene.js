@@ -1,41 +1,25 @@
+import Emitter from './emitter.js';
 import * as Pixi from 'pixi.js';
-import { Emitter, Requests } from '../core/messenger.js';
 
-Pixi.Container.prototype.resize = function (width, height) {
-    this.width = width;
-    this.height = height;
-}
-
-class Scene {
-    static Requests = Requests;
-
+class SceneBase {
     /**
      * Scene unique identifier.
      */
     static Id = '';
-  
+
     /**
      * @type {Pixi.Container}
      */
     container;
 
     /**
-     * Scene relevat model.
-     * 
-     * @type {*}
      */
-    model;
-
-    /**
-     * @param {*} model 
-     */
-    constructor (model) {
-        this.model = model;
+    constructor () {
     }
 
     /**
      * @public
-     * @param {Requests} request 
+     * @param {String} request 
      * @param  {...any} payload 
      */
     message (request, ...payload) {
@@ -69,7 +53,7 @@ class Scene {
     /**
      * @virtual
      * @param {Pixi.Application} application
-     * @returns {Scene} this
+     * @returns {SceneBase} this
      */
     on_destroy (application) {
         this.container.destroy(
@@ -83,38 +67,21 @@ class Scene {
 
         return this;
     }
-
-    /**
-     * @virtual
-     * @param {Pixi.Application} application
-     * @returns {Scene} this
-     */
-    on_connect (application) {
-        application.renderer.on(
-            'resize',
-            this.container.resize,
-            this.container
-        );
-
-        return this;
-    }
     
-    /**
-     * @virtual
-     * @param {Pixi.Application} application
-     * @returns {Scene} this
-     */
-    on_disconnect (application) {
-        application.renderer.off(
-            'resize',
-            this.container.resize,
-            this.container
+    on_resize (w, h, r) {
+        this.container.boundsArea = new Pixi.Rectangle(
+            0, 0, w, h
         );
-        
-        return this;
+        this.container.hitArea = new Pixi.Rectangle(
+            0, 0, w, h
+        );
+        this.container.scale.set(
+            w / 1920,
+            h / 1920
+        );
     }
 }
 
 export {
-    Scene
+    SceneBase
 };
