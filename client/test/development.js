@@ -1,6 +1,6 @@
 import * as Pixi from 'pixi.js';
 import { SceneBase } from '../src/core/scene.js';
-import { Game } from '../src/model/game.js';
+import { Game } from '../src/game/game.js';
 
 class DevelopmentScene extends SceneBase {
     static Id = 'dev';
@@ -39,7 +39,7 @@ class DevelopmentScene extends SceneBase {
         entity.on(
             'pointerup',
             e => {
-                this.message(Game.Request.Enter, 'bg');
+                this.request(Game.Request.Enter, 'bg');
             }
         );
 

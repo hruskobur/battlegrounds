@@ -5,4 +5,17 @@ import EventEmitter from 'eventemitter3';
  */
 const Emitter = new EventEmitter();
 
-export default Emitter;
+/**
+ * 
+ * @param {String} request 
+ * @param  {...any} payload 
+ */
+function message (request, ...payload) {
+    Emitter.emit(request, ...payload);
+}
+
+export {
+    EventEmitter,
+    Emitter,
+    message
+};

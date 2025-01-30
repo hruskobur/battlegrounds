@@ -1,11 +1,11 @@
 /* imports ********************************************************************/
 // managers
-import Emitter from '../src/core/emitter.js';
+import * as Events from '../src/core/emitter.js';
 import * as Persistency from '../src/core/persistency.js';
 import * as Scenes from '../src/core/scenes.js';
 
 // models
-import { Game } from '../src/model/game.js';
+import { Game } from '../src/game/game.js';
 
 // scenes
 import { DevelopmentScene } from './development.js';
@@ -41,9 +41,8 @@ window.addEventListener(
             }
         );
 
-        Emitter.on(Game.Request.Enter, enter)
+        Events.Emitter.on(Game.Request.Enter, enter)
         .emit(Game.Request.Enter, 'dev');
-
     }
 );
 

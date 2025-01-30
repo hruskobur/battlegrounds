@@ -1,4 +1,4 @@
-import Emitter from './emitter.js';
+import { EventEmitter, message } from './emitter.js';
 import * as Pixi from 'pixi.js';
 
 class SceneBase {
@@ -12,26 +12,19 @@ class SceneBase {
      */
     container;
 
-    /**
-     */
-    constructor () {
-    }
+    request = message;
 
     /**
-     * @public
-     * @param {String} request 
-     * @param  {...any} payload 
      */
-    message (request, ...payload) {
-        Emitter.emit(request, ...payload);
-    }
+    constructor () {}
 
     /**
      * @virtual
      * @param {Pixi.Application} application
-     * @returns {Scene} this
+     * @param {EventEmitter} emitter 
+     * @returns {SceneBase} this
      */
-    on_create (application) {
+    on_create (application, emitter) {
         this.container = new Pixi.Container(
             {
                 x: 0,
@@ -53,9 +46,10 @@ class SceneBase {
     /**
      * @virtual
      * @param {Pixi.Application} application
+     * @param {EventEmitter} emitter 
      * @returns {SceneBase} this
      */
-    on_destroy (application) {
+    on_destroy (application, emitter) {
         this.container.destroy(
             {
                 children: true
@@ -66,19 +60,6 @@ class SceneBase {
         this.model = null;
 
         return this;
-    }
-    
-    on_resize (w, h, r) {
-        this.container.boundsArea = new Pixi.Rectangle(
-            0, 0, w, h
-        );
-        this.container.hitArea = new Pixi.Rectangle(
-            0, 0, w, h
-        );
-        this.container.scale.set(
-            w / 1920,
-            h / 1920
-        );
     }
 }
 

@@ -1,4 +1,5 @@
 import * as Pixi from 'pixi.js';
+import { Emitter } from './emitter.js';
 import { SceneBase } from './scene.js';
 
 /**
@@ -64,12 +65,14 @@ function scene (id, ...payload) {
             PixiApp.stage.removeChildAt(0);
         }
 
-        ActiveScene.on_destroy(PixiApp);
+        ActiveScene.on_destroy(PixiApp, Emitter);
         ActiveScene = null;
     }
 
     // new scene: create & add to stage
-    ActiveScene = new (Scenes.get(id))(...payload).on_create(PixiApp);
+    ActiveScene = new (Scenes.get(id))(...payload)
+    .on_create(PixiApp, Emitter);
+    
     PixiApp.stage.addChild(ActiveScene.container);
 
     return ActiveScene;

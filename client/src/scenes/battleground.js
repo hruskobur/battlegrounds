@@ -1,7 +1,52 @@
 import * as Pixi from 'pixi.js';
+import EventEmitter from 'eventemitter3';
 import { Viewport } from 'pixi-viewport';
 import { SceneBase } from '../core/scene.js';
-import { Game } from '../model/game.js';
+import { Game } from '../game/game.js';
+import { AreaEntity } from '../game/area.js';
+import * as Utils from '../core/utils.js';
+
+class BattlegroundSceneController {
+    constructor (game) {
+        this.game = game;
+
+        Utils.array_2d_iterate(
+            this.game.areas,
+            (x, y, area) => {
+                area.sprite
+                .on('pointerdown', this.select.bind(this, area))
+                .on('pointerenter', this.info.bind(this, area))
+                .on('pointerleave', this.info.bind(this, area));
+            }
+        );
+    }
+
+    info (area) {
+        if(this.game.info != null && this.game.info != area) {
+            this.game.info.set_over(false);
+        }
+
+        this.game.info = area;
+        this.game.info.set_over(true);
+    }
+
+    select (area) {
+        if(this.game.selected === area) {
+            this.game.selected.set_selected(false);
+            this.game.selected = null;
+
+            return;
+        }
+
+        if(this.game.selected != null) {
+            this.game.selected.set_selected(false);
+            this.game.selected = null;
+        }
+
+        this.game.selected = area;
+        this.game.selected.set_selected(true);
+    }
+}
 
 class BattlegroundScene extends SceneBase {
     static Id = 'bg';
@@ -10,6 +55,11 @@ class BattlegroundScene extends SceneBase {
      * @type {Game}
      */
     game;
+
+    /**
+     * @type {BattlegroundSceneController}
+     */
+    controller;
 
     /**
      * @param {Game} game 
@@ -26,36 +76,35 @@ class BattlegroundScene extends SceneBase {
      * @returns {BattlegroundScene} this
      */
     on_create (application) {
-        const w = 32;
-        const h = 32;
+        this.container = new Viewport({
+            container: application.stage,
+            worldHeight: this.game.wh,
+            worldWidth: this.game.ww,
+            screenHeight: application.renderer.height,
+            screenWidth: application.renderer.width, 
+            events: application.renderer.events,
+            disableOnContextMenu: true
+        }).drag({
+            mouseButtons: 'right'
+        }).wheel(
+            {}
+        );
 
-        this.container = new Viewport(
-            {
-                container: application.stage,
-                worldHeight: w * 128 + 8 * (w + 1),
-                worldWidth: h * 128 + 8 * (h + 1),
-                screenHeight: application.renderer.height,
-                screenWidth: application.renderer.width, 
-                events: application.renderer.events
+        this.game.create();
+        Utils.array_2d_iterate(
+            this.game.areas,
+            (x, y, area) => {
+                this.container.addChild(area.sprite);
             }
-        )
-        .drag()
-        .wheel();
+        );
 
-        for(let y = 0; y < h; ++y) {
-            for(let x = 0; x < w; ++x) {
-                const area = new Pixi.Sprite(Pixi.Texture.WHITE);
-                area.width = 128;
-                area.height= 128;
-                area.x = x * 128 + 8 * (x + 1);
-                area.y = y * 128 + 8 * (y + 1);
-                
-                this.container.addChild(area);
-            }
-        }
+        this.controller = new BattlegroundSceneController(this.game);
+        
 
         return this;
     }
+
+
 }
 
 export {
