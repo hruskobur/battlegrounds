@@ -11,14 +11,18 @@ class GameEditor {
      * 
      * @param {Game} game 
      */
-    constructor (game) {
+    constructor(game) {
         this.game = game;
     }
 
-    world_create() {
-        for(let y = Coordinate.WY_MIN; y <= Coordinate.WY_MAX; ++y) {
+    /**
+     * 
+     * @returns {GameEditor}
+     */
+    world_create () {
+        for (let y = Coordinate.WY_MIN; y <= Coordinate.WY_MAX; ++y) {
             const areas = [];
-            for(let x = Coordinate.WX_MIN; x <= Coordinate.WX_MAX; ++x) {
+            for (let x = Coordinate.WX_MIN; x <= Coordinate.WX_MAX; ++x) {
                 areas.push(null);
             }
             this.game.areas.push(areas);
@@ -26,18 +30,36 @@ class GameEditor {
 
         return this;
     }
+
+    /**
+     * @param {Array<[Number, Number]>} wxys world (x & y)s
+     * @returns {GameEditor} this
+     */
+    areas_create (wxys) {
+        wxys.forEach(wxy => {
+            const [wx, wy] = wxy;
+
+            if(Coordinate.check(wx, wy) === false) {
+                throw new Error(`coordinate [${wx},${wy}] is out of bound`);
+            }
+            
+            if(this.game.areas[wy][wx] != null) {
+                throw new Error(`area [${wx},${wy}] already exists`);
+            }
+
+            this.game.areas[wy][wx] = new Coordinate(wx, wy);
+        });
+
+
+        return this;
+    }
+
     
     /**
-     * @param {Number} x 
-     * @param {Number} y 
-     * @returns {Game} this
+     * @returns {GameEditor} this
      */
-    area_create (x, y) {
-        if(this.game.areas[y][x] != null) {
-            throw new Error(`area [${x},${y}] already exists`);
-        }
-
-        this.game.areas[y][x] = new Coordinate(x, y);
+    areas_clear () {
+        this.areas.clear();
 
         return this;
     }

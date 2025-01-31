@@ -33,8 +33,8 @@ class DevelopmentScene extends SceneBase {
             {
                 screenWidth: applicaiton.renderer.width,
                 screenHeight: applicaiton.renderer.height,
-                worldWidth: Coordinate.WX_MAX * Coordinate.SU,
-                worldHeight: Coordinate.WY_MAX * Coordinate.SU,
+                worldWidth: Coordinate.WX_MAX * Coordinate.SizeUnit,
+                worldHeight: Coordinate.WY_MAX * Coordinate.SizeUnit,
                 events: applicaiton.renderer.events,
                 disableOnContextMenu: true
             }

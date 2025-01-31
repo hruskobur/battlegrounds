@@ -5,14 +5,26 @@ class Coordinate {
     static WY_MAX = 0;
     static SU = 0;
 
-    static set (w, h, u) {
+    /**
+     * 
+     * @param {Number} w x-axis max. size
+     * @param {Number} h y-axis max. size
+     * @param {Number} su size per one unit
+     */
+    static set (w, h, su) {
         Coordinate.WX_MIN = 0;
         Coordinate.WX_MAX = w - 1;
         Coordinate.WY_MIN = 0;
         Coordinate.WY_MAX = h - 1;
-        Coordinate.SU = u;
+        Coordinate.SU = su;
     }
 
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {Boolean}
+     */
     static check (x, y) {
         return (x >= Coordinate.WX_MIN
             && x <= Coordinate.WX_MAX 
@@ -32,8 +44,6 @@ class Coordinate {
 
         this.wx = wx;
         this.wy = wy;
-
-        this.id = this.wy * Coordinate.WX_MAX + this.wx;
     }
 
     get sx () {

@@ -57,41 +57,41 @@ class GameSelection {
      * @returns {Array<Coordinate>}
      */
     path(xf, yf, xt, yt) {
-        if(Coordinate.check(xf, yf) === false) {
+        if (Coordinate.check(xf, yf) === false) {
             throw new Error(`coordinate (start) [${xf},${yf}] is out of bound`);
         }
 
-        if(Coordinate.check(xt, yt) === false) {
+        if (Coordinate.check(xt, yt) === false) {
             throw new Error(`coordinate (start) [${xt},${yt}] is out of bound`);
         }
 
         const DIRECTIONS = [
             // N
-            [ 0,-1],
+            [0, -1],
             // NE
-            [ 1,-1],
+            [1, -1],
             // E
-            [ 1, 0],
+            [1, 0],
             // SE
-            [ 1, 1],
+            [1, 1],
             // S
-            [ 0, 1],
+            [0, 1],
             // SW
             [-1, 1],
             // W
             [-1, 0],
             // NW
-            [-1,-1]
+            [-1, -1]
         ];
 
         // targets
         const start = this.game.areas[yf][xf];
-        if(start == null) {
+        if (start == null) {
             return [];
         }
 
         const end = this.game.areas[yt][xt];
-        if(end == null) {
+        if (end == null) {
             return [];
         }
 
@@ -100,7 +100,7 @@ class GameSelection {
 
         while (queue.length > 0) {
             const current = queue.shift();
-            if(current == null) {
+            if (current == null) {
                 continue;
             }
 
@@ -115,7 +115,7 @@ class GameSelection {
 
                 // dev
                 console.log('result', _path);
-                
+
                 return _path;
             }
 
@@ -123,12 +123,12 @@ class GameSelection {
                 const nx = current.wx + dx;
                 const ny = current.wy + dy;
 
-                if(Coordinate.check(nx, ny) === false) {
+                if (Coordinate.check(nx, ny) === false) {
                     continue;
                 }
-                
+
                 const neighbor = this.game.areas[ny][nx];
-                if(from.has(neighbor) === false) {
+                if (from.has(neighbor) === false) {
                     from.set(neighbor, current);
                     queue.push(neighbor)
                 }
@@ -136,6 +136,19 @@ class GameSelection {
         }
 
         return []; // No path found
+    }
+
+
+    /**
+     * Iterates over areas, calling callback on each iteration.
+     * @param {Function} cb (arg: Coordinate)
+     */
+    iterate_areas(cb) {
+        for (let y = Coordinate.WY_MIN; y <= Coordinate.WY_MAX; ++y) {
+            for (let x = Coordinate.WX_MIN; x <= Coordinate.WX_MAX; ++x) {
+                cb(this.game.areas[y][x]);
+            }
+        }
     }
 }
 
