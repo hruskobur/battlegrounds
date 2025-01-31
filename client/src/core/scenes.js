@@ -33,7 +33,7 @@ async function init (cfg) {
             // note: correct initial dimensions
             width: cfg.parent.clientWidth,
             height: cfg.parent.clientHeight,
-            resizeTo: cfg.parent
+            resizeTo: cfg.parent,
         }
     );
     PixiApp.stage.label = 'stage';

@@ -1,49 +1,44 @@
-import { AreaEntity } from './area.js';
+import { Coordinate } from './coordinate.js';
 
 class Game {
     static Request = Object.freeze({
         Enter: 'system.enter'
     });
 
-    w;
-    h;
-    ww;
-    wh;
+    /**
+     * @type {Array<Array<Coordinate>>}
+     */
     areas;
 
-    info;
-    selected;
-
     constructor () {
-        this.w = 0;
-        this.h = 0;
-        this.ww = 0;
-        this.wh = 0;
-        this.areas = [];
+        Coordinate.set(10, 10, 128);
+
+        this.areas = []; 
     }
 
-    create () {
-        this.w = 10;
-        this.h = 10;
-        this.ww = (this.w * 128) + ((this.w + 1) * 8);
-        this.wh = (this.h * 128) + ((this.h + 1) * 8);
-
-        for(let y = 0; y < this.h; ++y) {
-            const _areas = []
-            for(let x = 0; x < this.w; ++x) {
-                const area = new AreaEntity()
-                .set_position(x, y);
-
-                _areas.push(area);
+    /**
+     * 
+     * @param {Function} cb (arg: Coordinate)
+     */
+    areas (cb) {
+        for(let y = Coordinate.WY_MIN; y <= Coordinate.WY_MAX; ++y) {
+            for(let x = Coordinate.WX_MIN; x <= Coordinate.WX_MAX; ++x) {
+                cb(this.areas[y][x]);
             }
-
-            this.areas.push(_areas);
         }
+    }
+
+    /**
+     * @returns {Game} this
+     */
+    clear () {
+        this.areas.clear();
 
         return this;
     }
 }
 
 export {
+    Coordinate,
     Game
 };
