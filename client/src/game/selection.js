@@ -1,4 +1,4 @@
-import { Coordinate } from './game.js';
+import { AreaEntity } from './area.js';
 import { Game } from './game.js';
 
 class GameSelection {
@@ -17,138 +17,81 @@ class GameSelection {
 
     /**
      * 
-     * @param {Number} x 
-     * @param {Number} y 
-     * @param {Number} e
-     * @returns {Array<Coordinate>}
+     * @param {Number} from 
+     * @param {Number} to 
+     * @returns {Array<AreaEntity>}
      */
-    extend(x, y, e) {
-        let xf = x - e;
-        if (xf < Coordinate.WX_MIN) xf = Coordinate.WX_MIN;
+    path(from, to) {
+        const areas = this.game.areas;
 
-        let xt = x + e;
-        if (xt > Coordinate.WX_MAX) xt = Coordinate.WX_MAX;
-
-        let yf = y - e;
-        if (yf < Coordinate.WY_MIN) yf = Coordinate.WY_MIN;
-
-        let yt = y + e;
-        if (yt > Coordinate.WY_MAX) yt = Coordinate.WY_MAX;
-
-        const coordinates = [];
-
-        for (let y = yf; y <= yt; ++y) {
-            for (let x = xf; x <= xt; ++x) {
-                coordinates.push(
-                    new Coordinate(x, y)
-                );
-            }
+        const area_from = areas.get(from);
+        if(area_from == null) {
+            return [];
         }
-
-        return coordinates;
-    }
-
-    /**
-     * 
-     * @param {Number} xf 
-     * @param {Number} yf 
-     * @param {Number} xt 
-     * @param {Number} yt 
-     * @returns {Array<Coordinate>}
-     */
-    path(xf, yf, xt, yt) {
-        if (Coordinate.check(xf, yf) === false) {
-            throw new Error(`coordinate (start) [${xf},${yf}] is out of bound`);
-        }
-
-        if (Coordinate.check(xt, yt) === false) {
-            throw new Error(`coordinate (start) [${xt},${yt}] is out of bound`);
-        }
-
-        const DIRECTIONS = [
-            // N
-            [0, -1],
-            // NE
-            [1, -1],
-            // E
-            [1, 0],
-            // SE
-            [1, 1],
-            // S
-            [0, 1],
-            // SW
-            [-1, 1],
-            // W
-            [-1, 0],
-            // NW
-            [-1, -1]
-        ];
-
-        // targets
-        const start = this.game.areas[yf][xf];
-        if (start == null) {
+        
+        const area_to = areas.get(to);
+        if(area_to == null) {
             return [];
         }
 
-        const end = this.game.areas[yt][xt];
-        if (end == null) {
-            return [];
+        const distances = new Map();
+        const previous = new Map();
+        const unvisited = new Set();
+
+        for (const [id, area] of areas) {
+            distances.set(id, Infinity);
+            unvisited.add(area);
         }
 
-        const from = new Map().set(start, null);
-        const queue = [start];
+        distances.set(from, 0);
 
-        while (queue.length > 0) {
-            const current = queue.shift();
-            if (current == null) {
-                continue;
-            }
-
-            if (current === end) {
-                const _path = [];
-                let _current = end;
-
-                while (_current) {
-                    _path.push(_current);
-                    _current = from.get(_current);
+        while (unvisited.size > 0) {
+            let current = null;
+            let min_distance = Infinity;
+            for (const area of unvisited) {
+                const d = distances.get(area.id);
+                if (d < min_distance) {
+                    min_distance = d;
+                    current = area;
                 }
-
-                // dev
-                console.log('result', _path);
-
-                return _path;
             }
 
-            for (const [dx, dy] of DIRECTIONS) {
-                const nx = current.wx + dx;
-                const ny = current.wy + dy;
+            if (min_distance === Infinity || current === null) {
+                break;
+            }
 
-                if (Coordinate.check(nx, ny) === false) {
+            if (current.id === to) {
+                break;
+            }
+
+            unvisited.delete(current);
+
+            for (const [neighborId, path_entity] of current.paths) {
+                const neighbor = areas.get(neighborId);
+                if (!unvisited.has(neighbor)) {
                     continue;
                 }
 
-                const neighbor = this.game.areas[ny][nx];
-                if (from.has(neighbor) === false) {
-                    from.set(neighbor, current);
-                    queue.push(neighbor)
+                const alt_distance = distances.get(current.id) + path_entity.distance;
+                if (alt_distance < distances.get(neighborId)) {
+                    distances.set(neighborId, alt_distance);
+                    previous.set(neighborId, current);
                 }
             }
         }
 
-        return []; // No path found
-    }
-
-
-    /**
-     * Iterates over areas, calling callback on each iteration.
-     * @param {Function} cb (arg: Coordinate)
-     */
-    iterate_areas(cb) {
-        for (let y = Coordinate.WY_MIN; y <= Coordinate.WY_MAX; ++y) {
-            for (let x = Coordinate.WX_MIN; x <= Coordinate.WX_MAX; ++x) {
-                cb(this.game.areas[y][x]);
-            }
+        const path = [];
+        let currentArea = area_to;
+        while (currentArea) {
+            path.unshift(currentArea);
+            currentArea = previous.get(currentArea.id);
         }
+
+        if (path.length === 0 || path[0].id !== from) {
+            return { distance: Infinity, path: [] };
+        }
+
+        return { distance: distances.get(to), path };
     }
 }
 

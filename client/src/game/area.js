@@ -1,20 +1,38 @@
-import * as Pixi from 'pixi.js';
+import { PathEntity } from './path.js';
 
 class AreaEntity {
-    constructor () {
-        this.model = {};
-        
-        this.sprite = new Pixi.Sprite(Pixi.Texture.WHITE);
-    }
+    /**
+     * @type {Number}
+     */
+    id;
 
-    set_position (x, y, m=8) {
-        this.model.x = x;
-        this.model.y = y;
+    /**
+     * @type {Number}
+     */
+    x;
 
-        this.sprite.x = x * this.sprite.width + (x + 1) * m;
-        this.sprite.y = y * this.sprite.height + (y + 1) * m;
+    /**
+     * @type {Number}
+     */
+    y;
 
-        return this;
+    /**
+     * @type {Map<Number, PathEntity>}
+     */
+    paths;
+
+    /**
+     * 
+     * @param {Number} id 
+     * @param {Number} x 
+     * @param {Number} y 
+     */
+    constructor (id, x, y) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+
+        this.paths = new Map();
     }
 }
 

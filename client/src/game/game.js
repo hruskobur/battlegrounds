@@ -1,23 +1,16 @@
-import { Coordinate } from './coordinate.js';
+import { AreaEntity } from './area.js';
 
 class Game {
-    static Request = Object.freeze({
-        Enter: 'system.enter'
-    });
-
     /**
-     * @type {Array<Array<Coordinate>>}
+     * @type {Map<Number, AreaEntity>}
      */
     areas;
 
     constructor () {
-        Coordinate.set(10, 10, 128);
-        this.areas = []; 
+        this.areas = new Map();
     }
-
 }
 
 export {
-    Coordinate,
     Game
 };
