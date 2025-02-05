@@ -16,6 +16,9 @@ import { GameSelector } from '../src/game/selector.js';
 import { DevelopmentScene } from './development.js';
 import { SceneBase } from '../src/core/scene.js';
 
+// level-development
+import * as Maps from './maps.js'
+
 /* the "main" function ********************************************************/
 
 window.addEventListener(
@@ -45,6 +48,7 @@ window.addEventListener(
                 TheGame, 
                 TheEditor,
                 TheSelector,
+                Maps,
                 visualise: visualise.bind(null, TheGame, TheScene)
             }
         );
@@ -78,30 +82,19 @@ function visualise (game, scene) {
 
     // draw: paths
     {
-        const drawn_paths_cache = new Set();
+        const paths = window.Bgs.TheSelector.paths();
+        for(const path of paths) {
+            console.log('drawing!');
+            
+            const from = path.a;
+            const to = path.b;
 
-        for(const area of areas.values()) {
-            for(const path of area.paths.values()) {
-                if(drawn_paths_cache.has(path) === true) {
-                    continue;
-                }
+            const sprite = new Pixi.Graphics()
+            .moveTo(from.x + 8, from.y + 8)
+            .lineTo(to.x + 8, to.y + 8)
+            .stroke({ width: 2, color: 'lightblue' });
 
-                const from = path.a;
-                const to = path.b;
-
-                const sprite = new Pixi.Graphics()
-                .moveTo(from.x + 8, from.y + 8)
-                .lineTo(to.x + 8, to.y + 8)
-                .stroke({ width: 2, color: 'lightblue' });
-
-                container.addChild(sprite);
-
-                drawn_paths_cache.add(path);
-            }
+            container.addChild(sprite);
         }
     }
-
-
-
-
-}
+    }

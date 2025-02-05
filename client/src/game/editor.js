@@ -1,3 +1,4 @@
+import * as Pixi from 'pixi.js';
 import { AreaEntity } from './area.js';
 import { Game } from './game.js';
 import { PathEntity } from './path.js';
@@ -11,26 +12,32 @@ class GameEditor {
     /**
      * 
      * @param {Game} game 
+     * @param {Pixi} scene 
      */
-    constructor (game) {
+    constructor (game, scene) {
         this.game = game;
     }
 
     /**
      * 
      * @param {Number} id 
-     * @param {Number} x 
-     * @param {Number} y 
+     * @param {Number} x_world 
+     * @param {Number} y_world 
      * @return {GameEditor} this
      */
-    area_add (id, x, y) {
+    area_add (id, x_world, y_world) {
         if(this.game.areas.has(id) === true) {
             throw new Error();
         }
 
         this.game.areas.set(
             id,
-            new AreaEntity(id, x, y)
+            new AreaEntity(id, x_world, y_world)
+        );
+
+        this.game.paths.set(
+            id,
+            new Map()
         );
 
         return this;
@@ -38,21 +45,25 @@ class GameEditor {
 
     /**
      * 
-     * @param {Number} id 
+     * @param {Number} id_area 
      * @returns {GameEditor} this
      */
-    area_rem (id) {
-        const area = this.game.areas.get(id);
+    area_rem (id_area) {
+        const area = this.game.areas.get(id_area);
         if(area == null) {
             throw new Error();
         }
 
-        for(const path of area.paths.values()) {
-            path.a.paths.delete(path.b.id);
-            path.b.paths.delete(path.a.id);
-        };
+        // remove paths: TO area
+        for(const ids_to of this.game.paths.get(id_area).keys()) {
+            this.game.paths.get(ids_to).delete(id_area);
+        }
 
-        this.game.areas.delete(id);
+        // remove paths: FROM area
+        this.game.paths.delete(id_area);
+  
+        // remove area
+        this.game.areas.delete(id_area);
 
         return this;
     }
@@ -65,6 +76,10 @@ class GameEditor {
      * @returns {GameEditor} this
      */
     path_add (id_area_a, id_area_b, distance=1000) {
+        if(id_area_a === id_area_b) {
+            throw new Error();
+        }
+
         const area_a = this.game.areas.get(id_area_a);
         if(area_a == null) {
             throw new Error();
@@ -76,9 +91,9 @@ class GameEditor {
         }
 
         const path = new PathEntity(area_a, area_b, distance);
-
-        area_a.paths.set(id_area_b, path);
-        area_b.paths.set(id_area_a, path);
+        
+        this.game.paths.get(id_area_a).set(id_area_b, path);
+        this.game.paths.get(id_area_b).set(id_area_a, path);
 
         return this;
     }
@@ -100,8 +115,8 @@ class GameEditor {
             throw new Error();
         }
 
-        area_a.paths.delete(id_area_b);
-        area_b.paths.delete(id_area_a);
+        this.game.paths.get(id_area_a).delete(id_area_b);
+        this.game.paths.get(id_area_b).delete(id_area_a);
 
         return this;
     }
@@ -112,17 +127,16 @@ class GameEditor {
      * @returns {GameEditor} this
      */
     export (payload) {
-        const areas = [];
-        const paths = [];
+        payload.areas = [];
+        payload.paths = [];
 
         // areas
         for(const area of this.game.areas.values()) {
-            areas.push(
-                {
-                    id: area.id,
-                    x: area.x,
-                    y: area.y
-                }
+            payload.areas.push(
+                [
+                    area.id, 
+                    area.x, area.y
+                ]
             );
         }
 
@@ -130,24 +144,23 @@ class GameEditor {
         {
             const exported_paths_cache = new Set();
 
-            for(const area of this.game.areas.values()) {
-                for(const path of area.paths.values()) {
-                    paths.push(
-                        {
-                            a: path.a.id,
-                            b: path.b.id,
-                            distance: path.distance
-                        }
+            for(const paths of this.game.paths.values()) {
+                for(const path of paths.values()) {
+                    if(exported_paths_cache.has(path) === true) {
+                        continue;
+                    }
+
+                    payload.paths.push(
+                        [
+                            path.a.id, path.b.id,
+                            path.distance
+                        ]
                     );
 
                     exported_paths_cache.add(path);
                 }
             }
         }
-
-        // export
-        payload.areas = areas;
-        payload.paths = paths;
 
         return this;
     }
@@ -160,22 +173,19 @@ class GameEditor {
     import (payload) {
         // clear
         this.game.areas.clear();
+        this.game.paths.clear();
 
         // areas
         payload.areas.forEach(
             area => {
-                this.area_add(
-                    area.id, area.x, area.y
-                );
+                this.area_add(...area);
             }
         );
 
         // paths
         payload.paths.forEach(
             path => {
-                this.path_add(
-                    path.a, path.b, path.distance
-                );
+                this.path_add(...path);
             }
         );
 

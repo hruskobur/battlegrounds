@@ -9,6 +9,7 @@ class PathEntity {
     constructor (a, b, distance) {
         this.a = a;
         this.b = b;
+        
         this.distance = distance;
     }
 }

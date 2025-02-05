@@ -1,4 +1,4 @@
-import { PathEntity } from './path.js';
+import * as Pixi from 'pixi.js';
 
 class AreaEntity {
     /**
@@ -17,9 +17,9 @@ class AreaEntity {
     y;
 
     /**
-     * @type {Map<Number, PathEntity>}
+     * @type {Pixi.Container}
      */
-    paths;
+    graphics;
 
     /**
      * 
@@ -32,7 +32,11 @@ class AreaEntity {
         this.x = x;
         this.y = y;
 
-        this.paths = new Map();
+        this.graphics = new Pixi.Container();
+    }
+
+    draw () {
+
     }
 }
 
