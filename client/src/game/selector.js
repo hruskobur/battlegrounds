@@ -18,15 +18,6 @@ class GameSelector {
 
     /**
      * 
-     * @param {Number} id 
-     * @returns {AreaEntity|null}
-     */
-    area(id) {
-        return this.game.areas.get(id);
-    }
-
-    /**
-     * 
      * @param {Number} from 
      * @param {Number} to 
      * @returns {Array<AreaEntity>}

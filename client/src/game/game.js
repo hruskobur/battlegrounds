@@ -16,6 +16,34 @@ class Game {
         this.areas = new Map();
         this.paths = new Map();
     }
+
+    /**
+     * 
+     * @returns {Array<AreaEntity>}
+     */
+    get_areas () {
+        return Array.from(this.areas.values());
+    }
+
+    /**
+     * 
+     * @returns {Array<PathEntity>}
+     */
+    get_paths () {
+        const traversed = new Set();
+        
+        for (const paths of this.paths.values()) {
+            for (const path of paths.values()) {
+                if (paths.has(path) === true) {
+                    continue;
+                }
+    
+                traversed.add(path);
+            }
+        }
+
+        return Array.from(traversed);
+    }
 }
 
 export {

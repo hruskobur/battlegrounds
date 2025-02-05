@@ -28,6 +28,8 @@ window.addEventListener(
         const TheEditor = new GameEditor(TheGame);
         const TheSelector = new GameSelector(TheGame);
 
+        TheEditor.import(Maps.DevIslande);
+
         // initialize: managers
         await Scenes.init(
             {
@@ -48,53 +50,10 @@ window.addEventListener(
                 TheGame, 
                 TheEditor,
                 TheSelector,
-                Maps,
-                visualise: visualise.bind(null, TheGame, TheScene)
+                Maps
             }
         );
     }
 );
 
-/* logic **********************************************************************/
-/**
- * @param {Game} game 
- * @param {SceneBase} scene 
- */
-function visualise (game, scene) {
-    const areas = game.areas;
-    const container = scene.container;
-
-    // purge
-    while(container.children.length > 0) {
-        container.removeChildAt(0);
-    }
-
-    // draw: areas
-    for(const area of areas.values()) {
-        const sprite = new Pixi.Sprite(Pixi.Texture.WHITE);
-        sprite.width = 16;
-        sprite.height = 16;
-        sprite.x = area.x;
-        sprite.y = area.y;
-
-        container.addChild(sprite);
-    }
-
-    // draw: paths
-    {
-        const paths = window.Bgs.TheSelector.paths();
-        for(const path of paths) {
-            console.log('drawing!');
-            
-            const from = path.a;
-            const to = path.b;
-
-            const sprite = new Pixi.Graphics()
-            .moveTo(from.x + 8, from.y + 8)
-            .lineTo(to.x + 8, to.y + 8)
-            .stroke({ width: 2, color: 'lightblue' });
-
-            container.addChild(sprite);
-        }
-    }
-    }
+/* sandbox ********************************************************************/

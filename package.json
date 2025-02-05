@@ -17,6 +17,7 @@
     "client": "vite --debug --config ./client/vite.config.js"
   },
   "dependencies": {
+    "animejs": "^3.2.2",
     "eventemitter3": "^5.0.1",
     "pixi-viewport": "^6.0.3",
     "pixi.js": "^8.6.6"
