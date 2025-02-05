@@ -1,7 +1,7 @@
 import { AreaEntity } from './area.js';
 import { Game } from './game.js';
 
-class GameSelection {
+class GameSelector {
     /**
      * @type {Game}
      */
@@ -93,8 +93,62 @@ class GameSelection {
 
         return { distance: distances.get(to), path };
     }
+
+    /**
+     * 
+     * @param {Number} from 
+     * @param {Number} extend 
+     * @returns {Array<AreaEntity>}
+     */
+    extend (from, extend) {
+        const area_from = this.game.areas.get(from);
+        if(area_from == null) {
+            return [];
+        }
+        const visited = new Set(
+            [
+                area_from
+            ]
+        );
+    
+        const result = new Set(
+            [
+                area_from
+            ]
+        );
+        
+        let current_level = [
+            area_from
+        ];
+    
+        for (let range = 1; range <= extend; range++) {
+            const next_level = [];
+        
+            for (const area of current_level) {
+                for (const [area_to_id, path] of area.paths) {
+                    if(visited.has(area_to_id) === true) {
+                        continue;
+                    }
+
+                    visited.add(area_to_id);
+                    
+                    const area_neighbour = this.game.areas.get(area_to_id);
+                    result.add(area_neighbour);
+                    next_level.push(area_neighbour);
+                }
+            }
+            
+            if (next_level.length === 0) {
+                break;
+            }
+        
+            current_level = next_level;
+        }
+    
+        return Array.from(result);
+    }
 }
 
 export {
-    GameSelection
+    GameSelector
 };

@@ -10,7 +10,7 @@ import * as Scenes from '../src/core/scenes.js';
 // models
 import { Game } from '../src/game/game.js';
 import { GameEditor } from '../src/game/editor.js';
-import { GameSelection } from '../src/game/selection.js';
+import { GameSelector } from '../src/game/selector.js';
 
 // scenes
 import { DevelopmentScene } from './development.js';
@@ -23,7 +23,7 @@ window.addEventListener(
     async event => {
         const TheGame = new Game();
         const TheEditor = new GameEditor(TheGame);
-        const TheSelection = new GameSelection(TheGame);
+        const TheSelector = new GameSelector(TheGame);
 
         // initialize: managers
         await Scenes.init(
@@ -44,17 +44,8 @@ window.addEventListener(
             {
                 TheGame, 
                 TheEditor,
-                TheSelection,
-                visualise: visualise.bind(null, TheGame, TheScene),
-                path: (from, to) => {
-                    const _s = performance.now();
-                    
-                    TheSelection.path(from, to);
-                    
-                    const _e = performance.now();
-                    
-                    console.log(_e-_s);
-                }
+                TheSelector,
+                visualise: visualise.bind(null, TheGame, TheScene)
             }
         );
     }
