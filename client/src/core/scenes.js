@@ -65,13 +65,15 @@ function scene (id, ...payload) {
             PixiApp.stage.removeChildAt(0);
         }
 
-        ActiveScene.on_destroy(PixiApp, Emitter);
+        ActiveScene.on_destroy();
         ActiveScene = null;
     }
 
     // new scene: create & add to stage
-    ActiveScene = new (Scenes.get(id))(...payload)
-    .on_create(PixiApp, Emitter);
+    ActiveScene = new (Scenes.get(id))(
+        PixiApp, Emitter,
+        ...payload
+    ).on_create();
     
     PixiApp.stage.addChild(ActiveScene.container);
 

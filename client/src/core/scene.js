@@ -1,5 +1,5 @@
-import { EventEmitter, message } from './emitter.js';
 import * as Pixi from 'pixi.js';
+import EventEmitter from 'eventemitter3';
 
 class SceneBase {
     /**
@@ -8,34 +8,47 @@ class SceneBase {
     static Id = '';
 
     /**
+     * @type {Pixi.Application}
+     */
+    app;
+
+    /**
+     * @type {EventEmitter}
+     */
+    emitter;
+
+    /**
      * @type {Pixi.Container}
      */
     container;
 
-    request = message;
-
     /**
+     * 
+     * @param {Pixi.Application} application 
+     * @param {EventEmitter} emitter 
      */
-    constructor () {}
+    constructor (application, emitter) {
+        this.app = application;
+        this.emitter = emitter;
+    }
 
     /**
      * @virtual
-     * @param {Pixi.Application} application
-     * @param {EventEmitter} emitter 
      * @returns {SceneBase} this
      */
-    on_create (application, emitter) {
+    on_create () {
         this.container = new Pixi.Container(
             {
+                label: `scene.${this.constructor.Id}`,
                 x: 0,
                 y: 0,
                 boundsArea: new Pixi.Rectangle(
                     0, 0,
-                    application.renderer.width, application.renderer.height
+                    this.app.renderer.width, this.app.renderer.height
                 ),
                 hitArea: new Pixi.Rectangle(
                     0, 0,
-                    application.renderer.width, application.renderer.height
+                    this.app.renderer.width, this.app.renderer.height
                 )
             }
         );
@@ -45,11 +58,9 @@ class SceneBase {
 
     /**
      * @virtual
-     * @param {Pixi.Application} application
-     * @param {EventEmitter} emitter 
      * @returns {SceneBase} this
      */
-    on_destroy (application, emitter) {
+    on_destroy () {
         this.container.destroy(
             {
                 children: true
@@ -57,12 +68,10 @@ class SceneBase {
         );
         this.container = null;
         
-        this.model = null;
-
         return this;
     }
 }
 
 export {
-    SceneBase
+    SceneBase, Pixi
 };

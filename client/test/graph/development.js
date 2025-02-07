@@ -1,9 +1,9 @@
 import EventEmitter from 'eventemitter3';
 import * as Pixi from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
-import { SceneBase } from '../src/core/scene.js';
-import { Game } from '../src/game/game.js';
-import { DevEntity } from '../src/game/entity.js';
+import { SceneBase } from '../../src/core/scene.js';
+import { Game } from './game/game.js';
+import { DevEntity } from './game/entity.js';
 
 
 class DevelopmentScene extends SceneBase {

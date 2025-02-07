@@ -3,18 +3,18 @@
 import * as Pixi from 'pixi.js';
 
 // managers
-import * as Events from '../src/core/emitter.js';
-import * as Persistency from '../src/core/persistency.js';
-import * as Scenes from '../src/core/scenes.js';
+import * as Events from '../../src/core/emitter.js';
+import * as Persistency from '../../src/core/persistency.js';
+import * as Scenes from '../../src/core/scenes.js';
 
 // models
-import { Game } from '../src/game/game.js';
-import { GameEditor } from '../src/game/editor.js';
-import { GameSelector } from '../src/game/selector.js';
+import { Game } from './game/game.js';
+import { GameEditor } from './game/editor.js';
+import { GameSelector } from './game/selector.js';
 
 // scenes
 import { DevelopmentScene } from './development.js';
-import { SceneBase } from '../src/core/scene.js';
+import { SceneBase } from '../../src/core/scene.js';
 
 // level-development
 import * as Maps from './maps.js'
