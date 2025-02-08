@@ -1,14 +1,7 @@
-import { ActionProcessor } from './action/processor.js';
-import { AreaModel } from './models/area.js';
-import { DevAction } from './action/dev.js';
-import { ModelBase } from './models/base.js';
+import { AreaModel } from './area/model.js';
+import { Target } from './target.js';
 
 class TheGame {
-    /**
-     * @type {ActionProcessor}
-     */
-    action_processor;
-
     /**
      * @type {Number}
      */
@@ -30,7 +23,7 @@ class TheGame {
      */
     constructor (payload) {
         // engine
-        this.action_processor = new ActionProcessor();
+        // . . .
 
         // model
         // dev: will be refactored to model member
@@ -58,11 +51,9 @@ class TheGame {
     /**
      * @public
      * @param {Number} dt 
-     * @return {Array<import('./action/base.js').ActionSnapshot>}
+     * @return {Array<*>}
      */
-    tick = (dt) => {
-        return this.action_processor.tick(dt);
-    }
+    tick = (dt) => {}
 
     /**
      * @public
@@ -70,8 +61,8 @@ class TheGame {
      * possiblity to execute an action, and if allowed, schedules action
      * to the action queue
      * @development this is called by bots and by players
-     * @param {ModelBase} from 
-     * @param {ModelBase} to
+     * @param {Target} from 
+     * @param {Target} to
      */
     command (from, to) {
         console.log('TheGame.command', from, to);

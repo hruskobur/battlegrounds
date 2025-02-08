@@ -1,6 +1,4 @@
-import {  } from './base.js';
-
-class ModelBase {
+class AreaModel {
     /**
      * @type {Number}
      */
@@ -16,19 +14,13 @@ class ModelBase {
      */
     id;
 
-    /**
-     * @type {Number}
-     */
-    owner;
-
     constructor () {
         this.x = 0;
         this.y = 0;
         this.id = 0;
-        this.owner = null;
     }
 }
 
 export {
-    ModelBase
+    AreaModel
 };
