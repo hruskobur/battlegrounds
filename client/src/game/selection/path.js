@@ -1,5 +1,5 @@
 import { TheGame } from '../game.js';
-import { SelectionModel } from './model.js';
+import { EntitySelection } from './selection.js';
 
 /**
  * @this {TheGame}
@@ -7,7 +7,7 @@ import { SelectionModel } from './model.js';
  * @param {Number} xt 
  * @param {Number} yf 
  * @param {Number} yt 
- * @return {Array<SelectionModel>}
+ * @return {Array<EntitySelection>}
  */
 function path (xf, xt, yf, yt) {
     // note: not implemented yet

@@ -1,21 +1,26 @@
 import * as Pixi from 'pixi.js';
-import { AreaModel } from './model.js';
 
 class AreaGraphics extends Pixi.Container {
     static Size = 64;
+    static Margin = 8;
 
     /**
-     * @type {AreaModel}
      */
-    model;
-
-    /**
-     * @param {AreaModel} model 
-     */
-    constructor (model) {
+    constructor () {
         super();
 
-        this.model = model;
+        // back face (border)
+        this.addChild(
+            new Pixi.Sprite(
+                {
+                    width: AreaGraphics.Size + AreaGraphics.Margin,
+                    height: AreaGraphics.Size + AreaGraphics.Margin,
+                    x: 0,
+                    y: 0,
+                    eventMode: 'none'
+                }
+            )
+        );
 
         // front face
         this.addChild(
@@ -23,30 +28,15 @@ class AreaGraphics extends Pixi.Container {
                 {
                     width: AreaGraphics.Size,
                     height: AreaGraphics.Size,
-                    x: 0,
-                    y: 0,
-                    texture: Pixi.Texture.WHITE
+                    x: (AreaGraphics.Size + AreaGraphics.Margin) / 2,
+                    y: (AreaGraphics.Size + AreaGraphics.Margin) / 2,
+                    texture: Pixi.Texture.WHITE,
+                    anchor: 0.5,
+                    eventMode: 'static'
                 }
             )
         );
 
-        // border
-        this.addChild(
-            new Pixi.Graphics()
-            .rect(
-                0, 0,
-                AreaGraphics.Size, AreaGraphics.Size
-            ).stroke(
-                {
-                    width: 1,
-                    color: 'black'
-                }
-            )
-        );
-
-        this.x = this.model.position.x * (AreaGraphics.Size + 8);
-        this.y = this.model.position.y * (AreaGraphics.Size + 8);
-        
         this.eventMode = 'static';
     }
 
@@ -56,17 +46,7 @@ class AreaGraphics extends Pixi.Container {
      * @returns {AreaGraphics} this
      */
     targeted (is) {
-        const border = this.children[1];
-
-        border
-        .clear()
-        .rect(0, 0, AreaGraphics.Size, AreaGraphics.Size)
-        .stroke(
-            {
-                width: (is === true) ? 3 : 1,
-                color: (is === true) ? 'red' : 'black'
-            }
-        );
+        this.children[0].tint = (is === true) ? 'red' : 'black';
     }
 }
 

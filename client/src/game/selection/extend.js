@@ -1,12 +1,12 @@
 import { TheGame } from '../game.js';
-import { SelectionModel } from './model.js';
+import { EntitySelection } from './selection.js';
 
 /**
  * @this {TheGame}
  * @param {Number} x 
  * @param {Number} y 
  * @param {Number} e 
- * @returns {Array<SelectionModel>}
+ * @returns {Array<EntitySelection>}
  */
 function extend (x, y, e) {
     let xf = x - e;
@@ -26,7 +26,7 @@ function extend (x, y, e) {
     for(let y = yf; y <= yt; ++y) {
         for(let x = xf; x <= xt; ++x) {
             selections.push(
-                new SelectionModel(
+                new EntitySelection(
                     this.areas[y][x],
                     this.tokens[y][x]
                 )

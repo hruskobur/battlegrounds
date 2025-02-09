@@ -1,10 +1,6 @@
 import { SceneBase, Pixi } from '../../core/scene.js';
-
 import { TheGame } from '../../game/game.js';
-import { AreaGraphics } from '../../game/area/graphic.js';
-
 import { BattlegroundsControls } from './controls.js';
-import { SelectionModel } from '../../game/selection/model.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -43,42 +39,6 @@ class BattlegroundsScene extends SceneBase {
     }
 
     /**
-     * 
-     * @param  {SelectionModel|Array<SelectionModel>} selection 
-     * @returns {{areas: Array<AreaGraphics>,tokens: Array<TokenGraphics|null>}}
-     */
-    select (selection) {
-        const result = {
-            areas: [],
-            tokens: []
-        };
-
-        if(Array.isArray(selection) === false) {
-            const id = selection.area.position.id;
-
-            result.areas.push(
-                this.areas.children[id]
-            );
-
-            result.tokens.push(
-                this.tokens.children[id]
-            );
-        }
-
-        selection.forEach(s => {
-            const id = s.area.position.id;
-
-            result.areas.push(
-                this.areas.children[id]
-            );
-
-            result.tokens.push(
-                this.tokens.children[id] ?? null
-            );
-        });
-    }
-
-    /**
      * @override
      * @param {*} scenario 
      * @returns {SceneBase} this
@@ -99,9 +59,7 @@ class BattlegroundsScene extends SceneBase {
         for(let y = 0; y < this.game.height; ++y) {
             for(let x = 0; x < this.game.width; ++x) {
                 this.areas.addChild(
-                    new AreaGraphics(
-                        this.game.areas[y][x]
-                    )
+                    this.game.areas[y][x].graphics
                 );
             }
         }

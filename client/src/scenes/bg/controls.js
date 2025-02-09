@@ -1,12 +1,12 @@
 import * as Pixi from 'pixi.js';
 import { TheGame } from '../../game/game.js';
-import { SelectionModel } from '../../game/selection/model.js';
-import { TokenModel } from '../../game/token/model.js';
+import { EntitySelection } from '../../game/selection/selection.js';
 import { BattlegroundsScene } from './scene.js';
 
-const CoordinatesThreshold = 2;
-
 class BattlegroundsControls {
+    // note: these may go somewhere else, like constants, etc...
+    static #CoordinatesArgc = 2;
+
     /**
      * @type {BattlegroundsScene}
      */
@@ -30,7 +30,7 @@ class BattlegroundsControls {
      * How many targets are needed depends on FIRST SELECTED target (token ON
      * area)
      * 
-     * @type {Array<SelectionModel>}
+     * @type {Array<EntitySelection>}
      */
     #targets;
 
@@ -50,13 +50,14 @@ class BattlegroundsControls {
 
         this.#coordinates = [];
         this.#targets = [];
-        this.#argc = TokenModel.DefaultTokenActionArgc;
+        this.#argc = TheGame.DefaultTokenActionArgc;
         
         this.#scene.areas.children
         .forEach(
             area => {
                 area
                 .on('pointerdown', this.#on_pointer_down)
+                
                 // dev: disabled until handling is needed & implemented
                 // .on('pointerenter', this.#on_pointer_enter)
                 // .on('pointerleave', this.#on_pointer_leave);
@@ -89,7 +90,7 @@ class BattlegroundsControls {
     clear () {
         this.#coordinates = [];
         this.#targets = [];
-        this.#argc = TokenModel.DefaultTokenActionArgc;
+        this.#argc = TheGame.DefaultTokenActionArgc;
 
         return this;
     }
@@ -102,7 +103,10 @@ class BattlegroundsControls {
      */
     #on_partial_target = (coordinate) => {
         // do nothing until we get 2 coordinates - full target
-        if(this.#coordinates.push(coordinate) !== CoordinatesThreshold) {
+        if(this
+            .#coordinates
+            .push(coordinate) !== BattlegroundsControls.#CoordinatesArgc
+        ) {
             return this;
         }
         
@@ -138,7 +142,7 @@ class BattlegroundsControls {
             // if first target doesn't contain a token, a default action
             // will be executed - meaning we need 2 targets...
             if(target.token == null) {
-                this.#argc = TokenModel.DefaultTokenActionArgc;
+                this.#argc = TheGame.DefaultTokenActionArgc;
             } 
             // if first target contains a token - that token determines how many
             // other targets are needed
@@ -190,12 +194,12 @@ class BattlegroundsControls {
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_down = event => {
-        const position = event.target.model.position;
+        const pt = event.getLocalPosition(this.#scene.areas);
 
-        this.target(
-            position.x, 
-            position.y
-        );
+        const x = Math.floor(pt.x / 72);
+        const y = Math.floor(pt.y / 72);
+
+        console.log(x, y);
         
         // console.log('BattlegroundsControls.#on_pointer_down', event.target);
     }

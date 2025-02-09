@@ -4,7 +4,6 @@
 import * as Events from '../../src/core/emitter.js';
 import * as Persistency from '../../src/core/persistency.js';
 import * as Scenes from '../../src/core/scenes.js';
-import { TokenModel } from '../../src/game/token/model.js';
 
 // scenes
 import { BattlegroundsScene } from '../../src/scenes/bg/scene.js';

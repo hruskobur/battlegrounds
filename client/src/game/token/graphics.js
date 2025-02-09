@@ -1,21 +1,12 @@
 import * as Pixi from 'pixi.js';
-import { TokenModel } from './model.js';
 
 class TokenGraphics extends Pixi.Container {
     static Size = 16;
 
     /**
-     * @type {TokenModel}
      */
-    model;
-
-    /**
-     * @param {TokenModel} model 
-     */
-    constructor (model) {
+    constructor () {
         super();
-
-        this.model = model;
 
         this.eventMode = 'passive';
     }

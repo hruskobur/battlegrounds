@@ -1,19 +1,19 @@
-import { TheGame } from '../game.js'
-import { SelectionModel } from './model.js';
+import { TheGame } from '../game.js';
+import { EntitySelection } from './selection.js';
 
 /**
  * 
  * @this {TheGame} game 
  * @param {Number} x 
  * @param {Number} y 
- * @returns {SelectionModel|null}
+ * @returns {EntitySelection|null}
  */
 function target (x, y) {
     if(x < 0 || x >= this.width || y < 0 || y >= this.height) {
         return null;
     }
 
-    return new SelectionModel(
+    return new EntitySelection(
         this.areas[y][x],
         this.tokens[y][x]
     );
