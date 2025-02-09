@@ -1,7 +1,7 @@
 import { AreaModel } from '../area/model.js';
 import { TokenModel } from '../token/model.js';
 
-class TargetModel {
+class SelectionModel {
     /**
      * @type {AreaModel}
      */
@@ -24,5 +24,5 @@ class TargetModel {
 }
 
 export {
-    TargetModel
+    SelectionModel
 };

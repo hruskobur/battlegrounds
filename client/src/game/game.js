@@ -1,6 +1,9 @@
 import { AreaModel } from './area/model.js';
 import { TokenModel } from './token/model.js';
-import { TargetModel } from './target/model.js';
+
+import target from './selection/target.js';
+import extend from './selection/extend.js';
+import path from './selection/path.js';
 
 class TheGame {
     /**
@@ -23,6 +26,11 @@ class TheGame {
      */
     tokens;
 
+    // dev: seems that they are not needed here; that even binding in CTOR
+    // keeps the signature intact ... let's see
+    // target = Target.target;
+    // check = Target.check;
+
     /**
      */
     constructor () {
@@ -30,33 +38,10 @@ class TheGame {
         this.height = 0;
         this.areas = [];
         this.tokens = [];
-    }
 
-    /**
-     * @public
-     * @param {Number} x 
-     * @param {Number} y 
-     * @returns {Boolean}
-     */
-    check (x, y) {
-        return (x >= 0 && x < this.width && y >= 0 && y < this.height);
-    }
-
-    /**
-     * @public
-     * @param {Number} x x-axis coordinate
-     * @param {Number} y y-axis coordinate
-     * @returns {TargetModel|null}
-     */
-    target (x, y) {
-        if(this.check(x, y) === false) {
-            return null;
-        }
-
-        return new TargetModel(
-            this.areas[y][x],
-            this.tokens[y][x]
-        );
+        this.target = target.bind(this);
+        this.extend = extend.bind(this);
+        this.path = path.bind(this);
     }
 
     /**

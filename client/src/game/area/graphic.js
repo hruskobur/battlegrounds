@@ -50,7 +50,12 @@ class AreaGraphics extends Pixi.Container {
         this.eventMode = 'static';
     }
 
-    select (is) {
+    /**
+     * @public
+     * @param {Boolean} is 
+     * @returns {AreaGraphics} this
+     */
+    targeted (is) {
         const border = this.children[1];
 
         border

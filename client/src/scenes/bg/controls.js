@@ -1,9 +1,9 @@
 import * as Pixi from 'pixi.js';
 import { TheGame } from '../../game/game.js';
-import { TargetModel } from '../../game/target/model.js';
+import { SelectionModel } from '../../game/selection/model.js';
+import { TokenModel } from '../../game/token/model.js';
 import { BattlegroundsScene } from './scene.js';
 
-const DefaultTokenActionArgc = 2;
 const CoordinatesThreshold = 2;
 
 class BattlegroundsControls {
@@ -30,7 +30,7 @@ class BattlegroundsControls {
      * How many targets are needed depends on FIRST SELECTED target (token ON
      * area)
      * 
-     * @type {Array<TargetModel>}
+     * @type {Array<SelectionModel>}
      */
     #targets;
 
@@ -48,7 +48,9 @@ class BattlegroundsControls {
         this.#scene = scene;
         this.#game = scene.game;
 
-        this.clear();
+        this.#coordinates = [];
+        this.#targets = [];
+        this.#argc = TokenModel.DefaultTokenActionArgc;
         
         this.#scene.areas.children
         .forEach(
@@ -87,7 +89,7 @@ class BattlegroundsControls {
     clear () {
         this.#coordinates = [];
         this.#targets = [];
-        this.#argc = DefaultTokenActionArgc;
+        this.#argc = TokenModel.DefaultTokenActionArgc;
 
         return this;
     }
@@ -136,7 +138,7 @@ class BattlegroundsControls {
             // if first target doesn't contain a token, a default action
             // will be executed - meaning we need 2 targets...
             if(target.token == null) {
-                this.#argc = DefaultTokenActionArgc;
+                this.#argc = TokenModel.DefaultTokenActionArgc;
             } 
             // if first target contains a token - that token determines how many
             // other targets are needed

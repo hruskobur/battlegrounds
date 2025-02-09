@@ -1,4 +1,4 @@
-class PositionProperty {
+class AreaPropertyPosition {
     /**
      * @type {Number}
      */
@@ -22,5 +22,5 @@ class PositionProperty {
 }
 
 export {
-    PositionProperty
+    AreaPropertyPosition
 }

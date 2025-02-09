@@ -40,6 +40,6 @@ window.addEventListener(
 
         Scenes.scene('bg', {});
 
-        // Tests.token_argc();
+        Tests.token_argc();
     }
 );

@@ -1,4 +1,4 @@
-class OwnershipProperty {
+class AreaPropertyOwnership {
     /**
      * @type {Number}
      */
@@ -10,5 +10,5 @@ class OwnershipProperty {
 }
 
 export {
-    OwnershipProperty
+    AreaPropertyOwnership
 };

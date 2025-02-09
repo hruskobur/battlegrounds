@@ -1,4 +1,6 @@
 class TokenModel {
+    static DefaultTokenActionArgc = 2;
+    
     /**
      * @type {Number}
      */

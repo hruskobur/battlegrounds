@@ -4,6 +4,7 @@ import { TheGame } from '../../game/game.js';
 import { AreaGraphics } from '../../game/area/graphic.js';
 
 import { BattlegroundsControls } from './controls.js';
+import { SelectionModel } from '../../game/selection/model.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -43,20 +44,38 @@ class BattlegroundsScene extends SceneBase {
 
     /**
      * 
-     * @param {Number} x 
-     * @param {Number} y 
-     * @returns {AreaGraphics|null}
+     * @param  {SelectionModel|Array<SelectionModel>} selection 
+     * @returns {{areas: Array<AreaGraphics>,tokens: Array<TokenGraphics|null>}}
      */
-    target (x, y) {
-        const {area, token} = this.game.target(x, y);
+    select (selection) {
+        const result = {
+            areas: [],
+            tokens: []
+        };
 
-        return {
-            area:
-            (area !== null) ? this.areas.children[area.position.id] : null,
+        if(Array.isArray(selection) === false) {
+            const id = selection.area.position.id;
 
-            token:
-            (token !== null) ? this.tokens.children[area.position.id] : null
+            result.areas.push(
+                this.areas.children[id]
+            );
+
+            result.tokens.push(
+                this.tokens.children[id]
+            );
         }
+
+        selection.forEach(s => {
+            const id = s.area.position.id;
+
+            result.areas.push(
+                this.areas.children[id]
+            );
+
+            result.tokens.push(
+                this.tokens.children[id] ?? null
+            );
+        });
     }
 
     /**
