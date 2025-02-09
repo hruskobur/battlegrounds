@@ -1,8 +1,14 @@
 import * as Pixi from 'pixi.js';
+import anime from 'animejs';
 
 class AreaGraphics extends Pixi.Container {
     static Size = 64;
     static Margin = 8;
+
+    /**
+     * @type {}
+     */
+    animation_border;
 
     /**
      */
@@ -40,6 +46,16 @@ class AreaGraphics extends Pixi.Container {
             )
         );
 
+        // animations
+        this.animation_border = anime({
+            loop: true,
+            autoplay: false,
+            targets: this.children[0],
+            alpha:[0, 1],
+            direction: 'alternate',
+            easing: 'linear'
+        });
+
         this.eventMode = 'static';
     }
 
@@ -49,7 +65,11 @@ class AreaGraphics extends Pixi.Container {
      * @returns {AreaGraphics} this
      */
     targeted (is) {
-        this.children[0].alpha = (is === true) ? 1 : 0;
+        if(is === true) {
+            this.animation_border.play();
+        } else {
+            this.animation_border.reset();
+        }
     }
 }
 
