@@ -6,7 +6,7 @@ import * as Persistency from '../../src/core/persistency.js';
 import * as Scenes from '../../src/core/scenes.js';
 
 // scenes
-import { BgScene } from '../../src/scenes/bg.js';
+import { BgScene } from '../../src/scenes/bg/scene.js';
 
 /* the "main" function ********************************************************/
 
@@ -34,7 +34,7 @@ window.addEventListener(
             }
         );
 
-        Scenes.scene('bg');
+        Scenes.scene('bg', {x:10});
     }
 );
 

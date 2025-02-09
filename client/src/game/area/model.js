@@ -1,23 +1,20 @@
+import { PositionProperty } from '../property/position.js';
+import { OwnershipProperty } from '../property/ownership.js';
+
 class AreaModel {
     /**
-     * @type {Number}
+     * @type {PositionProperty}
      */
-    x;
+    position;
 
     /**
-     * @type {Number}
+     * @type {OwnershipProperty}
      */
-    y;
-
-    /**
-     * @type {Number}
-     */
-    id;
+    ownership;
 
     constructor () {
-        this.x = 0;
-        this.y = 0;
-        this.id = 0;
+        this.position = new PositionProperty();
+        this.ownership = new OwnershipProperty();
     }
 }
 

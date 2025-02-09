@@ -36,7 +36,8 @@ async function init (cfg) {
             resizeTo: cfg.parent,
         }
     );
-    PixiApp.stage.label = 'stage';
+    PixiApp.ticker.stop();
+    PixiApp.stage.label = 'scene.stage';
 
     // scenes: scenes here are constructors, not instances
     cfg.scenes.forEach(scene => {
@@ -61,6 +62,9 @@ function scene (id, ...payload) {
 
     // old scene: remove from stage & destroy
     if(ActiveScene != null) {
+        PixiApp.ticker.stop();
+        ActiveScene.container.visible = false;
+
         while(PixiApp.stage.children.length > 0) {
             PixiApp.stage.removeChildAt(0);
         }
@@ -71,11 +75,11 @@ function scene (id, ...payload) {
 
     // new scene: create & add to stage
     ActiveScene = new (Scenes.get(id))(
-        PixiApp, Emitter,
-        ...payload
-    ).on_create();
+        PixiApp, Emitter
+    ).on_create(...payload);
     
-    PixiApp.stage.addChild(ActiveScene.container);
+    PixiApp.stage.addChild(ActiveScene.container).visible = true;
+    PixiApp.ticker.start();
 
     return ActiveScene;
 }

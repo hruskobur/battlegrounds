@@ -1,23 +1,21 @@
 import * as Pixi from 'pixi.js';
-import { Target } from '../target.js'
+import { AreaModel } from './model.js';
 
 class AreaGraphics extends Pixi.Container {
     static Size = 64;
 
     /**
-     * @type {Target}
+     * @type {AreaModel}
      */
-    target;
+    model;
 
     /**
-     * @note I have decided to map model to graphics by just x,y and id,
-     * not by the whole model.
-     * @param {Number} x 
-     * @param {Number} y 
-     * @param {Number} id 
+     * @param {AreaModel} model 
      */
-    constructor (x, y, id) {
+    constructor (model) {
         super();
+
+        this.model = model;
 
         // front face
         this.addChild(
@@ -46,10 +44,10 @@ class AreaGraphics extends Pixi.Container {
             )
         );
 
-        this.x = x * (AreaGraphics.Size + 8);
-        this.y = y * (AreaGraphics.Size + 8);
+        this.x = this.model.position.x * (AreaGraphics.Size + 8);
+        this.y = this.model.position.y * (AreaGraphics.Size + 8);
+        
         this.eventMode = 'static';
-        this.target = new Target(x, y, id);
     }
 
     select (is) {

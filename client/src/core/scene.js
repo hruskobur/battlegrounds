@@ -34,9 +34,10 @@ class SceneBase {
 
     /**
      * @virtual
+     * @param {...any} payload 
      * @returns {SceneBase} this
      */
-    on_create () {
+    on_create (...payload) {
         this.container = new Pixi.Container(
             {
                 label: `scene.${this.constructor.Id}`,
