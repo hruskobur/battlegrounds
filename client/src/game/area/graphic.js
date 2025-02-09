@@ -17,7 +17,10 @@ class AreaGraphics extends Pixi.Container {
                     height: AreaGraphics.Size + AreaGraphics.Margin,
                     x: 0,
                     y: 0,
-                    eventMode: 'none'
+                    eventMode: 'none',
+                    texture: Pixi.Texture.WHITE,
+                    tint: 0x00FF00,
+                    alpha: 0
                 }
             )
         );
@@ -46,7 +49,7 @@ class AreaGraphics extends Pixi.Container {
      * @returns {AreaGraphics} this
      */
     targeted (is) {
-        this.children[0].tint = (is === true) ? 'red' : 'black';
+        this.children[0].alpha = (is === true) ? 1 : 0;
     }
 }
 

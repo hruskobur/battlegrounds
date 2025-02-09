@@ -88,6 +88,14 @@ class BattlegroundsControls {
      * @returns {BattlegroundsControls} this
      */
     clear () {
+        // dev: demonstration of graphical un-selection
+        {
+            this.#targets
+            .forEach(target => {
+                target.area.graphics.targeted(false);
+            });
+        }
+
         this.#coordinates = [];
         this.#targets = [];
         this.#argc = TheGame.DefaultTokenActionArgc;
@@ -133,6 +141,11 @@ class BattlegroundsControls {
         
         // cache selected target
         this.#targets.push(target);
+
+        // dev: demonstration of graphical selection
+        {
+            target.area.graphics.targeted(true);
+        }
 
         // only targer target has been selected so far
         if(this.#targets.length === 1) {
