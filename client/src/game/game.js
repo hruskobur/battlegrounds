@@ -1,11 +1,6 @@
 import { AreaModel } from './area/model.js';
 import { TokenModel } from './token/model.js';
-
-/**
- * @typedef {Object} Target
- * @property {AreaModel} area
- * @property {TokenModel} token
- */
+import { TargetModel } from './target/model.js';
 
 class TheGame {
     /**
@@ -51,20 +46,17 @@ class TheGame {
      * @public
      * @param {Number} x x-axis coordinate
      * @param {Number} y y-axis coordinate
-     * @returns {Target}
+     * @returns {TargetModel|null}
      */
     target (x, y) {
         if(this.check(x, y) === false) {
-            return {
-                area: null,
-                token: null
-            };
+            return null;
         }
 
-        return {
-            area: this.areas[y][x],
-            token: this.tokens[y][x]
-        };
+        return new TargetModel(
+            this.areas[y][x],
+            this.tokens[y][x]
+        );
     }
 
     /**
@@ -113,18 +105,6 @@ class TheGame {
      * @return {Array<*>}
      */
     tick = (dt) => {}
-
-    /**
-     * @public
-     * @development this is called from the scene; it checks the entity's
-     * possiblity to execute an action, and if allowed, schedules action
-     * to the action queue
-     * @development this is called by bots and by players
-     * @param {Array<*>} targets
-     */
-    command (targets) {
-        console.log('TheGame.command', targets);
-    }
 }
 
 export {

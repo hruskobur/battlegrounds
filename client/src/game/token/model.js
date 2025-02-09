@@ -1,5 +1,16 @@
 class TokenModel {
-    constructor () {}
+    /**
+     * @type {Number}
+     */
+    argc;
+
+    /**
+     * 
+     * @param {Number} argc 
+     */
+    constructor (argc) {
+        this.argc = argc;
+    }
 }
 
 export {

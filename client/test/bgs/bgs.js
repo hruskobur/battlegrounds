@@ -4,9 +4,13 @@
 import * as Events from '../../src/core/emitter.js';
 import * as Persistency from '../../src/core/persistency.js';
 import * as Scenes from '../../src/core/scenes.js';
+import { TokenModel } from '../../src/game/token/model.js';
 
 // scenes
-import { BgScene } from '../../src/scenes/bg/scene.js';
+import { BattlegroundsScene } from '../../src/scenes/bg/scene.js';
+
+// tests
+import * as Tests from './tests.js';
 
 /* the "main" function ********************************************************/
 
@@ -17,7 +21,7 @@ window.addEventListener(
         await Scenes.init(
             {
                 scenes: [
-                    BgScene
+                    BattlegroundsScene
                 ],
                 parent: document.querySelector('#bg-app')
             }
@@ -34,8 +38,8 @@ window.addEventListener(
             }
         );
 
-        Scenes.scene('bg', {x:10});
+        Scenes.scene('bg', {});
+
+        // Tests.token_argc();
     }
 );
-
-/* sandbox ********************************************************************/

@@ -3,9 +3,9 @@ import { SceneBase, Pixi } from '../../core/scene.js';
 import { TheGame } from '../../game/game.js';
 import { AreaGraphics } from '../../game/area/graphic.js';
 
-import { BgControls } from './controls.js';
+import { BattlegroundsControls } from './controls.js';
 
-class BgScene extends SceneBase {
+class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
 
     /**
@@ -24,7 +24,7 @@ class BgScene extends SceneBase {
     tokens;
 
     /**
-     * @type {BgControls}
+     * @type {BattlegroundsControls}
      */
     controls;
 
@@ -105,7 +105,7 @@ class BgScene extends SceneBase {
         this.container.addChild(this.tokens);
 
         // controls
-        this.controls = new BgControls(this);
+        this.controls = new BattlegroundsControls(this);
         
         // events
         this.emitter.on('game.pause', this.pause);
@@ -136,11 +136,11 @@ class BgScene extends SceneBase {
      */
     pause = () => {
         if(this.app.ticker.started === true) {
-            console.log('BgScene.pause', false);
+            console.log('BattlegroundsScene.pause', false);
     
             this.app.ticker.stop();
         } else {
-            console.log('BgScene.pause', true);
+            console.log('BattlegroundsScene.pause', true);
             
             this.app.ticker.start();
         }
@@ -151,10 +151,10 @@ class BgScene extends SceneBase {
      * @param {Pixi.Ticker} ticker 
      */
     #on_tick = ticker => {
-        // console.log('BgScene.#on_tick');
+        // console.log('BattlegroundsScene.#on_tick');
     }
 }
 
 export {
-    BgScene
+    BattlegroundsScene
 };

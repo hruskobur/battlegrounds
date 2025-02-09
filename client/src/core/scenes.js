@@ -87,5 +87,5 @@ function scene (id, ...payload) {
 export {
     PixiApp,
     init, 
-    scene
+    ActiveScene, scene
 };
