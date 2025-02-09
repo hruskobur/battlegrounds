@@ -28,10 +28,12 @@ class TheGame {
      */
     tokens;
 
-    // dev: seems that they are not needed here; that even binding in CTOR
-    // keeps the signature intact ... let's see
-    // target = Target.target;
-    // check = Target.check;
+    // note: this looks dumb, but it allows two important uses
+    // a) extending TheGame class with additional functionality in a modular way
+    // b) allows intellisense to pick-up function description from the module
+    target = target;
+    extend = extend;
+    path = path;
 
     /**
      */
@@ -40,10 +42,6 @@ class TheGame {
         this.height = 0;
         this.areas = [];
         this.tokens = [];
-
-        this.target = target.bind(this);
-        this.extend = extend.bind(this);
-        this.path = path.bind(this);
     }
 
     /**

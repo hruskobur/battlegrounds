@@ -196,10 +196,10 @@ class BattlegroundsControls {
     #on_pointer_down = event => {
         const pt = event.getLocalPosition(this.#scene.areas);
 
-        const x = Math.floor(pt.x / 72);
-        const y = Math.floor(pt.y / 72);
-
-        console.log(x, y);
+        this.target(
+            Math.floor(pt.x / 72),
+            Math.floor(pt.y / 72)
+        );
         
         // console.log('BattlegroundsControls.#on_pointer_down', event.target);
     }
