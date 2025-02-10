@@ -1,6 +1,6 @@
 import { SceneBase, Pixi } from '../../core/scene.js';
 import { TheGame } from '../../game/game.js';
-import { BattlegroundsControls } from './controls.js';
+import { PlayerControl } from './controls.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -82,7 +82,7 @@ class BattlegroundsScene extends SceneBase {
         this.container.addChild(this.tokens);
 
         // controls
-        this.controls = new BattlegroundsControls(this);
+        this.controls = new PlayerControl(this);
         
         // events
         this.emitter.on('game.pause', this.pause);

@@ -1,9 +1,9 @@
 import * as Pixi from 'pixi.js';
 import { TheGame } from '../../game/game.js';
-import { EntitySelection } from '../../game/selection/selection.js';
+import { GameController } from '../../game/controller/game.js';
 import { BattlegroundsScene } from './scene.js';
 
-class BattlegroundsControls {
+class PlayerControl extends GameController {
     // note: these may go somewhere else, like constants, etc...
     static #CoordinatesArgc = 2;
 
@@ -11,11 +11,6 @@ class BattlegroundsControls {
      * @type {BattlegroundsScene}
      */
     #scene;
-
-    /**
-     * @type {TheGame}
-     */
-    #game;
 
     /**
      * Coordinates cache. 
@@ -26,38 +21,19 @@ class BattlegroundsControls {
     #coordinates;
 
     /**
-     * Targets cache.
-     * How many targets are needed depends on FIRST SELECTED target (token ON
-     * area)
-     * 
-     * @type {Array<EntitySelection>}
-     */
-    #targets;
-
-    /**
-     * How many targets we need to gather before we can execute token's action.
-     * Defaults to 2 - a default, generate action.
-     * @type {Number}
-     */
-    #argc
-
-    /**
      * @param {BattlegroundsScene} scene 
      */
     constructor (scene) {
-        this.#scene = scene;
-        this.#game = scene.game;
-
-        this.#coordinates = [];
-        this.#targets = [];
-        this.#argc = TheGame.DefaultTokenActionArgc;
+        super(scene.game);
         
+        this.#coordinates = [];
+
+        this.#scene = scene;
         this.#scene.areas.children
         .forEach(
             area => {
                 area
                 .on('pointerdown', this.#on_pointer_down)
-                
                 // dev: disabled until handling is needed & implemented
                 // .on('pointerenter', this.#on_pointer_enter)
                 // .on('pointerleave', this.#on_pointer_leave);
@@ -68,7 +44,7 @@ class BattlegroundsControls {
     }
 
     /**
-     * 
+     * @override
      * @returns {null}
      */
     destructor () {
@@ -85,20 +61,12 @@ class BattlegroundsControls {
     }
 
     /**
-     * @returns {BattlegroundsControls} this
+     * @returns {PlayerControl} this
      */
     clear () {
-        // dev: demonstration of graphical un-selection
-        {
-            this.#targets
-            .forEach(target => {
-                target.area.graphics.targeted(false);
-            });
-        }
-
+        super.clear();
+       
         this.#coordinates = [];
-        this.#targets = [];
-        this.#argc = TheGame.DefaultTokenActionArgc;
 
         return this;
     }
@@ -107,13 +75,13 @@ class BattlegroundsControls {
     /**
      * @public
      * @param {Number} coordinate 
-     * @returns {BattlegroundsControls} this
+     * @returns {PlayerControl} this
      */
     #on_partial_target = (coordinate) => {
         // do nothing until we get 2 coordinates - full target
         if(this
             .#coordinates
-            .push(coordinate) !== BattlegroundsControls.#CoordinatesArgc
+            .push(coordinate) !== PlayerControl.#CoordinatesArgc
         ) {
             return this;
         }
@@ -126,55 +94,6 @@ class BattlegroundsControls {
 
         // targeting's done - clear the coordiantes cache
         this.#coordinates = [];
-    }
-
-    /**
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {BattlegroundsControls} this
-     */
-    target = (x, y) => {
-        const target = this.#game.target(x, y);
-        if(target === null) {
-            throw new Error();
-        }
-        
-        // cache selected target
-        this.#targets.push(target);
-
-        // dev: demonstration of graphical selection
-        {
-            target.area.graphics.targeted(true);
-        }
-
-        // only targer target has been selected so far
-        if(this.#targets.length === 1) {
-            // and determine, how many targets are needed in order to
-            // schedule an action
-
-            // if first target doesn't contain a token, a default action
-            // will be executed - meaning we need 2 targets...
-            if(target.token == null) {
-                this.#argc = TheGame.DefaultTokenActionArgc;
-            } 
-            // if first target contains a token - that token determines how many
-            // other targets are needed
-            else {
-                this.#argc = target.token.argc;
-            }
-        }
-
-        // argc could also be 1, or many...
-        if(this.#targets.length !== this.#argc) {
-            return this;
-        }
-
-        // we got everything that is needed for an action to be executed
-        // . . .
-
-        console.log('BattlegroundsControls.execute', this.#targets);
-
-        return this.clear();
     }
 
     /**
@@ -214,7 +133,7 @@ class BattlegroundsControls {
             Math.floor(pt.y / 72)
         );
         
-        // console.log('BattlegroundsControls.#on_pointer_down', event.target);
+        // console.log('PlayerControl.#on_pointer_down', event.target);
     }
 
     /**
@@ -225,7 +144,7 @@ class BattlegroundsControls {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('BattlegroundsControls.#on_pointer_enter', event.target);
+        console.log('PlayerControl.#on_pointer_enter', event.target);
     }
 
     /**
@@ -236,11 +155,11 @@ class BattlegroundsControls {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('BattlegroundsControls.#on_pointer_leave', event.target);
+        console.log('PlayerControl.#on_pointer_leave', event.target);
     }
 
 }
 
 export {
-    BattlegroundsControls
+    PlayerControl
 };
