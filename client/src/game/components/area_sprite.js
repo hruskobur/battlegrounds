@@ -1,6 +1,12 @@
 import * as Pixi from 'pixi.js';
 import anime from 'animejs';
 
+/**
+ * @note A BIG NOTE about XYZSpriteComponent
+ * There WILL be single SpriteComponent for all sprites, but only after
+ * i decide, how to deal with spites/anitmations
+ */
+
 class AreaSpriteComponent extends Pixi.Container {
     static Size = 64;
     static Margin = 8;
