@@ -1,7 +1,8 @@
 import { TheGame } from '../game.js';
 import { EntitySelection } from '../selection/selection.js';
+import { FactionComponent } from '../components/faction.js';
 
-class GameController {
+class CommanderEntity {
     /**
      * @type {TheGame}
      */
@@ -9,9 +10,9 @@ class GameController {
 
     /**
      * Who issues the commands?
-     * @type {*}
+     * @type {FactionComponent}
      */
-    commander;
+    faction;
 
     /**
      * The action-targets cache.
@@ -29,11 +30,11 @@ class GameController {
 
     /**
      * @param {TheGame} game 
-     * @param {*} commander
+     * @param {FactionComponent} faction
      */
-    constructor (game, commander) {
+    constructor (game, faction) {
         this.game = game;
-        this.commander = commander;
+        this.faction = faction;
 
         this.targets = [];
     }
@@ -48,7 +49,7 @@ class GameController {
     }
 
     /**
-     * @returns {GameController} this
+     * @returns {CommanderEntity} this
      */
     clear () {
         this.targets = [];
@@ -92,5 +93,5 @@ class GameController {
 }
 
 export {
-    GameController
+    CommanderEntity
 };

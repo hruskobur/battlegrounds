@@ -1,6 +1,6 @@
 import { SceneBase, Pixi } from '../../core/scene.js';
 import { TheGame } from '../../game/game.js';
-import { PlayerController } from './player_controller.js';
+import { PlayerEntity } from './player.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -21,9 +21,9 @@ class BattlegroundsScene extends SceneBase {
     tokens;
 
     /**
-     * @type {PlayerController}
+     * @type {PlayerEntity}
      */
-    controls;
+    player;
 
     /**
      * 
@@ -82,7 +82,7 @@ class BattlegroundsScene extends SceneBase {
         this.container.addChild(this.tokens);
 
         // controls
-        this.controls = new PlayerController(this);
+        this.player = new PlayerEntity(this);
         
         // events
         this.emitter.on('game.pause', this.pause);
@@ -99,7 +99,7 @@ class BattlegroundsScene extends SceneBase {
         super.on_destroy();
 
         // controls
-        this.controls = this.controls.destructor();
+        this.player = this.player.destructor();
 
         // events        
         this.app.ticker.remove(this.#on_tick);

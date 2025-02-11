@@ -1,10 +1,10 @@
 import * as Pixi from 'pixi.js';
 import { TheGame } from '../../game/game.js';
-import { GameController } from '../../game/controller/game.js';
-import { BattlegroundsScene } from './scene.js';
+import { CommanderEntity } from '../../game/entities/commander.js';
 import { EntitySelection } from '../../game/selection/selection.js';
+import { BattlegroundsScene } from './scene.js';
 
-class PlayerController extends GameController {
+class PlayerEntity extends CommanderEntity {
     static #CoordinatesArgc = 2;
 
     /**
@@ -64,13 +64,13 @@ class PlayerController extends GameController {
     /**
      * @public
      * @override
-     * @returns {PlayerController} this
+     * @returns {PlayerEntity} this
      */
     clear () {
         this.targets.forEach(target => {
             target.area.graphics.targeted(false);
         });
-        // console.log('PlayerController.target', 'graphical-unselection');
+        // console.log('PlayerEntity.target', 'graphical-unselection');
 
         super.clear();
        
@@ -93,7 +93,7 @@ class PlayerController extends GameController {
         // . . . 
         if(this.targets.length != 0) {
             target.area.graphics.targeted(true);
-            // console.log('PlayerController.target', 'graphical-selection');
+            // console.log('PlayerEntity.target', 'graphical-selection');
         }
 
         return target;
@@ -102,13 +102,13 @@ class PlayerController extends GameController {
     /**
      * @private
      * @param {Number} coordinate 
-     * @returns {PlayerController} this
+     * @returns {PlayerEntity} this
      */
     #on_partial_target = (coordinate) => {
         // do nothing until we get 2 coordinates - full target
         if(this
             .#coordinates
-            .push(coordinate) !== PlayerController.#CoordinatesArgc
+            .push(coordinate) !== PlayerEntity.#CoordinatesArgc
         ) {
             return this;
         }
@@ -147,7 +147,7 @@ class PlayerController extends GameController {
                 break;
             }
         }
-        console.log('PlayerController.#on_key_up', event.key);
+        console.log('PlayerEntity.#on_key_up', event.key);
     }
 
     /**
@@ -162,7 +162,7 @@ class PlayerController extends GameController {
             Math.floor(pt.y / 72)
         );
         
-        // console.log('PlayerController.#on_pointer_down', event.target);
+        // console.log('PlayerEntity.#on_pointer_down', event.target);
     }
 
     /**
@@ -173,7 +173,7 @@ class PlayerController extends GameController {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('PlayerController.#on_pointer_enter', event.target);
+        console.log('PlayerEntity.#on_pointer_enter', event.target);
     }
 
     /**
@@ -184,11 +184,11 @@ class PlayerController extends GameController {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('PlayerController.#on_pointer_leave', event.target);
+        console.log('PlayerEntity.#on_pointer_leave', event.target);
     }
 
 }
 
 export {
-    PlayerController
+    PlayerEntity
 };

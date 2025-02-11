@@ -3,9 +3,15 @@ class FactionComponent {
      * @type {String}
      */
     name;
+
+    /**
+     * @type {Number}
+     */
+    flag;
     
     constructor () {
-        this.faction = '';
+        this.name = '';
+        this.flag = 0xFFFFFF;
     }
 }
 
