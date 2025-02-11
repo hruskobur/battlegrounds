@@ -1,4 +1,4 @@
-import { TokenEntity } from '../../src/game/token/entity.js';
+import { TokenEntity } from '../../src/game/entities/token.js';
 
 function token_argc () {
     const game = window.Bgs.Scenes?.ActiveScene?.game;

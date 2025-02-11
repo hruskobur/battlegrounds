@@ -1,4 +1,4 @@
-class AreaPosition {
+class PositionComponent {
     /**
      * @type {Number}
      */
@@ -22,5 +22,5 @@ class AreaPosition {
 }
 
 export {
-    AreaPosition
+    PositionComponent
 }

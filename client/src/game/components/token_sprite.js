@@ -1,6 +1,6 @@
 import * as Pixi from 'pixi.js';
 
-class TokenGraphics extends Pixi.Container {
+class TokenSpriteComponent extends Pixi.Container {
     static Size = 16;
 
     /**
@@ -13,5 +13,5 @@ class TokenGraphics extends Pixi.Container {
 }
 
 export {
-    TokenGraphics
+    TokenSpriteComponent
 };

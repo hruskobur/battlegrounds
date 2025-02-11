@@ -1,5 +1,5 @@
-import { AreaEntity } from '../area/entity.js';
-import { TokenEntity } from '../token/entity.js';
+import { AreaEntity } from '../entities/area.js';
+import { TokenEntity } from '../entities/token.js';
 
 class EntitySelection {
     /**

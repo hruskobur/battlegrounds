@@ -1,5 +1,5 @@
-import { AreaEntity, AreaGraphics } from './area/entity.js';
-import { TokenEntity, TokenGraphics } from './token/entity.js';
+import { AreaEntity } from './entities/area.js';
+import { TokenEntity } from './entities/token.js';
 import target from './selection/target.js';
 import extend from './selection/extend.js';
 import path from './selection/path.js';
@@ -66,7 +66,7 @@ class TheGame {
                 area.position.y = y;
                 area.position.id = (y * this.width) + x;
 
-                area.ownership.owner = null;
+                area.faction.owner = null;
 
                 // note: this is a graphic component; no "place" fn yet impl.
                 area.graphics.x = x * area.graphics.width;
