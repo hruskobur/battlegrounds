@@ -5,9 +5,6 @@ import extend from './selection/extend.js';
 import path from './selection/path.js';
 
 class TheGame {
-    // note: these may go somewhere else, like constants etc...
-    static DefaultTokenActionArgc = 2;
-
     /**
      * @type {Number}
      */

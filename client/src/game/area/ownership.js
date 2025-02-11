@@ -1,6 +1,6 @@
 class AreaOwnership {
     /**
-     * @type {Number}
+     * @type {Number|String}
      */
     owner;
     

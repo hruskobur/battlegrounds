@@ -2,9 +2,9 @@ import * as Pixi from 'pixi.js';
 import { TheGame } from '../../game/game.js';
 import { GameController } from '../../game/controller/game.js';
 import { BattlegroundsScene } from './scene.js';
+import { EntitySelection } from '../../game/selection/selection.js';
 
-class PlayerControl extends GameController {
-    // note: these may go somewhere else, like constants, etc...
+class PlayerController extends GameController {
     static #CoordinatesArgc = 2;
 
     /**
@@ -24,7 +24,7 @@ class PlayerControl extends GameController {
      * @param {BattlegroundsScene} scene 
      */
     constructor (scene) {
-        super(scene.game);
+        super(scene.game, 'player');
         
         this.#coordinates = [];
 
@@ -44,6 +44,7 @@ class PlayerControl extends GameController {
     }
 
     /**
+     * @public
      * @override
      * @returns {null}
      */
@@ -61,9 +62,16 @@ class PlayerControl extends GameController {
     }
 
     /**
-     * @returns {PlayerControl} this
+     * @public
+     * @override
+     * @returns {PlayerController} this
      */
     clear () {
+        this.targets.forEach(target => {
+            target.area.graphics.targeted(false);
+        });
+        // console.log('PlayerController.target', 'graphical-unselection');
+
         super.clear();
        
         this.#coordinates = [];
@@ -71,17 +79,36 @@ class PlayerControl extends GameController {
         return this;
     }
 
-
     /**
      * @public
+     * @override
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {EntitySelection}
+     */
+    target (x, y) {
+        const target = super.target(x,y);
+
+        // todo: do the graphical-selection here
+        // . . . 
+        if(this.targets.length != 0) {
+            target.area.graphics.targeted(true);
+            // console.log('PlayerController.target', 'graphical-selection');
+        }
+
+        return target;
+    }
+
+    /**
+     * @private
      * @param {Number} coordinate 
-     * @returns {PlayerControl} this
+     * @returns {PlayerController} this
      */
     #on_partial_target = (coordinate) => {
         // do nothing until we get 2 coordinates - full target
         if(this
             .#coordinates
-            .push(coordinate) !== PlayerControl.#CoordinatesArgc
+            .push(coordinate) !== PlayerController.#CoordinatesArgc
         ) {
             return this;
         }
@@ -94,10 +121,12 @@ class PlayerControl extends GameController {
 
         // targeting's done - clear the coordiantes cache
         this.#coordinates = [];
+
+        return this;
     }
 
     /**
-     * 
+     * @private
      * @param {KeyboardEvent} event 
      */
     #on_key_up = event => {
@@ -118,11 +147,11 @@ class PlayerControl extends GameController {
                 break;
             }
         }
-        console.log('BattlegroundsControls.#on_key_up', event.key);
+        console.log('PlayerController.#on_key_up', event.key);
     }
 
     /**
-     * 
+     * @private
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_down = event => {
@@ -133,33 +162,33 @@ class PlayerControl extends GameController {
             Math.floor(pt.y / 72)
         );
         
-        // console.log('PlayerControl.#on_pointer_down', event.target);
+        // console.log('PlayerController.#on_pointer_down', event.target);
     }
 
     /**
-     * 
+     * @private
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_enter = event => {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('PlayerControl.#on_pointer_enter', event.target);
+        console.log('PlayerController.#on_pointer_enter', event.target);
     }
 
     /**
-     * 
+     * @private
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_leave = event => {
         //note: may serve only for the graphic-preview, not for the info display
         // . . .
 
-        console.log('PlayerControl.#on_pointer_leave', event.target);
+        console.log('PlayerController.#on_pointer_leave', event.target);
     }
 
 }
 
 export {
-    PlayerControl
+    PlayerController
 };
