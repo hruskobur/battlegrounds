@@ -1,17 +1,17 @@
 class FactionComponent {
     /**
+     * @type {Number}
+     */
+    id;
+
+    /**
      * @type {String}
      */
     name;
 
-    /**
-     * @type {Number}
-     */
-    flag;
-    
     constructor () {
+        this.id = Number.MIN_SAFE_INTEGER;
         this.name = '';
-        this.flag = 0xFFFFFF;
     }
 }
 

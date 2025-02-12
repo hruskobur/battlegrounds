@@ -1,15 +1,16 @@
 import { SceneBase, Pixi } from '../../core/scene.js';
-import { TheGame } from '../../game/game.js';
-import { PlayerEntity } from './player.js';
+import { GameSystem } from '../../game/system/game.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
 
+    /* systems ****************************************************************/
     /**
-     * @type {TheGame}
+     * @type {GameSystem}
      */
     game;
 
+    /* graphics ***************************************************************/
     /**
      * @type {Pixi.Container}
      */
@@ -21,11 +22,6 @@ class BattlegroundsScene extends SceneBase {
     tokens;
 
     /**
-     * @type {PlayerEntity}
-     */
-    player;
-
-    /**
      * 
      * @param {Pixi.Application} application 
      * @param {EventEmitter} emitter 
@@ -34,6 +30,7 @@ class BattlegroundsScene extends SceneBase {
         super(application, emitter);
 
         this.game = null;
+
         this.areas = null;
         this.tokens = null;
     }
@@ -41,49 +38,36 @@ class BattlegroundsScene extends SceneBase {
     /**
      * @override
      * @param {*} scenario 
-     * @returns {SceneBase} this
+     * @returns {BattlegroundsScene} this
     */
-    on_create(...scenario) {
-        super.on_create(...scenario);
+    on_create(scenario) {
+        super.on_create();
         
-        // game model
-        this.game = new TheGame().initialize(...scenario);
+        this.game = new GameSystem().import(scenario);
 
-        // area graphics
+        // graphics
         this.areas = new Pixi.Container(
             {
-                label: 'scene.bg.areas'
+                label: 'scene.bg.areas',
+                children: this.game.selection.all_areas().map(a => a.sprite)
             }
         );
-
-        for(let y = 0; y < this.game.height; ++y) {
-            for(let x = 0; x < this.game.width; ++x) {
-                this.areas.addChild(
-                    this.game.areas[y][x].graphics
-                );
-            }
-        }
-
         this.areas.x = (this.container.width - this.areas.width) / 2;
         this.areas.y = (this.container.height - this.areas.height) / 2;
-
         this.container.addChild(this.areas);
 
-        // token graphics
         this.tokens = new Pixi.Container(
             {
-                label: 'scene.bg.tokens'
+                label: 'scene.bg.tokens',
+                children: this.game.selection.all_tokens()
+                .filter(Boolean)
+                .map(t => t.sprite)
             }
         );
-
         this.tokens.x = this.areas.x;
         this.tokens.y = this.areas.y;
-
         this.container.addChild(this.tokens);
 
-        // controls
-        this.player = new PlayerEntity(this);
-        
         // events
         this.emitter.on('game.pause', this.pause);
         this.app.ticker.add(this.#on_tick);
@@ -93,17 +77,18 @@ class BattlegroundsScene extends SceneBase {
 
     /**
      * @override
-     * @returns {SceneBase} this
+     * @returns {BattlegroundsScene} this
      */
     on_destroy () {
-        super.on_destroy();
-
-        // controls
-        this.player = this.player.destructor();
-
         // events        
         this.app.ticker.remove(this.#on_tick);
         this.emitter.removeAllListeners('game.pause');
+
+        // graphics
+        super.on_destroy();
+
+        // systems
+        this.game = null;
         
         return this;
     }

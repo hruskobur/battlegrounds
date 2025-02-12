@@ -1,27 +1,72 @@
-import { PositionComponent } from '../components/position.js';
+import * as Pixi from 'pixi.js';
 import { FactionComponent } from '../components/faction.js';
-import { AreaSpriteComponent } from '../components/area_sprite.js';
+import { SpriteComponent } from '../components/sprite.js';
 
 class AreaEntity {
-    /**
-     * @type {PositionComponent}
-     */
-    position;
-
     /**
      * @type {FactionComponent}
      */
     faction;
 
     /**
-     * @type {AreaSpriteComponent} 
+     * @type {SpriteComponent}
      */
-    graphics;
+    sprite;
 
     constructor () {
-        this.position = new PositionComponent();
         this.faction = new FactionComponent();
-        this.graphics = new AreaSpriteComponent();
+
+        this.sprite = new SpriteComponent({
+            eventMode: 'static'
+        });
+
+        // border
+        this.sprite.addChild(
+            new Pixi.Sprite({
+                width: 64 + 8,
+                height: 64 + 8,
+                x: 0,
+                y: 0,
+                eventMode: 'none',
+                texture: Pixi.Texture.WHITE,
+                tint: 0x00FF00,
+                alpha: 0
+            })
+        );
+
+        // front
+        this.sprite.addChild(
+            new Pixi.Sprite({
+                width: 64,
+                height: 64,
+                x: (64 + 8) / 2,
+                y: (64 + 8) / 2,
+                anchor: 0.5,
+                eventMode: 'static',
+                texture: Pixi.Texture.WHITE
+            })
+        );
+    }
+
+    /**
+     * 
+     * @param {Number} x x-axis coordinate
+     * @param {Number} y y-axis coordinate
+     * @returns {AreaEntity} this
+     */
+    place (x, y) {
+        this.sprite.x = x * this.sprite.width;
+        this.sprite.y = y * this.sprite.height;
+
+        return this;
+    }
+
+    get border () {
+        return this.sprite.children[0];
+    }
+
+    get front () {
+        return this.sprite.children[1];
     }
 }
 

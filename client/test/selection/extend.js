@@ -1,4 +1,4 @@
-import { TheGame } from '../game.js';
+import { GameEntity } from '../entities/game.js';
 import { EntitySelection } from './selection.js';
 
 /**
