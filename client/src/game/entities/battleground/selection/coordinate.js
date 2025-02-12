@@ -1,27 +1,27 @@
-import { SelectionSystem } from '../selection.js';
+import { BattlegroundEntity } from '../bg.js';
 import { AreaEntity } from '../../../entities/area.js';
 import { TokenEntity } from '../../../entities/token.js';
 
 /**
- * @this {SelectionSystem}
+ * @this {BattlegroundEntity}
  * @param {Number} x 
  * @param {Number} y 
  * @returns {{area: AreaEntity, token: TokenEntity}}
  */
-function coordiante (x, y) {
+function coordinate (x, y) {
     x = Math.floor(x / 72);
     y = Math.floor(y / 72);
 
-    if(this.bg.check(x, y) === false) {
+    if(this.check(x, y) === false) {
         return null;
     }
 
     return {
-        area: this.bg.areas[y][x],
-        token: this.bg.tokens[y][x]
+        area: this.areas[y][x],
+        token: this.tokens[y][x]
     };
 }
 
 export {
-    coordiante
+    coordinate
 };

@@ -1,5 +1,8 @@
-import { AreaEntity } from './area.js';
-import { TokenEntity } from './token.js';
+import { AreaEntity } from '../area.js';
+import { TokenEntity } from '../token.js';
+
+import { all, all_areas, all_tokens } from './selection/all.js';
+import { coordinate } from './selection/coordinate.js';
 
 class BattlegroundEntity {
     /**
@@ -27,6 +30,11 @@ class BattlegroundEntity {
      * @param {*} scenario 
      */
     constructor (scenario) {
+        this.all = all;
+        this.all_areas = all_areas;
+        this.all_tokens = all_tokens;
+        this.coordinate = coordinate;
+        
         this.width = 10;
         this.height = 10;
 

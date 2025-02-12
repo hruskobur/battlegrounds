@@ -1,6 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import { BattlegroundEntity } from '../../entities/battleground.js';
-import { SelectionSystem } from '../selection/selection.js';
+import { BattlegroundEntity } from '../../entities/battleground/bg.js';
 
 class BotControlSystem {
     /**
@@ -12,22 +11,15 @@ class BotControlSystem {
      * @type {BattlegroundEntity}
      */
     bg;
-
-    /**
-     * @type {SelectionSystem}
-     */
-    selection;
     
     /**
      * 
      * @param {EventEmitter} emitter 
      * @param {BattlegroundEntity} bg 
-     * @param {SelectionSystem} selection
      */
-    constructor (emitter, bg, selection) {
+    constructor (emitter, bg) {
         this.emitter = emitter;
         this.bg = bg;
-        this.selection = selection;
     }
 }
 

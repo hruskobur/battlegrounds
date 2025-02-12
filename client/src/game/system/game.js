@@ -1,7 +1,6 @@
-import { BattlegroundEntity } from '../entities/battleground.js';
+import { BattlegroundEntity } from '../entities/battleground/bg.js';
 import { BotControlSystem } from './control/bot.js';
 import { PlayerControlSystem } from './control/player.js';
-import { SelectionSystem } from './selection/selection.js';
 import EventEmitter from 'eventemitter3';
 
 class GameSystem {
@@ -16,16 +15,6 @@ class GameSystem {
     bg;
 
     /**
-     * @type {PlacementSystem}
-     */
-    placement;
-
-    /**
-     * @type {SelectionSystem}
-     */
-    selection;
-
-    /**
      * 
      * @param {EventEmitter} emitter 
      * @param {*} scenario 
@@ -33,10 +22,10 @@ class GameSystem {
     constructor (emitter, scenario) {
         this.emitter = emitter;
 
+        // ok, not very ECS-y ... this is basicaly a model, not an entity.
         this.bg = new BattlegroundEntity(scenario);
-        this.selection = new SelectionSystem(emitter, this.bg);
-        this.player = new PlayerControlSystem(emitter, this.bg, this.selection);
-        this.bot = new BotControlSystem(emitter, this.bg, this.selection);
+        this.player = new PlayerControlSystem(emitter, this.bg);
+        this.bot = new BotControlSystem(emitter, this.bg);
     }
     /**
      * @public

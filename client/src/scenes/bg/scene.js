@@ -49,7 +49,7 @@ class BattlegroundsScene extends SceneBase {
         this.areas = new Pixi.Container(
             {
                 label: 'scene.bg.areas',
-                children: this.game.selection
+                children: this.game.bg
                 .all_areas()
                 .map(a => a.sprite)
             }
@@ -61,7 +61,7 @@ class BattlegroundsScene extends SceneBase {
         this.tokens = new Pixi.Container(
             {
                 label: 'scene.bg.tokens',
-                children: this.game.selection
+                children: this.game.bg
                 .all_tokens()
                 .filter(Boolean)
                 .map(t => t.sprite)

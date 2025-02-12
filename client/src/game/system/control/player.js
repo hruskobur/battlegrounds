@@ -1,7 +1,6 @@
 import * as Pixi from 'pixi.js';
 import EventEmitter from 'eventemitter3';
-import { BattlegroundEntity } from '../../entities/battleground.js';
-import { SelectionSystem } from '../selection/selection.js';
+import { BattlegroundEntity } from '../../entities/battleground/bg.js';
 
 class PlayerControlSystem {
     /**
@@ -15,20 +14,13 @@ class PlayerControlSystem {
     bg;
 
     /**
-     * @type {SelectionSystem}
-     */
-    selection;
-
-    /**
      * 
      * @param {EventEmitter} emitter 
      * @param {BattlegroundEntity} bg 
-     * @param {SelectionSystem} selection
      */
-    constructor (emitter, bg, selection) {
+    constructor (emitter, bg) {
         this.emitter = emitter;
         this.bg = bg;
-        this.selection = selection;
 
         this.bg.iterate(
             (x, y, area, token) => {
@@ -45,7 +37,7 @@ class PlayerControlSystem {
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_enter = event => {
-        const selection = this.selection.coordinate(
+        const selection = this.bg.coordinate(
             event.target.x,
             event.target.y
         );
@@ -61,7 +53,7 @@ class PlayerControlSystem {
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_leave = event => {
-        const selection = this.selection.coordinate(
+        const selection = this.bg.coordinate(
             event.target.x,
             event.target.y
         );
@@ -77,7 +69,7 @@ class PlayerControlSystem {
      * @param {Pixi.FederatedPointerEvent} event 
      */
     #on_pointer_down = event => {
-        const selection = this.selection.coordinate(
+        const selection = this.bg.coordinate(
             event.target.x,
             event.target.y
         );
