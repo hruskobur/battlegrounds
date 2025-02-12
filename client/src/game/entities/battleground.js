@@ -22,11 +22,48 @@ class BattlegroundEntity {
      */
     tokens;
 
-    constructor () {
-        this.width = 0;
-        this.height = 0;
+    /**
+     * 
+     * @param {*} scenario 
+     */
+    constructor (scenario) {
+        this.width = 10;
+        this.height = 10;
+
         this.areas = [];
         this.tokens = [];
+        
+        for(let y = 0; y < this.height; ++y) {
+            const _areas = [];
+            const _tokens = [];
+            
+            for(let x = 0; x < this.width; ++x) {
+                const area = new AreaEntity().place(x, y);
+                _areas.push(area);
+
+                const token = null;
+                _tokens.push(token);
+            }
+
+            this.areas.push(_areas);
+            this.tokens.push(_tokens);
+        }
+    }
+
+    /**
+     * 
+     * @param {Function} cb x, y, bg.areas[y][x], bg.tokens[y][x]
+     * @returns {BattlegroundEntity} this
+     */
+    iterate = (cb) => {
+        for(let y = 0; y < this.height; ++y) {
+            for(let x = 0; x < this.width; ++x) {
+                cb(
+                    x, y,
+                    this.areas[y][x], this.tokens[y][x]
+                );
+            }
+        }
     }
 
     /**

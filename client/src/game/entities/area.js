@@ -17,7 +17,7 @@ class AreaEntity {
         this.faction = new FactionComponent();
 
         this.sprite = new SpriteComponent({
-            eventMode: 'static'
+            eventMode: 'static',
         });
 
         // border
@@ -59,6 +59,15 @@ class AreaEntity {
         this.sprite.y = y * this.sprite.height;
 
         return this;
+    }
+
+    /**
+     * 
+     * @param {Boolean} is 
+     * @returns {AreaEntity} this
+     */
+    select (is) {
+        this.border.alpha = (is === true) ? 1 : 0;
     }
 
     get border () {

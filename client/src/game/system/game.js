@@ -1,9 +1,15 @@
-import { AreaEntity } from '../entities/area.js';
-import { TokenEntity } from '../entities/token.js';
 import { BattlegroundEntity } from '../entities/battleground.js';
+import { BotControlSystem } from './control/bot.js';
+import { PlayerControlSystem } from './control/player.js';
 import { SelectionSystem } from './selection/selection.js';
+import EventEmitter from 'eventemitter3';
 
 class GameSystem {
+    /**
+     * @type {EventEmitter}
+     */
+    emitter;
+
     /**
      * @type {BattlegroundEntity}
      */
@@ -19,42 +25,19 @@ class GameSystem {
      */
     selection;
 
-    constructor () {
-        this.bg = new BattlegroundEntity();
-        this.selection = new SelectionSystem(this.bg);
-    }
-
     /**
-     * @public
-     * @param {*} scenario not used yet!
-     * @returns {GameSystem} this
+     * 
+     * @param {EventEmitter} emitter 
+     * @param {*} scenario 
      */
-    import = (scenario) => {
-        this.bg.width = 10;
-        this.bg.height = 10;
+    constructor (emitter, scenario) {
+        this.emitter = emitter;
 
-        this.bg.areas = [];
-        this.bg.tokens = [];
-        
-        for(let y = 0; y < this.bg.height; ++y) {
-            const _areas = [];
-            const _tokens = [];
-            
-            for(let x = 0; x < this.bg.width; ++x) {
-                const area = new AreaEntity().place(x, y);
-                _areas.push(area);
-
-                const token = null;
-                _tokens.push(token);
-            }
-
-            this.bg.areas.push(_areas);
-            this.bg.tokens.push(_tokens);
-        }
-
-        return this;
+        this.bg = new BattlegroundEntity(scenario);
+        this.selection = new SelectionSystem(emitter, this.bg);
+        this.player = new PlayerControlSystem(emitter, this.bg, this.selection);
+        this.bot = new BotControlSystem(emitter, this.bg, this.selection);
     }
-
     /**
      * @public
      * @param  {...any} payload 
@@ -62,15 +45,19 @@ class GameSystem {
      */
     execute = (...payload) => {
         console.log('GameSystem.execute', ...payload);
+
+        return this;
     }
 
     /**
      * @public
      * @param {Number} dt 
-     * @returns {GameSystem} this1
+     * @returns {GameSystem} this
      */
     tick = dt => {
         console.log('GameSystem.tick', dt);
+
+        return this;
     }
 }
 

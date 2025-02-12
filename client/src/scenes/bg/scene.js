@@ -43,13 +43,15 @@ class BattlegroundsScene extends SceneBase {
     on_create(scenario) {
         super.on_create();
         
-        this.game = new GameSystem().import(scenario);
+        this.game = new GameSystem(this.emitter, scenario);
 
         // graphics
         this.areas = new Pixi.Container(
             {
                 label: 'scene.bg.areas',
-                children: this.game.selection.all_areas().map(a => a.sprite)
+                children: this.game.selection
+                .all_areas()
+                .map(a => a.sprite)
             }
         );
         this.areas.x = (this.container.width - this.areas.width) / 2;
@@ -59,7 +61,8 @@ class BattlegroundsScene extends SceneBase {
         this.tokens = new Pixi.Container(
             {
                 label: 'scene.bg.tokens',
-                children: this.game.selection.all_tokens()
+                children: this.game.selection
+                .all_tokens()
                 .filter(Boolean)
                 .map(t => t.sprite)
             }
