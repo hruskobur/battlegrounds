@@ -15,7 +15,7 @@ class SceneBase {
     /**
      * @type {EventEmitter}
      */
-    emitter;
+    events;
 
     /**
      * @type {Pixi.Container}
@@ -25,11 +25,11 @@ class SceneBase {
     /**
      * 
      * @param {Pixi.Application} application 
-     * @param {EventEmitter} emitter 
+     * @param {EventEmitter} events 
      */
-    constructor (application, emitter) {
+    constructor (application, events) {
         this.app = application;
-        this.emitter = emitter;
+        this.events = events;
     }
 
     /**

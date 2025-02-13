@@ -1,81 +1,44 @@
 import * as Pixi from 'pixi.js';
-import { FactionComponent } from '../components/faction.js';
-import { SpriteComponent } from '../components/sprite.js';
+import { PositionComponent } from '../components/position.js';
 
 class AreaEntity {
     /**
-     * @type {FactionComponent}
+     * @type {PositionComponent}
      */
-    faction;
+    position;
 
     /**
-     * @type {SpriteComponent}
+     * @type {Pixi.Container}
      */
-    sprite;
+    renderable;
 
+    /**
+     */
     constructor () {
-        this.faction = new FactionComponent();
+        this.position = new PositionComponent()
 
-        this.sprite = new SpriteComponent({
+        this.renderable = new Pixi.Container({
             eventMode: 'static',
+            boundsArea: new Pixi.Rectangle(0, 0, 72, 72),
+            hitArea: new Pixi.Rectangle(0, 0, 72, 72),
+            children: [
+                // background
+                new Pixi.Sprite({
+                    width: 64,
+                    height: 64,
+                    anchor: 0.5,
+                    x: 72 / 2,
+                    y: 72 / 2,
+                    eventMode: 'none',
+                    texture: Pixi.Texture.WHITE,
+                    zIndex: 0
+                })
+            ]
         });
-
-        // border
-        this.sprite.addChild(
-            new Pixi.Sprite({
-                width: 64 + 8,
-                height: 64 + 8,
-                x: 0,
-                y: 0,
-                eventMode: 'none',
-                texture: Pixi.Texture.WHITE,
-                tint: 0x00FF00,
-                alpha: 0
-            })
-        );
-
-        // front
-        this.sprite.addChild(
-            new Pixi.Sprite({
-                width: 64,
-                height: 64,
-                x: (64 + 8) / 2,
-                y: (64 + 8) / 2,
-                anchor: 0.5,
-                eventMode: 'static',
-                texture: Pixi.Texture.WHITE
-            })
-        );
     }
 
-    /**
-     * 
-     * @param {Number} x x-axis coordinate
-     * @param {Number} y y-axis coordinate
-     * @returns {AreaEntity} this
-     */
-    place (x, y) {
-        this.sprite.x = x * this.sprite.width;
-        this.sprite.y = y * this.sprite.height;
-
-        return this;
-    }
-
-    /**
-     * 
-     * @param {Boolean} is 
-     * @returns {AreaEntity} this
-     */
-    select (is) {
-        this.border.alpha = (is === true) ? 1 : 0;
-    }
-
-    get border () {
-        return this.sprite.children[0];
-    }
-
-    get front () {
-        return this.sprite.children[1];
+    get background () {
+        return this.renderable.children[0];
     }
 }
 

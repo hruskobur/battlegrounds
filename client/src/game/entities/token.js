@@ -1,14 +1,13 @@
 import * as Pixi from 'pixi.js';
-import { SpriteComponent } from '../components/sprite.js';
 
 class TokenEntity {
     /**
-     * @type {SpriteComponent}
+     * @type {Pixi.Container}
      */
-    sprite;
+    renderable;
 
     constructor () {
-        this.sprite = new SpriteComponent({
+        this.renderable = new Pixi.Container({
             eventMode: 'none'
         });
     }

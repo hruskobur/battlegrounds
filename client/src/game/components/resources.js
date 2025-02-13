@@ -4,8 +4,12 @@ class ResourcesComponent {
      */
     gold;
 
-    constructor () {
-        this.gold = 0;
+    /**
+     * 
+     * @param {Number} gold 
+     */
+    constructor (gold) {
+        this.gold = gold;
     }
 }
 
