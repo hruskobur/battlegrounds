@@ -1,6 +1,7 @@
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 import { RendererEntity } from '../entities/renderer.js';
+import * as Query from './query.js';
 
 /**
  * @class GameState
@@ -18,6 +19,8 @@ import { RendererEntity } from '../entities/renderer.js';
  * dynamic component compositions.
  */
 class GameState {
+    static Query = Query;
+    
     /**
      * @type {Number}
      */

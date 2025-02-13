@@ -4,6 +4,7 @@ import { GameState } from '../../game/state/game.js';
 import { RendererSystem } from '../../game/system/renderer.js';
 import { InitialisationSystem } from '../../game/system/initialisation.js';
 import { TokenSystem } from '../../game/system/token.js';
+import { InputSystem } from '../../game/system/input.js';
 
 class GameInstance {
     /**
@@ -13,20 +14,20 @@ class GameInstance {
      * @param {*} scenario 
      */
     constructor (container, events, state, scenario) {
-        // systems
-        this.renderer = new RendererSystem(events, state, container);
-        this.tokens = new TokenSystem(events, state);
-
-        // events
-        // . . . 
-
         // note: no need for caching this system
         new InitialisationSystem(events, state)
         .init(scenario);
 
-        // note: will be handled via events
-        this.renderer
-        .redraw();
+        // systems
+        this.renderer = new RendererSystem(events, state, container);
+        this.tokens = new TokenSystem(events, state);
+        this.input = new InputSystem(events, state);
+        
+        // events
+        // . . .
+
+        // sandobx (dev)
+        this.renderer.redraw();
     }
 
     /**
@@ -36,6 +37,7 @@ class GameInstance {
     destructor () {
         this.events = null;
         this.state = null;
+        
         this.renderer = null;
         this.tokens = null;
 

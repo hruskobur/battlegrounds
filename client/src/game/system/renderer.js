@@ -1,7 +1,7 @@
 import * as Pixi from 'pixi.js';
 import EventEmitter from 'eventemitter3';
-import { GameState } from '../state/game.js';
 import { RenderableComponent } from '../components/renderable.js';
+import { GameState } from '../state/game.js';
 
 /**
  * @class RendererSystem
@@ -69,8 +69,9 @@ class RendererSystem {
         }
 
         // layers: do the "drawing"
-        for(let y = 0; y < this.state.height; ++y) {
-            for(let x = 0; x < this.state.width; ++x) {
+        GameState.Query.iterator(
+            this.state,
+            (x, y) => {
                 // draw area
                 const area = this.state.areas[y][x];
                 this.draw(area.renderable)
@@ -81,7 +82,7 @@ class RendererSystem {
                     this.draw(token.renderable);
                 }
             }
-        }
+        );
 
         // layers: center
         bg.x = fg.x = (this.container.width - bg.width) / 2;
