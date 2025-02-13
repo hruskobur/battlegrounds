@@ -3,6 +3,7 @@ import EventEmitter from 'eventemitter3';
 import { GameState } from '../../game/state/game.js';
 import { RendererSystem } from '../../game/system/renderer.js';
 import { InitialisationSystem } from '../../game/system/initialisation.js';
+import { TokenSystem } from '../../game/system/token.js';
 
 class GameInstance {
     /**
@@ -13,17 +14,19 @@ class GameInstance {
      */
     constructor (container, events, state, scenario) {
         // systems
-        this.renderer = new RendererSystem(container, events, state);
+        this.renderer = new RendererSystem(events, state, container);
+        this.tokens = new TokenSystem(events, state);
 
         // events
         // . . . 
 
         // note: no need for caching this system
-        new InitialisationSystem(container, events, state)
+        new InitialisationSystem(events, state)
         .init(scenario);
 
         // note: will be handled via events
-        this.renderer.redraw();
+        this.renderer
+        .redraw();
     }
 
     /**
@@ -34,6 +37,7 @@ class GameInstance {
         this.events = null;
         this.state = null;
         this.renderer = null;
+        this.tokens = null;
 
         return this;
     }

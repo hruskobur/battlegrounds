@@ -2,16 +2,13 @@ import * as Pixi from 'pixi.js';
 import EventEmitter from 'eventemitter3';
 import { GameState } from '../state/game.js';
 import { AreaEntity } from '../entities/area.js';
-import { RendererEntity } from '../entities/renderer.js';
 
 class InitialisationSystem {
     /**
-     * @param {Pixi.Container} container 
      * @param {EventEmitter} events 
      * @param {GameState} state 
      */
-    constructor (container, events, state) {
-        this.container = container;
+    constructor (events, state) {
         this.events = events;
         this.state = state;
     }
@@ -24,11 +21,6 @@ class InitialisationSystem {
     init (scenario) {
         this.state.width = 10;
         this.state.height = 10;
-
-        this.container.addChild(
-            this.state.renderer.areas,
-            this.state.renderer.tokens
-        );
 
         this.#init_areas(scenario);
         this.#init_tokens(scenario);
@@ -52,6 +44,7 @@ class InitialisationSystem {
                 const area = new AreaEntity();
                 area.position.x = x;
                 area.position.y = y;
+
                 area.renderable.x = x * area.renderable.width;
                 area.renderable.y = y * area.renderable.height;
 

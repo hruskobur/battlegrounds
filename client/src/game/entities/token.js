@@ -1,15 +1,30 @@
-import * as Pixi from 'pixi.js';
+import { 
+    RenderableComponent,
+    Graphics
+} from '../components/renderable.js';
 
 class TokenEntity {
     /**
-     * @type {Pixi.Container}
+     * @type {RenderableComponent}
      */
     renderable;
 
     constructor () {
-        this.renderable = new Pixi.Container({
-            eventMode: 'none'
+        this.renderable = new RenderableComponent({
+            eventMode: 'none',
+            children: [
+                new Graphics()
+                .circle(0, 0, 32, 32)
+                .stroke({
+                    width: 1,
+                    color: 'blue'
+                })
+                .fill({
+                    color: 'lightblue'
+                })
+            ]
         });
+        this.renderable.layer = RenderableComponent.LayerId.Foreground;
     }
 }
 
