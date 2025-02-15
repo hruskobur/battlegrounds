@@ -66,12 +66,12 @@ class RendererSystem extends SystemBase {
             (x, y) => {
                 // draw area
                 const area = this.state.areas[y][x];
-                this.draw(area.renderable)
+                this.draw(area)
                 
                 // draw token
                 const token = this.state.tokens[y][x];
                 if(token != null) {
-                    this.draw(token.renderable);
+                    this.draw(token);
                 }
             }
         );
@@ -85,28 +85,32 @@ class RendererSystem extends SystemBase {
 
     /**
      * @public
-     * @param {RenderableComponent} renderable 
+     * @param {*} entity 
      * @returns {RendererSystem} this
      */
-    draw = (renderable) => {
+    draw = (entity) => {
+        const renderable = entity.renderable;
+
         this.state
         .renderer[renderable.layer]
         .addChild(renderable);
 
-        this.events.emit(RendererSystem.Response.Draw, renderable);
+        this.events.emit(RendererSystem.Response.Draw, entity);
 
         return this;
     }
 
     /**
      * @public
-     * @param {RenderableComponent} renderable 
+     * @param {*} entity 
      * @returns {RendererSystem} this
      */
-    erase = (renderable) => {
+    erase = (entity) => {
+        const renderable = entity.renderable;
+
         renderable.removeFromParent();
 
-        this.events.emit(RendererSystem.Response.Erase, renderable);
+        this.events.emit(RendererSystem.Response.Erase, entity);
 
         return this;
     }

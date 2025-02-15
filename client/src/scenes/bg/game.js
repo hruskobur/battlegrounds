@@ -24,9 +24,14 @@ class GameInstance {
         this.input = new InputSystem(events, state);
 
         // events
+        events.on(TokenSystem.Response.Create, this.renderer.draw);
+        events.on(TokenSystem.Response.Destroy, this.renderer.erase);
 
         // sandobx (dev)
         this.renderer.redraw();
+
+        window.create = this.tokens.create;
+        window.destroy = this.tokens.destroy;
     }
 
     /**
