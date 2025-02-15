@@ -26,6 +26,9 @@ const DirectionCoordinates = Object.freeze([
     // { x: -1, y: -1 }
 ]);
 
+const CoordinateLow = 0;
+
 export {
+    CoordinateLow,
     DirectionCoordinates
 };

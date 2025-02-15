@@ -2,7 +2,7 @@ import { GameState } from './game.js';
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 
-import * as Constant from './constant.js';
+import { DirectionCoordinates, CoordinateLow} from './constant.js';
 
 // note: this will tightly couple the Check & Query modules
 // but since they are just a readability-extensions in the first place,
@@ -17,8 +17,8 @@ import * as Check from './check.js';
  * @param {Function} cb x, y, area, token, state
  */
 function iterator(state, cb) {
-    for (let y = 0; y < state.height; ++y) {
-        for (let x = 0; x < state.width; ++x) {
+    for (let y = CoordinateLow; y < state.height; ++y) {
+        for (let x = CoordinateLow; x < state.width; ++x) {
             cb(
                 x, y,
                 state.areas[y][x],
@@ -72,8 +72,8 @@ function path(state, fx, fy, tx, ty) {
             return path.reverse();
         }
 
-        for (let d = 0; d < Constant.DirectionCoordinates.length; ++d) {
-            const direction = Constant.DirectionCoordinates[d];
+        for (let d = 0; d < DirectionCoordinates.length; ++d) {
+            const direction = DirectionCoordinates[d];
 
             const nx = current.position.x + direction.x;
             const ny = current.position.y + direction.y;
