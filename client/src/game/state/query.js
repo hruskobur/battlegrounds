@@ -1,4 +1,11 @@
 import { GameState } from './game.js';
+import { AreaEntity } from '../entities/area.js';
+import { TokenEntity } from '../entities/token.js';
+
+// note: this will tightly couple the Check & Query modules
+// but since they are just a readability-extensions in the first place,
+// thats completly OK
+import * as Check from './check.js';
 
 /**
  * Iterates over

@@ -1,28 +1,53 @@
+import { SystemBase, EventEmitter, GameState } from './base.js';
 import { TokenEntity } from '../entities/token.js';
 
-class TokenSystem {
-    /**
-     * @type {EventEmitter}
-     */
-    events;
+class TokenSystem extends SystemBase {
+    static Response = Object.freeze({
+        Create: 'token.create.response',
+        Destroy: 'token.destroy.response'
+    });
 
     /**
-     * @type {GameState}
+     * @param {EventEmitter} events 
+     * @param {GameState} state 
      */
-    state;
-
     constructor (events, state) {
-        this.events = events;
-        this.state = state;
+        super(events, state);
     }
 
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {TokenSystem} this
+     */
     create = (x, y) => {
         const token = new TokenEntity();
-        
-        token.renderable.x = x * token.renderable.width;
-        token.renderable.y = y * token.renderable.height;
+        token.renderable.x = token.renderable.width * x;
+        token.renderable.y = token.renderable.height * y;
 
-        this.events.emit('token.created', token.renderable);
+        // todo: set other components
+        // . . .
+
+        this.state.tokens[y][x] = token;
+
+        this.events.emit(TokenSystem.Response.Create, token);
+
+        return this;
+    }
+
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {TokenSystem} this
+     */
+    destroy = (x, y) => {
+        const token = this.state.tokens[y][x];
+
+        this.state.tokens[y][x] = null;
+
+        this.events.emit(TokenSystem.Response.Destroy, token);
 
         return this;
     }

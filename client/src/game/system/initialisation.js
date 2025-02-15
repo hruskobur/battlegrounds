@@ -1,16 +1,13 @@
-import * as Pixi from 'pixi.js';
-import EventEmitter from 'eventemitter3';
-import { GameState } from '../state/game.js';
+import { SystemBase, EventEmitter, GameState } from './base.js';
 import { AreaEntity } from '../entities/area.js';
 
-class InitialisationSystem {
+class InitialisationSystem extends SystemBase {
     /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
      */
     constructor (events, state) {
-        this.events = events;
-        this.state = state;
+        super(events, state);
     }
 
     /**

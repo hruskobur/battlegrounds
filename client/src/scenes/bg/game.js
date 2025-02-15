@@ -22,10 +22,8 @@ class GameInstance {
         this.renderer = new RendererSystem(events, state, container);
         this.tokens = new TokenSystem(events, state);
         this.input = new InputSystem(events, state);
-        
+
         // events
-        events.on('token.create', this.tokens.create);
-        events.on('token.created', this.renderer.draw);
 
         // sandobx (dev)
         this.renderer.redraw();

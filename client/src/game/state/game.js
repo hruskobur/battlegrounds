@@ -1,7 +1,9 @@
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 import { RendererEntity } from '../entities/renderer.js';
+
 import * as Query from './query.js';
+import * as Check from './check.js';
 
 /**
  * @class GameState
@@ -20,6 +22,7 @@ import * as Query from './query.js';
  */
 class GameState {
     static Query = Query;
+    static Check = Check;
     
     /**
      * @type {Number}

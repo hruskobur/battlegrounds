@@ -1,7 +1,6 @@
 import * as Pixi from 'pixi.js';
-import EventEmitter from 'eventemitter3';
+import { SystemBase, EventEmitter, GameState } from './base.js';
 import { RenderableComponent } from '../components/renderable.js';
-import { GameState } from '../state/game.js';
 
 /**
  * @class RendererSystem
@@ -16,31 +15,24 @@ import { GameState } from '../state/game.js';
  * It is responsible for ensuring that entities are correctly 
  * displayed or removed from the scene based on their state.
  */
-class RendererSystem {
-    /**
-     * @type {EventEmitter}
-     */
-    events;
-
-    /**
-     * @type {GameState}
-     */
-    state;
+class RendererSystem extends SystemBase {
+    static Response = Object.freeze({
+        Draw: 'renderer.draw.response',
+        Erase: 'renderer.erase.response'
+    })
 
     /**
      * @type {Pixi.Container}
      */
     container;
 
-
     /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
-     * @param {Pixi.Container} container
+     * @param {Pixi.Container} container 
      */
     constructor (events, state, container) {
-        this.events = events;
-        this.state = state;
+        super(events, state);
 
         this.container = container;
         this.container.addChild(
@@ -99,7 +91,9 @@ class RendererSystem {
     draw = (renderable) => {
         this.state
         .renderer[renderable.layer]
-        .addChild(renderable)
+        .addChild(renderable);
+
+        this.events.emit(RendererSystem.Response.Draw, renderable);
 
         return this;
     }
@@ -111,6 +105,8 @@ class RendererSystem {
      */
     erase = (renderable) => {
         renderable.removeFromParent();
+
+        this.events.emit(RendererSystem.Response.Erase, renderable);
 
         return this;
     }

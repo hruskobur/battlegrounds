@@ -1,16 +1,13 @@
 import * as Pixi from 'pixi.js';
-import EventEmitter from 'eventemitter3';
-import { GameState } from '../state/game.js';
+import { SystemBase, EventEmitter, GameState } from './base.js';
 
-class InputSystem {
+class InputSystem extends SystemBase {
     /**
-     * 
      * @param {EventEmitter} events 
      * @param {GameState} state 
      */
     constructor (events, state) {
-        this.events = events;
-        this.state = state;
+        super(events, state);
 
         GameState.Query.iterator(
             this.state,
@@ -23,6 +20,23 @@ class InputSystem {
                 ;
             }
         )
+    }
+
+    /**
+     * @public
+     * @override
+     */
+    destructor () {
+        // note: not really needed, but lets keep it here for the sake of
+        // consistency
+        GameState.Query.iterator(
+            this.state,
+            (x, y) => {
+                this.state.areas[y][x].renderable.removeAllListeners();
+            }
+        );
+
+        super.destructor();
     }
 
     /**
@@ -52,8 +66,6 @@ class InputSystem {
         const y = Math.floor(event.target.y / 72);
 
         console.log('InputSystem.#on_pointer_down', this.state.areas[y][x]);
-
-        this.events.emit('token.create', x, y);
     }
 }
 
