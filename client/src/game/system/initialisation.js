@@ -42,8 +42,16 @@ class InitialisationSystem extends SystemBase {
                 area.position.x = x;
                 area.position.y = y;
 
+                area.terrain.difficulty = Math.floor(Math.random() * 100);
+
                 area.renderable.x = x * area.renderable.width;
                 area.renderable.y = y * area.renderable.height;
+
+                // dev: somehow, i need to provide getter for specific
+                // sprites of the renderable ... 
+                // should this be a general fn of RenderableComponent or
+                // AreaEntity specific fn?
+                area.renderable.children[1].text = area.terrain.difficulty;
 
                 _areas.push(area);
             }

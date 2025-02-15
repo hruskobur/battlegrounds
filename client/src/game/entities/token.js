@@ -16,7 +16,9 @@ class TokenEntity {
             boundsArea: new Rectangle(0, 0, 72, 72),
             hitArea: new Rectangle(0, 0, 72, 72),
             children: [
-                new Graphics()
+                new Graphics({
+                    alpha: 0.55
+                })
                 .circle(36, 36, 32, 32)
                 .stroke({
                     width: 1,

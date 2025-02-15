@@ -20,7 +20,7 @@ function iterator(state, cb) {
     for (let y = 0; y < state.height; ++y) {
         for (let x = 0; x < state.width; ++x) {
             cb(
-                x, y, 
+                x, y,
                 state.areas[y][x],
                 state.tokens[y][x],
                 state
@@ -42,16 +42,28 @@ function path(state, fx, fy, tx, ty) {
     const to = state.areas[ty][tx];
 
     const predecessor = new Map();
-    const visited = new Set( [from] );
+
+    const cost_total = new Map([
+        // note: i am not decided yet, how to approach terrain-difficulty
+        // counting:
+        
+        // ... when only journey to (closest) destination matters
+        // [from, 0]
+
+        // ... when also travelling through the starting area matters
+        [from, from.terrain.difficulty]
+    ]);
     const queue = [from];
 
     while (queue.length > 0) {
+        queue.sort((a, b) => cost_total.get(a) - cost_total.get(b));
+        
         const current = queue.shift();
+
         if (current === to) {
-            
             const path = [];
-            
             let area = current;
+            
             while (area) {
                 path.push(area);
                 area = predecessor.get(area) || null;
@@ -60,26 +72,34 @@ function path(state, fx, fy, tx, ty) {
             return path.reverse();
         }
 
-        for(let d = 0; d < Constant.DirectionCoordinates.length; ++d) {
+        for (let d = 0; d < Constant.DirectionCoordinates.length; ++d) {
             const direction = Constant.DirectionCoordinates[d];
 
             const nx = current.position.x + direction.x;
             const ny = current.position.y + direction.y;
 
-            if(Check.walkable(state, nx, ny) === false) {
+            if (Check.walkable(state, nx, ny) === false) {
                 continue;
             }
 
             const neighbor = state.areas[ny][nx];
+            const nc = cost_total.get(current) + (neighbor.terrain.difficulty);
 
-            if(visited.has(neighbor) === false) {
-                predecessor.set(neighbor, current);
-                visited.add(neighbor);
+            if ((cost_total.has(neighbor) === true) 
+            &&  (cost_total.get(neighbor) < nc)) {
+                continue;
+            }
+
+            cost_total.set(neighbor, nc);
+            predecessor.set(neighbor, current);
+            
+            if (queue.indexOf(neighbor) === -1) {
                 queue.push(neighbor);
             }
         }
     }
 
+    // Return an empty path if no route is found.
     return [];
 }
 

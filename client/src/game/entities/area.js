@@ -1,7 +1,8 @@
 import { PositionComponent } from '../components/position.js';
+import { TerrainComponent } from '../components/terrain.js';
 import { 
     RenderableComponent,
-    Sprite, Texture,
+    Sprite, Texture, Text,
     Rectangle
 } from '../components/renderable.js';
 
@@ -12,6 +13,11 @@ class AreaEntity {
     position;
 
     /**
+     * @type {TerrainComponent}
+     */
+    terrain;
+
+    /**
      * @type {RenderableComponent}
      */
     renderable;
@@ -19,14 +25,15 @@ class AreaEntity {
     /**
      */
     constructor () {
-        this.position = new PositionComponent()
+        this.position = new PositionComponent();
+        this.terrain = new TerrainComponent();
 
         this.renderable = new RenderableComponent({
             eventMode: 'static',
             boundsArea: new Rectangle(0, 0, 72, 72),
             hitArea: new Rectangle(0, 0, 72, 72),
             children: [
-                // background
+                // terrain sprite
                 new Sprite({
                     width: 64,
                     height: 64,
@@ -36,6 +43,14 @@ class AreaEntity {
                     eventMode: 'none',
                     texture: Texture.WHITE,
                     zIndex: 0
+                }),
+                // difficulty sprite
+                new Text({
+                    text: this.terrain.difficulty,
+                    eventMode: 'none',
+                    anchor: 0.5,
+                    x: 72 / 2,
+                    y: 72 / 2
                 })
             ]
         });

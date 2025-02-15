@@ -1,6 +1,6 @@
 import { 
     Container,
-    Sprite, Texture,
+    Sprite, Texture, Text,
     Graphics,
     Rectangle
 } from 'pixi.js';
@@ -32,7 +32,7 @@ class RenderableComponent extends Container {
 export {
     RenderableComponent, 
     Container,
-    Sprite, Texture,
+    Sprite, Texture, Text,
     Graphics,
     Rectangle
 };
