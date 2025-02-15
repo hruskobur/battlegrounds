@@ -52,6 +52,8 @@ class InputSystem {
         const y = Math.floor(event.target.y / 72);
 
         console.log('InputSystem.#on_pointer_down', this.state.areas[y][x]);
+
+        this.events.emit('token.create', x, y);
     }
 }
 

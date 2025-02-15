@@ -55,7 +55,7 @@ class RendererSystem {
      * @public
      * @returns {RendererSystem} this
      */
-    redraw () {
+    redraw = () => {
         const bg = this.state.renderer.background;
         const fg = this.state.renderer.foreground;
 
@@ -96,7 +96,7 @@ class RendererSystem {
      * @param {RenderableComponent} renderable 
      * @returns {RendererSystem} this
      */
-    draw (renderable) {
+    draw = (renderable) => {
         this.state
         .renderer[renderable.layer]
         .addChild(renderable)
@@ -109,7 +109,7 @@ class RendererSystem {
      * @param {RenderableComponent} renderable 
      * @returns {RendererSystem} this
      */
-    erase (renderable) {
+    erase = (renderable) => {
         renderable.removeFromParent();
 
         return this;

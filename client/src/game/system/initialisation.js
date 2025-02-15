@@ -18,7 +18,7 @@ class InitialisationSystem {
      * @param {*} scenario 
      * @returns {InitialisationSystem} this
      */
-    init (scenario) {
+    init = (scenario) => {
         this.state.width = 10;
         this.state.height = 10;
 

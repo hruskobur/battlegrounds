@@ -24,7 +24,8 @@ class GameInstance {
         this.input = new InputSystem(events, state);
         
         // events
-        // . . .
+        events.on('token.create', this.tokens.create);
+        events.on('token.created', this.renderer.draw);
 
         // sandobx (dev)
         this.renderer.redraw();
@@ -40,6 +41,7 @@ class GameInstance {
         
         this.renderer = null;
         this.tokens = null;
+        this.input = null;
 
         return this;
     }

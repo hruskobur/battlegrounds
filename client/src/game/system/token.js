@@ -16,13 +16,13 @@ class TokenSystem {
         this.state = state;
     }
 
-    create (x, y) {
+    create = (x, y) => {
         const token = new TokenEntity();
         
         token.renderable.x = x * token.renderable.width;
         token.renderable.y = y * token.renderable.height;
 
-        this.events.emit('token.create', token.renderable);
+        this.events.emit('token.created', token.renderable);
 
         return this;
     }
