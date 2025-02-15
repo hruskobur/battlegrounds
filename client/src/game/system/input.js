@@ -11,8 +11,8 @@ class InputSystem extends SystemBase {
 
         GameState.Query.iterator(
             this.state,
-            (x, y) => {
-                this.state.areas[y][x].renderable
+            (x, y, area, token, state) => {
+                area.renderable
                 .on('pointerdown', this.#on_pointer_down)
                 // dev: disabled until really needed
                 // .on('pointerleave', this.#on_pointer_leave)
