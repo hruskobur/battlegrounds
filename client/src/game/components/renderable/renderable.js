@@ -5,6 +5,11 @@ import {
     Rectangle
 } from 'pixi.js';
 
+/**
+ * @typedef {import('pixi.js').ContainerOptions 
+ * & { layer: RenderableComponent.LayerId }} RenderableComponentOptions
+ */
+
 class RenderableComponent extends Container {
     static LayerId = Object.freeze({
         Undefined: null,
@@ -20,12 +25,12 @@ class RenderableComponent extends Container {
 
     /**
      * 
-     * @param {import('pixi.js').ContainerOptions} options 
+     * @param {RenderableComponentOptions} options 
      */
     constructor (options = null) {
         super(options);
 
-        this.layer = RenderableComponent.LayerId.Undefined;
+        this.layer = options.layer || RenderableComponent.LayerId.Undefined;
     }
 }
 

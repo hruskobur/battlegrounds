@@ -1,4 +1,4 @@
-import { RenderableComponent } from '../components/renderable.js';
+import { RenderableComponent } from '../components/renderable/renderable.js';
 
 class RendererEntity {
     /**
@@ -6,7 +6,7 @@ class RendererEntity {
      * 
      * Sprites area drawn once and they are not added nor removed.
      * 
-     * @type {Pixi.Container}
+     * @type {RenderableComponent}
      */
     background;
 
@@ -15,21 +15,25 @@ class RendererEntity {
      * 
      * Sprites are added and removed there as needed.
      * 
-     * @type {Pixi.Container}
+     * @type {RenderableComponent}
      */
     foreground;
 
     constructor () {
         this.background = new RenderableComponent({
-            label: RenderableComponent.LayerId.Background,
+            layer: RenderableComponent.LayerId.Background,
             eventMode: 'static',
-            zIndex: 0
+            zIndex: 0,
+            // note: dev purpose only
+            label: RenderableComponent.LayerId.Background,
         });
 
         this.foreground = new RenderableComponent({
-            label: RenderableComponent.LayerId.Background,
+            layer: RenderableComponent.LayerId.Foreground,
             eventMode: 'none',
-            zIndex: 1
+            zIndex: 1,
+            // note: dev purpose only
+            label: RenderableComponent.LayerId.Foreground
         });
 
         // dev: ui layer with zIndex=2 ?

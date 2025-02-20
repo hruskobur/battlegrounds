@@ -1,6 +1,5 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { RenderableComponent } from '../components/renderable.js';
 
 /**
  * @class RendererSystem

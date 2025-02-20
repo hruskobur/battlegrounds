@@ -43,15 +43,28 @@ class InitialisationSystem extends SystemBase {
                 area.position.y = y;
 
                 area.terrain.difficulty = Math.floor(Math.random() * 100);
+                // dev: this is just to illustrate geography without 
+                // existing sprites. A string-id will be used later.
+                area.terrain.geography = area.terrain.difficulty;
+
+                // dev: for now, difficulty will determine hp of area
+                // will be reworked later ...
+                area.stats.hp = area.terrain.difficulty;
+                area.stats.owner = Math.floor(Math.random() *2);
 
                 area.renderable.x = x * area.renderable.width;
                 area.renderable.y = y * area.renderable.height;
-
-                // dev: somehow, i need to provide getter for specific
-                // sprites of the renderable ... 
-                // should this be a general fn of RenderableComponent or
-                // AreaEntity specific fn?
-                area.renderable.children[1].text = area.terrain.difficulty;
+                area.renderable.terrain.alpha = area.terrain.geography / 100;
+                area.renderable.difficulty.text = area.terrain.difficulty;
+                
+                // dev: this isn't the way ... setter has to be implemented
+                area.renderable.border
+                .clear()
+                .rect(8, 8, 56, 56)
+                .stroke({
+                    width: 2,
+                    color: area.stats.owner === 0 ? 'blue' : 'red'
+                });
 
                 _areas.push(area);
             }

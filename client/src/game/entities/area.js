@@ -1,10 +1,7 @@
 import { PositionComponent } from '../components/position.js';
 import { TerrainComponent } from '../components/terrain.js';
-import { 
-    RenderableComponent,
-    Sprite, Texture, Text,
-    Rectangle
-} from '../components/renderable.js';
+import { StatsComponent } from '../components/stats.js';
+import { AreaRenderableComponent } from '../components/renderable/area.js';
 
 class AreaEntity {
     /**
@@ -18,7 +15,12 @@ class AreaEntity {
     terrain;
 
     /**
-     * @type {RenderableComponent}
+     * @type {StatsComponent}
+     */
+    stats;
+
+    /**
+     * @type {AreaRenderableComponent}
      */
     renderable;
 
@@ -31,36 +33,16 @@ class AreaEntity {
         );
 
         this.terrain = new TerrainComponent(
+            '',
             Number.MIN_SAFE_INTEGER
         );
 
-        this.renderable = new RenderableComponent({
-            eventMode: 'static',
-            boundsArea: new Rectangle(0, 0, 72, 72),
-            hitArea: new Rectangle(0, 0, 72, 72),
-            children: [
-                // terrain sprite
-                new Sprite({
-                    width: 64,
-                    height: 64,
-                    anchor: 0.5,
-                    x: 72 / 2,
-                    y: 72 / 2,
-                    eventMode: 'none',
-                    texture: Texture.WHITE,
-                    zIndex: 0
-                }),
-                // difficulty sprite
-                new Text({
-                    text: this.terrain.difficulty,
-                    eventMode: 'none',
-                    anchor: 0.5,
-                    x: 72 / 2,
-                    y: 72 / 2
-                })
-            ]
-        });
-        this.renderable.layer = RenderableComponent.LayerId.Background;
+        this.stats = new StatsComponent(
+            null,
+            Number.MAX_SAFE_INTEGER
+        );
+
+        this.renderable = new AreaRenderableComponent();
     }
 }
 
