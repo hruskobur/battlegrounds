@@ -31,13 +31,14 @@ function iterator(state, cb) {
 
 /**
  * @param {GameState} state 
+ * @param {Number} o ownership
  * @param {Number} fx
  * @param {Number} fy
  * @param {Number} tx
  * @param {Number} ty
  * @returns {Array<AreaEntity>}
  */
-function path(state, fx, fy, tx, ty) {
+function path(state, o, fx, fy, tx, ty) {
     const from = state.areas[fy][fx];
     const to = state.areas[ty][tx];
 
@@ -78,7 +79,7 @@ function path(state, fx, fy, tx, ty) {
             const nx = current.position.x + direction.x;
             const ny = current.position.y + direction.y;
 
-            if (Check.walkable(state, nx, ny) === false) {
+            if (Check.walkable(state, o, nx, ny) === false) {
                 continue;
             }
 

@@ -8,19 +8,19 @@ class StatsComponent {
     /**
      * @type {Number}
      */
-    owner;
+    ownership;
 
     /**
      * @type {Number}
      */
-    owner;
+    ownership;
 
     /**
      * @param {Number} owner 
      * @param {Number} hp 
      */
     constructor (owner, hp) {
-        this.owner = owner;
+        this.ownership = owner;
         this.hp = hp;
     }
 }

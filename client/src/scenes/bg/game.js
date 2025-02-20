@@ -32,8 +32,8 @@ class GameInstance {
 
         window.create = this.tokens.create;
         window.destroy = this.tokens.destroy;
-        window.path = (fx, fy, tx, ty) => {
-            GameState.Query.path(state, fx, fy, tx, ty)
+        window.path = (o, fx, fy, tx, ty) => {
+            GameState.Query.path(state, o, fx, fy, tx, ty)
             .forEach(a => {
                 this.tokens.create(
                     a.position.x,

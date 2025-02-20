@@ -50,7 +50,7 @@ class InitialisationSystem extends SystemBase {
                 // dev: for now, difficulty will determine hp of area
                 // will be reworked later ...
                 area.stats.hp = area.terrain.difficulty;
-                area.stats.owner = Math.floor(Math.random() *2);
+                area.stats.ownership = Math.floor(Math.random() *2);
 
                 area.renderable.x = x * area.renderable.width;
                 area.renderable.y = y * area.renderable.height;
@@ -63,7 +63,7 @@ class InitialisationSystem extends SystemBase {
                 .rect(8, 8, 56, 56)
                 .stroke({
                     width: 2,
-                    color: area.stats.owner === 0 ? 'blue' : 'red'
+                    color: area.stats.ownership === 0 ? 'blue' : 'red'
                 });
 
                 _areas.push(area);
