@@ -25,8 +25,14 @@ class AreaEntity {
     /**
      */
     constructor () {
-        this.position = new PositionComponent();
-        this.terrain = new TerrainComponent();
+        this.position = new PositionComponent(
+            Number.MIN_SAFE_INTEGER,
+            Number.MIN_SAFE_INTEGER
+        );
+
+        this.terrain = new TerrainComponent(
+            Number.MIN_SAFE_INTEGER
+        );
 
         this.renderable = new RenderableComponent({
             eventMode: 'static',

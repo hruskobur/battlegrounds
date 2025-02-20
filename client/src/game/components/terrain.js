@@ -5,9 +5,10 @@ class TerrainComponent {
     difficulty;
 
     /**
+     * @param {Number} difficulty 
      */
-    constructor () {
-        this.difficulty = 0;
+    constructor (difficulty) {
+        this.difficulty = difficulty;
     }
 }
 

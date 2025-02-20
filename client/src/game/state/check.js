@@ -1,3 +1,4 @@
+import { CoordinateLow } from './constant.js';
 import { GameState } from './game.js';
 
 /**
@@ -8,7 +9,12 @@ import { GameState } from './game.js';
  * @returns {Boolean}
  */
 function coordinates (state, x, y) {
-    return (x >= 0 && x < state.width && y >= 0 && y < state.height);
+    return (
+        x >= CoordinateLow
+        && x < state.width
+        && y >= CoordinateLow
+        && y < state.height
+    );
 }
 
 /**
@@ -21,7 +27,11 @@ function coordinates (state, x, y) {
  */
 function walkable (state, x, y) {
     // rule: coordinates have to be valid
-    if(x < 0 || x >= state.width || y < 0 || y >= state.height) {
+    if(
+        x < CoordinateLow 
+        || x >= state.width
+        || y < CoordinateLow
+        || y >= state.height) {
         return false;
     }
 
