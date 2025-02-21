@@ -58,13 +58,19 @@ class InitialisationSystem extends SystemBase {
                 area.renderable.difficulty.text = area.terrain.difficulty;
                 
                 // dev: this isn't the way ... setter has to be implemented
-                area.renderable.border
-                .clear()
-                .rect(8, 8, 56, 56)
-                .stroke({
-                    width: 2,
-                    color: area.stats.ownership === 0 ? 'blue' : 'red'
-                });
+                // area.renderable.border
+                // .clear()
+                // .rect(8, 8, 56, 56)
+                // .stroke({
+                //     width: 2,
+                //     color: area.stats.ownership === 0 ? 'blue' : 'red'
+                // });
+                // dev: this isn't the way either... 
+                // but since i dont have terrain sprites for now, everything's 
+                // white , and it looks confusing
+                area.renderable.terrain.tint = area.stats.ownership === 0
+                 ? 'blue'
+                 : 'red';
 
                 _areas.push(area);
             }

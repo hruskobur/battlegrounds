@@ -38,10 +38,10 @@ class AreaRenderableComponent extends RenderableComponent {
                     y: 72 / 2,
                     label: undefined
                 }),
-                // border sprite
-                new Graphics({
-
-                }).rect(8, 8, 56, 56).stroke({ width: 2, color: 'green'})
+                // // border sprite
+                // new Graphics({})
+                // .rect(8, 8, 56, 56)
+                // .stroke({ width: 2, color: 'green'})
             ]
         });
     }
@@ -58,13 +58,13 @@ class AreaRenderableComponent extends RenderableComponent {
         return this.children[1];
     }
 
-    /**
-     * @note dev purposes only
-     * @returns {Graphics}
-     */
-    get border () {
-        return this.children[2];
-    }
+    // /**
+    //  * @note dev purposes only
+    //  * @returns {Graphics}
+    //  */
+    // get border () {
+    //     return this.children[2];
+    // }
 }
 
 export {
