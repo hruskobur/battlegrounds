@@ -22,7 +22,7 @@ class InitialisationSystem extends SystemBase {
         this.#init_areas(scenario);
         this.#init_tokens(scenario);
 
-        this.events.emit('initialisation.done');
+        this.events.emit(GameState.Event.InitialisationReady);
 
         return this;
     }
@@ -42,20 +42,18 @@ class InitialisationSystem extends SystemBase {
                 area.position.x = x;
                 area.position.y = y;
 
-                area.terrain.difficulty = Math.floor(Math.random() * 100);
+                area.terrain.difficulty = 1;
                 // dev: this is just to illustrate geography without 
                 // existing sprites. A string-id will be used later.
                 area.terrain.geography = area.terrain.difficulty;
 
-                // dev: for now, difficulty will determine hp of area
-                // will be reworked later ...
-                area.stats.hp = area.terrain.difficulty;
+                area.stats.hp = Math.floor(Math.random() * 100) + 1;
                 area.stats.ownership = Math.floor(Math.random() *2);
 
                 area.renderable.x = x * area.renderable.width;
                 area.renderable.y = y * area.renderable.height;
-                area.renderable.terrain.alpha = area.terrain.geography / 100;
-                area.renderable.difficulty.text = area.terrain.difficulty;
+                area.renderable.terrain.alpha = (area.stats.hp / 100);
+                area.renderable.difficulty.text = area.stats.hp;
                 
                 // dev: this isn't the way ... setter has to be implemented
                 // area.renderable.border
@@ -69,8 +67,8 @@ class InitialisationSystem extends SystemBase {
                 // but since i dont have terrain sprites for now, everything's 
                 // white , and it looks confusing
                 area.renderable.terrain.tint = area.stats.ownership === 0
-                 ? 'blue'
-                 : 'red';
+                ? 'blue'
+                : 'red';
 
                 _areas.push(area);
             }

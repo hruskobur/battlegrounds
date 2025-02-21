@@ -9,7 +9,7 @@ import * as Scenes from '../../src/core/scenes.js';
 import { BattlegroundsScene } from '../../src/scenes/bg/scene.js';
 
 // tests
-import * as Tests from './tests.js';
+// . . .
 
 /* the "main" function ********************************************************/
 
@@ -38,7 +38,5 @@ window.addEventListener(
         );
 
         Scenes.scene('bg', {});
-
-        Tests.token_argc();
     }
 );

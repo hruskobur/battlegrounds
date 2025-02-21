@@ -1,8 +1,8 @@
 import * as Pixi from 'pixi.js';
 import EventEmitter from 'eventemitter3';
 import { GameState } from '../../game/state/game.js';
-import { RendererSystem } from '../../game/system/renderer.js';
 import { InitialisationSystem } from '../../game/system/initialisation.js';
+import { RendererSystem } from '../../game/system/renderer.js';
 import { TokenSystem } from '../../game/system/token.js';
 import { InputSystem } from '../../game/system/input.js';
 
@@ -19,19 +19,16 @@ class GameInstance {
         .init(scenario);
 
         // systems
-        this.renderer = new RendererSystem(events, state, container);
+        this.renderer = new RendererSystem(events, state, container)
+        .init();
+
         this.tokens = new TokenSystem(events, state);
         this.input = new InputSystem(events, state);
 
         // events
-        events.on(TokenSystem.Response.Create, this.renderer.draw);
-        events.on(TokenSystem.Response.Destroy, this.renderer.erase);
+        events.on(GameState.Event.TokenCreate, this.renderer.draw);
+        events.on(GameState.Event.TokenDestroy, this.renderer.erase);
 
-        // sandobx (dev)
-        this.renderer.redraw();
-
-        window.create = this.tokens.create;
-        window.destroy = this.tokens.destroy;
         window.path = (o, fx, fy, tx, ty) => {
             GameState.Query.path(state, o, fx, fy, tx, ty)
             .forEach(a => {
@@ -41,6 +38,7 @@ class GameInstance {
                 );
             });
         }
+        window.tokens = this.tokens;
     }
 
     /**

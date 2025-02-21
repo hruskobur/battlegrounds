@@ -4,6 +4,7 @@ import { RendererEntity } from '../entities/renderer.js';
 
 import * as Query from './query.js';
 import * as Check from './check.js';
+import Event from './event.js';
 
 /**
  * @class GameState
@@ -23,6 +24,7 @@ import * as Check from './check.js';
 class GameState {
     static Query = Query;
     static Check = Check;
+    static Event = Event;
     
     /**
      * @type {Number}

@@ -15,11 +15,6 @@ import { SystemBase, EventEmitter, GameState } from './base.js';
  * displayed or removed from the scene based on their state.
  */
 class RendererSystem extends SystemBase {
-    static Response = Object.freeze({
-        Draw: 'renderer.draw.response',
-        Erase: 'renderer.erase.response'
-    })
-
     /**
      * @type {Pixi.Container}
      */
@@ -46,7 +41,7 @@ class RendererSystem extends SystemBase {
      * @public
      * @returns {RendererSystem} this
      */
-    redraw = () => {
+    init = () => {
         const bg = this.state.renderer.background;
         const fg = this.state.renderer.foreground;
 
@@ -94,7 +89,7 @@ class RendererSystem extends SystemBase {
         .renderer[renderable.layer]
         .addChild(renderable);
 
-        this.events.emit(RendererSystem.Response.Draw, entity);
+        this.events.emit(GameState.Event.RendererDraw, entity);
 
         return this;
     }
@@ -109,7 +104,7 @@ class RendererSystem extends SystemBase {
 
         renderable.removeFromParent();
 
-        this.events.emit(RendererSystem.Response.Erase, entity);
+        this.events.emit(GameState.Event.RendererErase, entity);
 
         return this;
     }
