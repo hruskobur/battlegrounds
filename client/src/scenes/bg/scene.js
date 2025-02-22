@@ -38,7 +38,8 @@ class BattlegroundsScene extends SceneBase {
 
         this.state = new GameState();
         this.instance = new GameInstance(
-            this.container, this.events,
+            this.container, this.app.ticker,
+            this.events, 
             this.state, scenario
         );
         
