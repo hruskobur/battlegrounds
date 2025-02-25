@@ -44,12 +44,8 @@ class BattlegroundsScene extends SceneBase {
     on_create(scenario) {
         super.on_create();
 
-        this.state = new GameState(scenario)
-        .init();
-
-        this.render = new RenderSystem(this.events, this.state, this.container)
-        .init();
-
+        this.state = new GameState(scenario);
+        this.render = new RenderSystem(this.events, this.state, this.container);
         this.input = new InputSystem(this.events, this.state);
         
         return this;

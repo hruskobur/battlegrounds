@@ -25,50 +25,31 @@ class RenderSystem extends SystemBase {
      * @param {GameState} state 
      * @param {Pixi.Container} container 
      */
-    constructor (events, state, container) {
+    constructor(events, state, container) {
         super(events, state);
 
         this.container = container;
-    }
 
-    /**
-     * @public
-     * @override
-     * @returns {null}
-     */
-    destructor () {
-        this.container = null;
-
-        return super.destructor();
-    }
-
-    /**
-     * Performs a full clean-up & redraw of the RenderEntity.
-     * 
-     * @public
-     * @returns {RenderSystem} this
-     */
-    init = () => {
         // layers
         const areas = this.state.render.areas;
         const tokens = this.state.render.tokens;
 
         // layers: clean-up
-        while(areas.children.length > 0) {
+        while (areas.children.length > 0) {
             areas.removeChildAt(0);
         }
 
-        while(tokens.children.length > 0) {
+        while (tokens.children.length > 0) {
             tokens.removeChildren(0);
         }
-        
+
         // layers: size
-        areas.boundsArea = 
-        tokens.boundsArea = new Pixi.Rectangle(
-            0, 0,
-            72 * this.state.width,
-            72 * this.state.height
-        );
+        areas.boundsArea =
+            tokens.boundsArea = new Pixi.Rectangle(
+                0, 0,
+                72 * this.state.width,
+                72 * this.state.height
+            );
 
         // layers: do the "drawing"
         GameState.Query.iterator(
@@ -77,10 +58,10 @@ class RenderSystem extends SystemBase {
                 // draw area
                 const area = this.state.areas[y][x];
                 this.draw(area);
-                
+
                 // draw token
                 const token = this.state.tokens[y][x];
-                if(token != null) {
+                if (token != null) {
                     this.draw(token);
                 }
             }
@@ -95,7 +76,17 @@ class RenderSystem extends SystemBase {
             tokens
         );
 
-        return this;
+    }
+
+    /**
+     * @public
+     * @override
+     * @returns {null}
+     */
+    destructor() {
+        this.container = null;
+
+        return super.destructor();
     }
 
     /**
@@ -107,8 +98,8 @@ class RenderSystem extends SystemBase {
         const renderable = entity.renderable;
 
         this.state
-        .render[renderable.constructor.Layer]
-        .addChild(renderable);
+            .render[renderable.constructor.Layer]
+            .addChild(renderable);
 
         return this;
     }
@@ -121,7 +112,7 @@ class RenderSystem extends SystemBase {
     erase = (entity) => {
         const renderable = entity.renderable;
 
-        while(renderable.children.length > 0) {
+        while (renderable.children.length > 0) {
             renderable.removeChildAt(0);
         }
 

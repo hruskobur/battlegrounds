@@ -69,17 +69,10 @@ class GameState {
         this.render = new RenderEntity();
         this.areas = [];
         this.tokens = [];
-    }
 
-    /**
-     * @returns {GameState} this
-     */
-    init () {
         Init.scenario(this);
         Init.areas(this);
         Init.tokens(this);
-
-        return this;
     }
 }
 
