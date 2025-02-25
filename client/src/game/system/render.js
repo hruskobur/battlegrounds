@@ -1,6 +1,5 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { RenderableComponent } from '../components/renderable/renderable.js';
 
 /**
  * @class RenderSystem
@@ -30,30 +29,46 @@ class RenderSystem extends SystemBase {
         super(events, state);
 
         this.container = container;
-        this.container.addChild(
-            this.state.renderer.background,
-            this.state.renderer.foreground
-        );
     }
 
     /**
-     * Performs a full clean-up & redraw of the RendererEntity.
+     * @public
+     * @override
+     * @returns {null}
+     */
+    destructor () {
+        this.container = null;
+
+        return super.destructor();
+    }
+
+    /**
+     * Performs a full clean-up & redraw of the RenderEntity.
      * 
      * @public
      * @returns {RenderSystem} this
      */
     init = () => {
-        const bg = this.state.renderer.background;
-        const fg = this.state.renderer.foreground;
+        // layers
+        const areas = this.state.render.areas;
+        const tokens = this.state.render.tokens;
 
         // layers: clean-up
-        while(bg.children.length > 0) {
-            bg.removeChildAt(0);
+        while(areas.children.length > 0) {
+            areas.removeChildAt(0);
         }
 
-        while(fg.children.length > 0) {
-            fg.removeChildren(0);
+        while(tokens.children.length > 0) {
+            tokens.removeChildren(0);
         }
+        
+        // layers: size
+        areas.boundsArea = 
+        tokens.boundsArea = new Pixi.Rectangle(
+            0, 0,
+            72 * this.state.width,
+            72 * this.state.height
+        );
 
         // layers: do the "drawing"
         GameState.Query.iterator(
@@ -61,19 +76,24 @@ class RenderSystem extends SystemBase {
             (x, y) => {
                 // draw area
                 const area = this.state.areas[y][x];
-                this.draw_entity(area)
+                this.draw(area);
                 
                 // draw token
                 const token = this.state.tokens[y][x];
                 if(token != null) {
-                    this.draw_entity(token);
+                    this.draw(token);
                 }
             }
         );
 
         // layers: center
-        bg.x = fg.x = (this.container.width - bg.width) / 2;
-        bg.y = fg.y = (this.container.height - bg.height) / 2;
+        areas.x = tokens.x = (this.container.width - areas.width) / 2;
+        areas.y = tokens.y = (this.container.height - areas.height) / 2;
+
+        this.container.addChild(
+            areas,
+            tokens
+        );
 
         return this;
     }
@@ -83,28 +103,14 @@ class RenderSystem extends SystemBase {
      * @param {*} entity 
      * @returns {RenderSystem} this
      */
-    draw_entity = (entity) => {
+    draw = (entity) => {
         const renderable = entity.renderable;
 
         this.state
-        .renderer[renderable.layer]
+        .render[renderable.constructor.Layer]
         .addChild(renderable);
-
-        this.events.emit(GameState.Event.RendererDraw, entity);
 
         return this;
-    }
-
-    /**
-     * @public
-     * @param {RenderableComponent} renderable 
-     */
-    draw_renderable = (renderable) => {
-        this.state
-        .renderer[renderable.layer]
-        .addChild(renderable);
-
-        this.events.emit(GameState.Event.RendererDraw, renderable);
     }
 
     /**
@@ -112,7 +118,7 @@ class RenderSystem extends SystemBase {
      * @param {*} entity 
      * @returns {RenderSystem} this
      */
-    erase_entity = (entity) => {
+    erase = (entity) => {
         const renderable = entity.renderable;
 
         while(renderable.children.length > 0) {
@@ -121,34 +127,8 @@ class RenderSystem extends SystemBase {
 
         renderable.removeFromParent();
 
-        this.events.emit(GameState.Event.RendererErase, entity);
-
         return this;
     }
-
-    /**
-     * @public
-     * @param {RenderableComponent} renderable 
-     * @returns {RenderSystem} this
-     */
-    erase_renderable = (renderable) => {
-        while(renderable.children.length > 0) {
-            renderable.removeChildAt(0);
-        }
-
-        renderable.removeFromParent();
-
-        this.events.emit(GameState.Event.RendererErase, renderable);
-
-        return this;
-    }
-
-    // todo: draw Pixi.DisplayObject ... the elementary basic Pixi stuff
-    draw_primitive () {}
-    erase_primitive () {}
-
-    // todo: unify draw/erase to single methods
-
 }
 
 export {

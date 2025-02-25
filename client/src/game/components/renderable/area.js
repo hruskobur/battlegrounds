@@ -1,36 +1,32 @@
-import { 
-    RenderableComponent,
-    Sprite, Text, Texture,
-    Rectangle,
-    Graphics
-} from './renderable.js';
+import { BaseRenderableComponent, Pixi } from './base.js';
 
 /**
  * @note The 64 & 72 will be refactored to some graphical-constants.
  * These constants will also be scaled, when the responsivnes is implemented.
  */
-class AreaRenderableComponent extends RenderableComponent {
+class AreaRenderableComponent extends BaseRenderableComponent {
+    static Layer = 'areas';
+    
     constructor () {
         super({
-            layer: RenderableComponent.LayerId.Background,
             eventMode: 'static',
-            boundsArea: new Rectangle(0, 0, 72, 72),
-            hitArea: new Rectangle(0, 0, 72, 72),
+            boundsArea: new Pixi.Rectangle(0, 0, 72, 72),
+            hitArea: new Pixi.Rectangle(0, 0, 72, 72),
             children: [
                 // terrain sprite
-                new Sprite({
+                new Pixi.Sprite({
                     width: 64,
                     height: 64,
                     anchor: 0.5,
                     x: 72 / 2,
                     y: 72 / 2,
                     eventMode: 'none',
-                    texture: Texture.WHITE,
+                    texture: Pixi.Texture.WHITE,
                     zIndex: 0,
                     label: undefined
                 }),
                 // difficulty sprite
-                new Text({
+                new Pixi.Text({
                     text: '',
                     eventMode: 'none',
                     anchor: 0.5,

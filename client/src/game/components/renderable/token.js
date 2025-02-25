@@ -1,22 +1,19 @@
-import { 
-    RenderableComponent,
-    Graphics,
-    Rectangle
-} from './renderable.js';
+import { BaseRenderableComponent, Pixi } from './base.js';
 
 /**
  * @note The 64 & 72 will be refactored to some graphical-constants.
  * These constants will also be scaled, when the responsivnes is implemented.
  */
-class TokenRenderableComponent extends RenderableComponent {
+class TokenRenderableComponent extends BaseRenderableComponent {
+    static Layer = 'tokens';
+
     constructor () {
         super({
-            layer: RenderableComponent.LayerId.Foreground,
             eventMode: 'none',
-            boundsArea: new Rectangle(0, 0, 72, 72),
-            hitArea: new Rectangle(0, 0, 72, 72),
+            boundsArea: new Pixi.Rectangle(0, 0, 72, 72),
+            hitArea: new Pixi.Rectangle(0, 0, 72, 72),
             children: [
-                new Graphics({
+                new Pixi.Graphics({
                     alpha: 0.55,
                     label: undefined
                 })

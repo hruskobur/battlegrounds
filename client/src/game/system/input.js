@@ -2,18 +2,12 @@ import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { PositionComponent } from '../components/position.js';
 import { TargetType } from '../state/constant.js';
-import { RenderableComponent } from '../components/renderable/renderable.js';
 
 class InputSystem extends SystemBase {
     /**
      * @type {PositionComponent}
      */
     actor;
-
-    /**
-     * @type {RenderableComponent}
-     */
-    hints;
 
     /**
      * @param {EventEmitter} events 
@@ -23,9 +17,6 @@ class InputSystem extends SystemBase {
         super(events, state);
 
         this.actor = null;
-        this.hints = new RenderableComponent({
-            layer: RenderableComponent.LayerId.Foreground
-        });
 
         GameState.Query.iterator(
             this.state,
@@ -47,15 +38,6 @@ class InputSystem extends SystemBase {
      */
     destructor () {
         this.actor = null;
-
-        // note: not really needed, but lets keep it here for the sake of
-        // consistency
-        GameState.Query.iterator(
-            this.state,
-            (x, y) => {
-                this.state.areas[y][x].renderable.removeAllListeners();
-            }
-        );
 
         return super.destructor();
     }
@@ -83,8 +65,6 @@ class InputSystem extends SystemBase {
         token.targets.targets.clear();
 
         console.log('Inputsystem.clear');
-
-        this.events.emit('target.hint.destroy', this.hints);
 
         return this;
     }
@@ -139,8 +119,6 @@ class InputSystem extends SystemBase {
                 token.targets.rules
             );
 
-            this.events.emit('target.hint.create', this.hints);
-
             return this;
         }
         
@@ -189,7 +167,6 @@ class InputSystem extends SystemBase {
                 }
 
                 target_targets.add(target_position);
-                this.draw_target_hint(this.actor, target_position);
 
                 break;
             }
@@ -204,7 +181,6 @@ class InputSystem extends SystemBase {
                 }
 
                 target_targets.add(target_position);
-                this.draw_target_hint(this.actor, target_position);
 
                 break;
             }
@@ -224,37 +200,7 @@ class InputSystem extends SystemBase {
             return this.clear();
         }
     }
-
-    /**
-     * 
-     * @param {PositionComponent} from 
-     * @param {PositionComponent} to 
-     * @returns {InputSystem} this
-    */
-    draw_target_hint (from, to) {
-        const line = new Pixi.Graphics()
-        .moveTo(
-            from.x * 72,
-            from.y * 72
-        )
-        .lineTo(
-            to.x * 72,
-            to.y * 72
-        )
-        .stroke({
-            width: 3,
-            color: 'yellow'
-        });
-
-
-        
-        this.hints.addChild(line);
-
-        return this;
 }
-
-}
-
 
 export {
     InputSystem

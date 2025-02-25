@@ -1,6 +1,6 @@
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
-import { RendererEntity } from '../entities/renderer.js';
+import { RenderEntity } from '../entities/render.js';
 
 import * as Init from './init.js';
 import * as Query from './query.js';
@@ -43,9 +43,9 @@ class GameState {
     height;
 
     /**
-     * @type {RendererEntity}
+     * @type {RenderEntity}
      */
-    renderer;
+    render;
 
     /**
      * @type {Array<Array<AreaEntity>>}
@@ -66,7 +66,7 @@ class GameState {
         this.width = 0;
         this.height = 0;
 
-        this.renderer = new RendererEntity();
+        this.render = new RenderEntity();
         this.areas = [];
         this.tokens = [];
     }
