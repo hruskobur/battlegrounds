@@ -1,12 +1,10 @@
 const Event = Object.freeze({
-    InitialisationReady: 'initialisation.ready',
-    RendererDraw: 'renderer.draw',
-    RendererErase: 'renderer.erase',
-    ConquestDamage: 'conquest.damage',
-    ConquestHeal: 'conquest.heal',
-    ConquestOwnership: 'conquest.ownership',
-    TokenCreate: 'token.create.response',
-    TokenDestroy: 'token.destroy.response'
+    InputSelected: 'input.selected',
+    InputSucceed: 'input.succeed',
+    InputFailed: 'input.failed',
+    InputCleared: 'input.cleared',
+    TokenCreated: 'token.created',
+    TokenDestroyed: 'token.destroyed'
 });
 
 export default Event;

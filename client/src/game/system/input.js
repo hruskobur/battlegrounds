@@ -28,7 +28,9 @@ class InputSystem extends SystemBase {
                 // .on('pointerenter', this.#on_pointer_enter)
                 ;
             }
-        )
+        );
+
+        window.addEventListener
     }
 
     /**
@@ -64,7 +66,7 @@ class InputSystem extends SystemBase {
         this.actor = null;
         token.targets.targets.clear();
 
-        console.log('Inputsystem.clear');
+        this.events.emit(GameState.Event.InputCleared, target_targets);
 
         return this;
     }
@@ -73,17 +75,13 @@ class InputSystem extends SystemBase {
      * @private
      * @param {Pixi.FederatedPointerEvent} event 
      */
-    #on_pointer_enter = event => {
-        console.log('InputSystem.#on_pointer_enter', event.target);
-    }
+    #on_pointer_enter = event => {}
 
     /**
      * @private
      * @param {Pixi.FederatedPointerEvent} event 
      */
-    #on_pointer_leave = event => {
-        console.log('InputSystem.#on_pointer_leave', event.target);
-    }
+    #on_pointer_leave = event => {}
 
     /**
      * @private
@@ -114,10 +112,7 @@ class InputSystem extends SystemBase {
             // todo: need to emit event about WHAT needs to be selected
             // . . .
 
-            console.log(
-                'InputSystem.actor', 
-                token.targets.rules
-            );
+            console.log('InputSystem.actor', token.targets.rules);
 
             return this;
         }
@@ -149,15 +144,18 @@ class InputSystem extends SystemBase {
         switch(current_rle) {
             case TargetType.Self: {
                 if(area !== target_area) {
+                    this.events.emit(GameState.Event.InputFailed, null);
                     return this.clear();
                 }
 
                 target_targets.add(target_position);
+                this.events.emit(GameState.Event.InputSelected, target_targets);
 
                 break;
             }
             case TargetType.Player: {
                 if(target_area.stats.ownership !== 0) {
+                    this.events.emit(GameState.Event.InputFailed, null);
                     return this.clear();
                 }
 
@@ -167,11 +165,13 @@ class InputSystem extends SystemBase {
                 }
 
                 target_targets.add(target_position);
+                this.events.emit(GameState.Event.InputSelected, target_targets);
 
                 break;
             }
             case TargetType.Enemy: {
                 if(target_area.stats.ownership !== 1) {
+                    this.events.emit(GameState.Event.InputFailed, null);
                     return this.clear();
                 }
 
@@ -181,6 +181,7 @@ class InputSystem extends SystemBase {
                 }
 
                 target_targets.add(target_position);
+                this.events.emit(GameState.Event.InputSelected, target_targets);
 
                 break;
             }
@@ -195,7 +196,7 @@ class InputSystem extends SystemBase {
             // todo: emit event
             // . . .
 
-            console.log(token.targets.targets);
+            this.events.emit(GameState.Event.InputSucceed, target_targets);
 
             return this.clear();
         }

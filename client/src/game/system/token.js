@@ -37,7 +37,7 @@ class TokenSystem extends SystemBase {
 
         this.state.tokens[y][x] = token;
 
-        this.events.emit(GameState.Event.TokenCreate, token);
+        this.events.emit(GameState.Event.TokenCreated, token);
 
         return this;
     }
@@ -59,7 +59,7 @@ class TokenSystem extends SystemBase {
 
         this.state.tokens[y][x] = null;
 
-        this.events.emit(GameState.Event.TokenDestroy, token);
+        this.events.emit(GameState.Event.TokenDestroyed, token);
 
         return this;
     }
