@@ -44,25 +44,6 @@ class ActionSystem extends SystemBase {
      * @returns {ActionSystem} this
      */
     schedule = (token) => {
-        // note: does this need a more safe check?
-        const action = token.current;
-        if(action.id !== null) {
-            console.error('ActionSystem.schedule', token);
-
-            return this;
-        }
-
-        
-        // note: start acting - 1st. action; 0 counter;
-        action.id = 0;
-        action.counter = 0;
-        
-        this.queue.push(
-            token
-        );
-
-        console.log('ActionSystem.schedule', token);
-
         return this;
     }
 
@@ -71,12 +52,6 @@ class ActionSystem extends SystemBase {
      * @returns {ActionSystem} this
      */
     clear = () => {
-        for(let a = 0; a < this.queue.length; ++a) {
-            const action = this.queue[a];
-            action.current.id = null;
-            action.current.counter = null;
-        }
-
         this.queue = [];
 
         return this;
@@ -90,41 +65,6 @@ class ActionSystem extends SystemBase {
      */
     #on_tick = (ticker) => {
         const dt = ticker.elapsedMS;
-
-        const updated = [];
-
-        for(let q = 0; q < this.queue.length; ++q) {
-            const token = this.queue[q];
-            const current = token.current;
-            const effect = token.actions[current.id];
-
-            if(current.counter === 0) {
-                console.log('ActionSystem.start', effect);
-            }
-            
-            current.counter += dt;
-            
-            if(current.counter >= effect.duration) {
-                console.log('ActionSystem.done', effect);
-
-                current.id += 1;
-                current.counter = 0;
-
-                if(current.id >= token.actions.length) {
-                    // note: stop acting
-                    current.id = null;
-                    current.counter = null;
-                    
-                    continue;
-                }
-            }
-
-            updated.push(
-                token
-            );
-        }
-
-        this.queue = updated;
 
         return this;
     }

@@ -1,7 +1,7 @@
+import { ActionEffectComponent } from '../components/action/effect.js';
+import { ActionTargetComponent } from '../components/action/target.js';
 import { PositionComponent } from '../components/position.js';
 import { TokenRenderableComponent } from '../components/renderable/token.js';
-import { TargetComponent } from '../components/target.js';
-import { TargetType } from '../state/constant.js';
 
 class TokenEntity {
     /**
@@ -15,9 +15,19 @@ class TokenEntity {
     renderable;
 
     /**
-     * @type {TargetComponent}
+     * @type {Array<ActionTargetComponent>}
      */
     targets;
+
+    /**
+     * @type {Array<ActionEffectComponent>}
+     */
+    effects;
+
+    /**
+     * @type {Object}
+     */
+    properties;
 
     constructor () {
         this.position = new PositionComponent(
@@ -27,13 +37,9 @@ class TokenEntity {
         
         this.renderable = new TokenRenderableComponent();
         
-        this.targets = new TargetComponent(
-            [
-                TargetType.Self,
-                TargetType.Player, TargetType.Player,
-                TargetType.Enemy, TargetType.Enemy, TargetType.Enemy,
-            ]
-        );
+        this.targets = [];
+        this.effects = [];
+        this.properties = {};
     }
 }
 

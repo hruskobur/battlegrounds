@@ -1,4 +1,5 @@
 const Event = Object.freeze({
+    InputInfo: 'input.info',
     InputSelected: 'input.selected',
     InputSucceed: 'input.succeed',
     InputFailed: 'input.failed',

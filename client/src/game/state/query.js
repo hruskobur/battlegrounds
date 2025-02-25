@@ -31,6 +31,43 @@ function iterator(state, cb) {
     }
 }
 
+
+/**
+ * @public
+ * 
+ * @unchecked
+ * 
+ * @param {GameState} state 
+ * @param {Number} x
+ * @param {Number} y
+ */
+function point (state, x, y) {
+    x = Math.floor(x / 72);
+    y = Math.floor(y / 72);
+
+    return {
+        token: state.tokens[y][x],
+        area: state.areas[y][x]
+    };
+}
+
+
+/**
+ * @public
+ * 
+ * @unchecked
+ * 
+ * @param {GameState} state 
+ * @param {Number} x
+ * @param {Number} y
+ */
+function coordinate (state, x, y) {
+    return {
+        token: state.tokens[y][x],
+        area: state.areas[y][x]
+    };
+}
+
 /**
  * @public
  * 
@@ -39,11 +76,26 @@ function iterator(state, cb) {
  * @param {GameState} state 
  * @param {PositionComponent} position 
  */
-function by_position (state, position) {
+function position (state, position) {
     return {
         token: state.tokens[position.y][position.x],
         area: state.areas[position.y][position.x]
     };
+}
+
+/**
+ * @public
+ * 
+ * @unchecked
+ * 
+ * @param {GameState} state 
+ * @param {Number} x 
+ * @param Number} y 
+ * @param {Number} e 
+ * @returns 
+ */
+function extend (state, x, y, e) {
+    return [];
 }
 
 /**
@@ -127,6 +179,6 @@ function path(state, o, fx, fy, tx, ty) {
 
 export {
     iterator,
-    path,
-    by_position
+    path, extend,
+    point, coordinate, position
 };

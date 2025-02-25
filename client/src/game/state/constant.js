@@ -28,14 +28,22 @@ const DirectionCoordinates = Object.freeze([
 
 const CoordinateLow = 0;
 
-const TargetType = Object.freeze({
-    Self: 0,
-    Player: 1,
-    Enemy: 2
+const CommanderType = Object.freeze({
+    None: null,
+    Player: 0,
+    Bot: 1
+});
+
+const SelectionType = Object.freeze({
+    None: null,
+    Single: 0,
+    Multiple: 1,
+    Extend: 2,
+    Path: 3
 });
 
 export {
     CoordinateLow,
     DirectionCoordinates,
-    TargetType
+    CommanderType, SelectionType
 };
