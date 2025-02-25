@@ -8,7 +8,7 @@ class StatsComponent {
     /**
      * @type {Number}
      */
-    ownership;
+    hp;
 
     /**
      * @type {Number}

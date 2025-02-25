@@ -6,7 +6,7 @@ import * as Persistency from '../../src/core/persistency.js';
 import * as Scenes from '../../src/core/scenes.js';
 
 // scenes
-import { BattlegroundsScene } from '../../src/scenes/bg/scene.js';
+import { BattlegroundsScene } from '../../src/scenes/bg.js';
 
 // tests
 // . . .
@@ -37,6 +37,12 @@ window.addEventListener(
             }
         );
 
-        Scenes.scene('bg', {});
+        Scenes.scene(
+            'bg',
+            {
+                width: 10,
+                height: 10
+            }
+        );
     }
 );

@@ -25,6 +25,10 @@ class TokenSystem extends SystemBase {
         }
 
         const token = new TokenEntity();
+
+        token.position.x = x;
+        token.position.y = y;
+
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 

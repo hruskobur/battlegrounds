@@ -2,6 +2,7 @@ import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 import { RendererEntity } from '../entities/renderer.js';
 
+import * as Init from './init.js';
 import * as Query from './query.js';
 import * as Check from './check.js';
 import Event from './event.js';
@@ -25,6 +26,11 @@ class GameState {
     static Query = Query;
     static Check = Check;
     static Event = Event;
+
+    /**
+     * @type {*}
+     */
+    scenario;
     
     /**
      * @type {Number}
@@ -45,21 +51,35 @@ class GameState {
      * @type {Array<Array<AreaEntity>>}
      */
     areas;
+
     /**
      * @type {Array<Array<TokenEntity>>}
      */
     tokens;
 
     /**
+     * @param {*} scenario 
      */
-    constructor () {
+    constructor (scenario) {
+        this.scenario = scenario;
+
         this.width = 0;
         this.height = 0;
 
+        this.renderer = new RendererEntity();
         this.areas = [];
         this.tokens = [];
+    }
 
-        this.renderer = new RendererEntity();
+    /**
+     * @returns {GameState} this
+     */
+    init () {
+        Init.scenario(this);
+        Init.areas(this);
+        Init.tokens(this);
+
+        return this;
     }
 }
 

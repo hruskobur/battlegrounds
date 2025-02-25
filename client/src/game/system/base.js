@@ -25,10 +25,13 @@ class SystemBase {
     /**
      * @public
      * @virtual
+     * @returns {null} 
      */
     destructor () {
         this.events = null;
         this.state = null;
+
+        return null;
     }
 }
 

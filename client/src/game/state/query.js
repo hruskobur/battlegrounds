@@ -8,11 +8,13 @@ import { DirectionCoordinates, CoordinateLow} from './constant.js';
 // but since they are just a readability-extensions in the first place,
 // thats completly OK
 import * as Check from './check.js';
+import { PositionComponent } from '../components/position.js';
 
 /**
  * Iterates over areas and tokens of the provided game state.
  * Note that this function REQUIRES already initialized game state.
  * @public
+ * @checked
  * @param {GameState} state 
  * @param {Function} cb x, y, area, token, state
  */
@@ -30,6 +32,25 @@ function iterator(state, cb) {
 }
 
 /**
+ * @public
+ * 
+ * @unchecked
+ * 
+ * @param {GameState} state 
+ * @param {PositionComponent} position 
+ */
+function by_position (state, position) {
+    return {
+        token: state.tokens[position.y][position.x],
+        area: state.areas[position.y][position.x]
+    };
+}
+
+/**
+ * @public
+ * 
+ * @unchecked
+ * 
  * @param {GameState} state 
  * @param {Number} o ownership
  * @param {Number} fx
@@ -106,5 +127,6 @@ function path(state, o, fx, fy, tx, ty) {
 
 export {
     iterator,
-    path
+    path,
+    by_position
 };

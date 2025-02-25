@@ -1,8 +1,9 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
+import { RenderableComponent } from '../components/renderable/renderable.js';
 
 /**
- * @class RendererSystem
+ * @class RenderSystem
  * 
  * @description
  * This class manages the scene presence of RenderableComponents.
@@ -14,7 +15,7 @@ import { SystemBase, EventEmitter, GameState } from './base.js';
  * It is responsible for ensuring that entities are correctly 
  * displayed or removed from the scene based on their state.
  */
-class RendererSystem extends SystemBase {
+class RenderSystem extends SystemBase {
     /**
      * @type {Pixi.Container}
      */
@@ -39,7 +40,7 @@ class RendererSystem extends SystemBase {
      * Performs a full clean-up & redraw of the RendererEntity.
      * 
      * @public
-     * @returns {RendererSystem} this
+     * @returns {RenderSystem} this
      */
     init = () => {
         const bg = this.state.renderer.background;
@@ -60,12 +61,12 @@ class RendererSystem extends SystemBase {
             (x, y) => {
                 // draw area
                 const area = this.state.areas[y][x];
-                this.draw(area)
+                this.draw_entity(area)
                 
                 // draw token
                 const token = this.state.tokens[y][x];
                 if(token != null) {
-                    this.draw(token);
+                    this.draw_entity(token);
                 }
             }
         );
@@ -80,9 +81,9 @@ class RendererSystem extends SystemBase {
     /**
      * @public
      * @param {*} entity 
-     * @returns {RendererSystem} this
+     * @returns {RenderSystem} this
      */
-    draw = (entity) => {
+    draw_entity = (entity) => {
         const renderable = entity.renderable;
 
         this.state
@@ -96,11 +97,27 @@ class RendererSystem extends SystemBase {
 
     /**
      * @public
-     * @param {*} entity 
-     * @returns {RendererSystem} this
+     * @param {RenderableComponent} renderable 
      */
-    erase = (entity) => {
+    draw_renderable = (renderable) => {
+        this.state
+        .renderer[renderable.layer]
+        .addChild(renderable);
+
+        this.events.emit(GameState.Event.RendererDraw, renderable);
+    }
+
+    /**
+     * @public
+     * @param {*} entity 
+     * @returns {RenderSystem} this
+     */
+    erase_entity = (entity) => {
         const renderable = entity.renderable;
+
+        while(renderable.children.length > 0) {
+            renderable.removeChildAt(0);
+        }
 
         renderable.removeFromParent();
 
@@ -109,8 +126,31 @@ class RendererSystem extends SystemBase {
         return this;
     }
 
+    /**
+     * @public
+     * @param {RenderableComponent} renderable 
+     * @returns {RenderSystem} this
+     */
+    erase_renderable = (renderable) => {
+        while(renderable.children.length > 0) {
+            renderable.removeChildAt(0);
+        }
+
+        renderable.removeFromParent();
+
+        this.events.emit(GameState.Event.RendererErase, renderable);
+
+        return this;
+    }
+
+    // todo: draw Pixi.DisplayObject ... the elementary basic Pixi stuff
+    draw_primitive () {}
+    erase_primitive () {}
+
+    // todo: unify draw/erase to single methods
+
 }
 
 export {
-    RendererSystem
+    RenderSystem
 };

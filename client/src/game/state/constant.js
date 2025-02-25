@@ -28,7 +28,14 @@ const DirectionCoordinates = Object.freeze([
 
 const CoordinateLow = 0;
 
+const TargetType = Object.freeze({
+    Self: 0,
+    Player: 1,
+    Enemy: 2
+});
+
 export {
     CoordinateLow,
-    DirectionCoordinates
+    DirectionCoordinates,
+    TargetType
 };
