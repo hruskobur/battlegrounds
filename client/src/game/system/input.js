@@ -30,7 +30,7 @@ class InputSystem extends SystemBase {
             }
         );
 
-        window.addEventListener
+        window.addEventListener('keyup', this.#on_key_up);
     }
 
     /**
@@ -39,6 +39,8 @@ class InputSystem extends SystemBase {
      * @returns {null}
      */
     destructor () {
+        window.removeEventListener('keyup', this.#on_key_up);
+
         this.actor = null;
 
         return super.destructor();
@@ -66,7 +68,7 @@ class InputSystem extends SystemBase {
         this.actor = null;
         token.targets.targets.clear();
 
-        this.events.emit(GameState.Event.InputCleared, target_targets);
+        this.events.emit(GameState.Event.InputCleared, token.targets.targets);
 
         return this;
     }
@@ -200,6 +202,17 @@ class InputSystem extends SystemBase {
 
             return this.clear();
         }
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} event 
+     */
+    #on_key_up = event => {
+        if(event.key === 'Escape') {
+            this.clear();
+        }
+
     }
 }
 

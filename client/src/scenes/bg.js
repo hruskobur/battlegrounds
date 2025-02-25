@@ -1,5 +1,6 @@
 import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
+import { ActionSystem } from '../game/system/action.js';
 import { InputSystem } from '../game/system/input.js';
 import { RenderSystem } from '../game/system/render.js';
 import { TokenSystem } from '../game/system/token.js';
@@ -25,7 +26,12 @@ class BattlegroundsScene extends SceneBase {
     /**
      * @type {TokenSystem}
      */
-    tokens;
+    token;
+
+    /**
+     * @type {ActionSystem}
+     */
+    action;
 
     /**
      * 
@@ -38,7 +44,8 @@ class BattlegroundsScene extends SceneBase {
         this.state = null;
         this.render = null;
         this.input = null;
-        this.tokens = null;
+        this.token = null;
+        this.action = null;
     }
 
     /**
@@ -53,7 +60,8 @@ class BattlegroundsScene extends SceneBase {
         this.state = new GameState(scenario);
         this.render = new RenderSystem(this.events, this.state, this.container);
         this.input = new InputSystem(this.events, this.state);
-        this.tokens = new TokenSystem(this.events, this.state);
+        this.token = new TokenSystem(this.events, this.state);
+        this.action = new ActionSystem(this.events, this.state,this.app.ticker);
 
         // events
         this.events.on(GameState.Event.TokenCreated, this.render.draw);
@@ -74,7 +82,8 @@ class BattlegroundsScene extends SceneBase {
 
         // dev: to make systems available via developer's console
         window.state = this.state;
-        window.tokens = this.tokens;
+        window.tokens = this.token;
+        window.actions = this.action;
 
         return this;
     }
@@ -88,7 +97,8 @@ class BattlegroundsScene extends SceneBase {
         this.state = null;
         this.input = this.input.destructor();
         this.render = this.render.destructor();
-        this.tokens = this.tokens.destructor();
+        this.token = this.token.destructor();
+        this.action = this.action.destructor();
 
         super.on_destroy();
         

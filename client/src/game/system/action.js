@@ -15,8 +15,8 @@ class ActionSystem extends SystemBase {
 
     /**
      * 
-     * @param {GameState} events 
-     * @param {EventEmitter} state 
+     * @param {EventEmitter} events 
+     * @param {GameState} state 
      * @param {Pixi.Ticker} ticker 
      */
     constructor (events, state, ticker) {
@@ -32,10 +32,10 @@ class ActionSystem extends SystemBase {
      * @override
      */
     destructor () {
-        this.queue = null;
-
         this.ticker.remove(this.#on_tick);
         this.ticker = null;
+
+        this.queue = null;
     }
 
     /**
