@@ -66,28 +66,16 @@ class BattlegroundsScene extends SceneBase {
         // events
         this.events.on(GameState.Event.TokenCreated, this.render.draw);
         this.events.on(GameState.Event.TokenDestroyed, this.render.erase);
-
-        // this.events.on(GameState.Event.InputSelected, e => {
-        //     console.log('input selected', e);
-        // });
-        // this.events.on(GameState.Event.InputSucceed, e => {
-        //     console.log('input succeed', e);
-        // });
-        // this.events.on(GameState.Event.InputCleared, e => {
-        //     console.log('input cleared', e);
-        // })
-        // this.events.on(GameState.Event.InputFailed, e => {
-        //     console.log('input failed', e);
-        // });
-        // this.events.on(GameState.Event.InputInfo, e => {
-        //     console.log('input info', e);
-        // });
+        this.events.on(GameState.Event.DEV_INPUT, this.action.schedule);
 
         // dev: to make systems available via developer's console
         window.state = this.state;
         window.token = this.token;
         window.input = this.input;
         window.action = this.action;
+
+        // dev: sandbox
+        this.token.create(0, 0);
 
         return this;
     }

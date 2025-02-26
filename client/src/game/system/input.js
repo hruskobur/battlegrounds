@@ -75,6 +75,15 @@ class InputSystem extends SystemBase {
      * @returns {InputSystem} this
      */
     #on_pointer_down = event => {
+        // note: no need for a check, because the event is emitted by
+        // zone, that has to have correct corrinates
+        const zone = GameState.Query.point(
+            this.state,
+            event.target.x, event.target.y
+        );
+        
+        this.events.emit(GameState.Event.DEV_INPUT, zone);
+
         return this;
     }
 

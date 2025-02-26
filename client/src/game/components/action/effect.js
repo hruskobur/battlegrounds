@@ -8,7 +8,7 @@ class ActionEffectComponent {
     /**
      * @type {String}
      */
-    id;
+    name;
 
     /**
      * @type {AreaEffectDuration}
@@ -41,10 +41,7 @@ class ActionEffectComponent {
      */
     constructor (name, total, tick, on_start, on_tick, on_end) {
         this.name = name;
-
-        this.duration.total = total;
-        this.duration.tick = tick;
-
+        this.duration = { total, tick };
         this.on_start = on_start;
         this.on_tick = on_tick;
         this.on_end = on_end;

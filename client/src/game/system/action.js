@@ -47,6 +47,28 @@ class ActionSystem extends SystemBase {
      * @returns {ActionSystem} this
      */
     schedule = (zone) => {
+        const token = zone.token;
+        if(token == null) {
+            console.log('ActionSystem.schedule', 'no token');
+
+            return this;
+        }
+
+        if(token.state.idx != null) {
+            console.log('ActionSystem.schedule', 'already scheduled');
+
+            return this;
+        }
+
+        token.state.idx = 0;
+
+        // note: yes, zone; not token
+        // we want to keep a reference to the zone's token for cases,
+        // where token is removed while still being processed
+        this.queue.push(zone);
+
+        console.log('ActionSystem.schedule', 'scheduled');
+
         return this;
     }
 
@@ -74,6 +96,8 @@ class ActionSystem extends SystemBase {
         for (let q = 0; q < this.queue.length; ++q) {
             const zone = this.queue[q];
 
+            // note: get the reference to the token; might be null if
+            // it has been removed by now
             const token = zone.token;
             if(token == null) {
                 continue;
@@ -81,27 +105,46 @@ class ActionSystem extends SystemBase {
 
             const state = token.state;
             const effects = token.effects;
-            const effect = effects[state.active];
+
+            // note: it makes no sense to have 0 effects in action,
+            // but let's support this case for now
+            const effects_total = effects.length;
+            if(effects_total == 0) {
+                state.idx = null;
+                continue;
+            }
+
+            const effect = effects[state.idx];
             const duration = effect.duration;
     
             state.tick += dt;
             state.total += dt;
     
             if (state.total == dt) {
-                console.log('start', performance.now());
+                console.log('ActionSystem.#on_tick', 'start',performance.now());
+            }
+
+            if(duration.tick != null && state.tick >= duration.tick) {
+                console.log('ActionSystem.#on_tick', 'tick', performance.now());
+
+                state.tick = 0;
             }
     
             if (state.total >= duration.total) {
-                console.log('end', performance.now());
+                console.log('ActionSystem.#on_tick', 'end', performance.now());
     
                 state.tick = 0;
                 state.total = 0;
-    
-                continue;
+                state.idx += 1;
+
+                if(state.idx >= effects.length) {
+                    state.idx = null;
+
+                    continue;
+                }
             }
     
             updated_queue.push(zone);
-           
         }
     
         this.queue = updated_queue;

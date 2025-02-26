@@ -2,7 +2,7 @@ class ActionStateComponent {
     /**
      * @type {Number}
      */
-    state;
+    idx;
     
     /**
      * @type {Number}
@@ -17,7 +17,7 @@ class ActionStateComponent {
     /**
      */
     constructor () {
-        this.state = null;
+        this.idx = null;
         this.total = 0;
         this.tick = 0;
     } 

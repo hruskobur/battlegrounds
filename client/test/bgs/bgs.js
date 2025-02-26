@@ -2,7 +2,6 @@
 
 // managers
 import * as Events from '../../src/core/emitter.js';
-import * as Persistency from '../../src/core/persistency.js';
 import * as Scenes from '../../src/core/scenes.js';
 
 // scenes
@@ -33,10 +32,10 @@ window.addEventListener(
             {
                 Events,
                 Scenes,
-                Persistency
             }
         );
 
+        // sandbox
         Scenes.scene(
             'bg',
             {
