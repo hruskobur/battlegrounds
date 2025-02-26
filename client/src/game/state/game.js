@@ -6,6 +6,7 @@ import * as Init from './init.js';
 import * as Query from './query.js';
 import * as Check from './check.js';
 import Event from './event.js';
+import { GridEntity } from '../entities/grid.js';
 
 /**
  * @class GameState
@@ -33,19 +34,9 @@ class GameState {
     scenario;
     
     /**
-     * @type {Number}
+     * @type {GridEntity}
      */
-    width;
-
-    /**
-     * @type {Number}
-     */
-    height;
-
-    /**
-     * @type {RenderEntity}
-     */
-    render;
+    grid;
 
     /**
      * @type {Array<Array<AreaEntity>>}
@@ -58,19 +49,23 @@ class GameState {
     tokens;
 
     /**
+     * @type {RenderEntity}
+     */
+    render;
+    
+    /**
      * @param {*} scenario 
      */
     constructor (scenario) {
         this.scenario = scenario;
 
-        this.width = 0;
-        this.height = 0;
-
-        this.render = new RenderEntity();
+        this.grid = new GridEntity();
         this.areas = [];
         this.tokens = [];
 
-        Init.scenario(this);
+        this.render = new RenderEntity();
+
+        Init.grid(this);
         Init.areas(this);
         Init.tokens(this);
     }

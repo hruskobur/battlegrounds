@@ -1,10 +1,10 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { PositionComponent } from '../components/position.js';
+import { GridEntity } from '../entities/grid.js';
 
 class InputSystem extends SystemBase {
     /**
-     * @type {PositionComponent}
+     * @type {GridEntity}
      */
     actor;
 
@@ -91,7 +91,19 @@ class InputSystem extends SystemBase {
         return this;
     }
 
-    select_actor () {}
+    /**
+     * 
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {Boolean}
+     */
+    input_select_actor = (x, y) => {
+        if(this.actor !== null) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 export {

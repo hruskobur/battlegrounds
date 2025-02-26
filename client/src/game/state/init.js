@@ -1,14 +1,32 @@
+import { GridEntity } from '../entities/grid.js';
 import { AreaEntity } from '../entities/area.js';
 import { GameState } from './game.js';
+import { PositionComponent } from '../components/position.js';
 
 /**
  * @public
  * @param {GameState} state
  * @returns {void}
  */
-function scenario (state) {
-    state.width = state.scenario.width;
-    state.height = state.scenario.height;
+function grid (state) {
+    state.grid.width = state.scenario.width;
+    state.grid.height = state.scenario.height;
+
+    state.grid.positions = [];
+
+    for(let y = 0; y < state.grid.height; ++y) {
+
+        const _position = [];
+        for(let x = 0; x < state.grid.width; ++x) {
+            _position.push(
+                new PositionComponent(x, y)
+            );
+        }
+
+        state.grid.positions.push(_position);
+    }
+
+    return grid;
 }
 
 /**
@@ -19,12 +37,10 @@ function scenario (state) {
 function areas (state) {
     state.areas = [];
     
-    for(let y = 0; y < state.height; ++y) {
+    for(let y = 0; y < state.grid.height; ++y) {
         const _areas = [];
-        for(let x = 0; x < state.width; ++x) {
+        for(let x = 0; x < state.grid.width; ++x) {
             const area = new AreaEntity();
-            area.position.x = x;
-            area.position.y = y;
 
             area.terrain.difficulty = 1;
             
@@ -69,10 +85,10 @@ function areas (state) {
  */
 function tokens (state) {
     state.tokens = [];
-    for(let y = 0; y < state.height; ++y) {
+    for(let y = 0; y < state.grid.height; ++y) {
 
         const _tokens = [];
-        for(let x = 0; x < state.width; ++x) {
+        for(let x = 0; x < state.grid.width; ++x) {
             _tokens.push(null);
         }
 
@@ -83,6 +99,6 @@ function tokens (state) {
 }
 
 export {
-    scenario, 
+    grid, 
     areas, tokens
 };

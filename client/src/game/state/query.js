@@ -9,6 +9,7 @@ import { DirectionCoordinates, CoordinateLow} from './constant.js';
 // thats completly OK
 import * as Check from './check.js';
 import { PositionComponent } from '../components/position.js';
+import { GridEntity } from '../entities/grid.js';
 
 /**
  * Iterates over areas and tokens of the provided game state.
@@ -19,8 +20,8 @@ import { PositionComponent } from '../components/position.js';
  * @param {Function} cb x, y, area, token, state
  */
 function iterator(state, cb) {
-    for (let y = CoordinateLow; y < state.height; ++y) {
-        for (let x = CoordinateLow; x < state.width; ++x) {
+    for (let y = CoordinateLow; y < state.grid.height; ++y) {
+        for (let x = CoordinateLow; x < state.grid.width; ++x) {
             cb(
                 x, y,
                 state.areas[y][x],
@@ -34,9 +35,7 @@ function iterator(state, cb) {
 
 /**
  * @public
- * 
  * @unchecked
- * 
  * @param {GameState} state 
  * @param {Number} x
  * @param {Number} y
@@ -70,9 +69,7 @@ function coordinate (state, x, y) {
 
 /**
  * @public
- * 
  * @unchecked
- * 
  * @param {GameState} state 
  * @param {PositionComponent} position 
  */
@@ -85,9 +82,7 @@ function position (state, position) {
 
 /**
  * @public
- * 
  * @unchecked
- * 
  * @param {GameState} state 
  * @param {Number} x 
  * @param Number} y 
@@ -100,9 +95,7 @@ function extend (state, x, y, e) {
 
 /**
  * @public
- * 
  * @unchecked
- * 
  * @param {GameState} state 
  * @param {Number} o ownership
  * @param {Number} fx

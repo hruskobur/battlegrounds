@@ -1,14 +1,8 @@
-import { PositionComponent } from '../components/position.js';
 import { TerrainComponent } from '../components/terrain.js';
 import { StatsComponent } from '../components/stats.js';
 import { AreaRenderableComponent } from '../components/renderable/area.js';
 
 class AreaEntity {
-    /**
-     * @type {PositionComponent}
-     */
-    position;
-
     /**
      * @type {TerrainComponent}
      */
@@ -27,11 +21,6 @@ class AreaEntity {
     /**
      */
     constructor () {
-        this.position = new PositionComponent(
-            Number.MIN_SAFE_INTEGER,
-            Number.MIN_SAFE_INTEGER
-        );
-
         this.terrain = new TerrainComponent(
             '',
             Number.MIN_SAFE_INTEGER
