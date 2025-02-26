@@ -2,7 +2,7 @@ import { GameState } from './game.js';
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 
-import { DirectionCoordinates, CoordinateLow} from './constant.js';
+import { DirectionCoordinates, CoordinateLow } from './constant.js';
 
 // note: this will tightly couple the Check & Query modules
 // but since they are just a readability-extensions in the first place,
@@ -23,7 +23,7 @@ function iterator(state, cb) {
     for (let y = CoordinateLow; y < state.grid.height; ++y) {
         for (let x = CoordinateLow; x < state.grid.width; ++x) {
             cb(
-                x, y,
+                state.grid.positions[y][x],
                 state.areas[y][x],
                 state.tokens[y][x],
                 state
@@ -45,6 +45,7 @@ function point (state, x, y) {
     y = Math.floor(y / 72);
 
     return {
+        position: state.grid.positions[y][x],
         token: state.tokens[y][x],
         area: state.areas[y][x]
     };
@@ -62,6 +63,7 @@ function point (state, x, y) {
  */
 function coordinate (state, x, y) {
     return {
+        grid: state.grid[y][x],
         token: state.tokens[y][x],
         area: state.areas[y][x]
     };
@@ -74,9 +76,13 @@ function coordinate (state, x, y) {
  * @param {PositionComponent} position 
  */
 function position (state, position) {
+    const x = position.x;
+    const y = position.y;
+
     return {
-        token: state.tokens[position.y][position.x],
-        area: state.areas[position.y][position.x]
+        position: state.grid.positions[y][x],
+        token: state.tokens[y][x],
+        area: state.areas[y][x]
     };
 }
 

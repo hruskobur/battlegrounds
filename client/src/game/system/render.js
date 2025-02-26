@@ -55,14 +55,14 @@ class RenderSystem extends SystemBase {
         // layers: do the "drawing"
         GameState.Query.iterator(
             this.state,
-            (x, y) => {
+            (position, area, token) => {
                 // draw area
-                const area = this.state.areas[y][x];
-                this.draw(area);
+                if(area != null) {
+                    this.draw(area);
+                }
 
                 // draw token
-                const token = this.state.tokens[y][x];
-                if (token != null) {
+                if(token != null) {
                     this.draw(token);
                 }
             }
