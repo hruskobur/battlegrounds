@@ -42,11 +42,17 @@ class ActionSystem extends SystemBase {
     }
 
     /**
+     * @note let's do the token & token.state checks here, as ActionSystem
+     * is solely responsible for scheduling and token.state management.
+     * Do not do the checks on InputSystem.
+     * 
      * @public
      * @param {GameZone} zone 
      * @returns {ActionSystem} this
      */
     schedule = (zone) => {
+        // note: it is important check if zone has token; as it may be destroyed
+        // at this point
         const token = zone.token;
         if(token == null) {
             console.log('ActionSystem.schedule', 'no token');

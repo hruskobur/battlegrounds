@@ -54,25 +54,27 @@ class InputSystem extends SystemBase {
     /**
      * @private
      * @param {Pixi.FederatedPointerEvent} event 
-     * @returns {InputSystem} this
+     * @returns {void}
      */
     #on_pointer_enter = event => {
-        return this;
+        return;
     }
 
     /**
      * @private
      * @param {Pixi.FederatedPointerEvent} event 
-     * @returns {InputSystem} this
+     * @returns {void}
      */
     #on_pointer_leave = event => {
-        return this;
+        return;
     }
 
     /**
+     * @note let's do the ownership checks here, as InputSystem is responsible
+     * for zone.area checks
      * @private
      * @param {Pixi.FederatedPointerEvent} event 
-     * @returns {InputSystem} this
+     * @returns {void}
      */
     #on_pointer_down = event => {
         // note: no need for a check, because the event is emitted by
@@ -81,37 +83,30 @@ class InputSystem extends SystemBase {
             this.state,
             event.target.x, event.target.y
         );
+
+        // note: this will be done more systematicaly, not by checking the 0
+        const area = zone.area;
+        if(area.stats.ownership != 0) {
+            console.log('InputSystem.#on_pointer_down', 'cannot act as enemy');
+            return;
+        }
         
         this.events.emit(GameState.Event.DEV_INPUT, zone);
 
-        return this;
+        return;
     }
 
     /**
      * @private
      * @param {KeyboardEvent} event 
-     * @returns {InputSystem} this
+     * @returns {void}
      */
     #on_key_up = event => {
         if(event.key === 'Escape') {
             this.clear();
+
+            return;
         }
-
-        return this;
-    }
-
-    /**
-     * 
-     * @param {Number} x 
-     * @param {Number} y 
-     * @returns {Boolean}
-     */
-    input_select_actor = (x, y) => {
-        if(this.actor !== null) {
-            return true;
-        }
-
-        return false;
     }
 }
 

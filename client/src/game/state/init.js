@@ -45,7 +45,7 @@ function areas (state, scenario) {
             area.terrain.difficulty = 1;
             area.terrain.geography = Math.floor(Math.random() * 5);
             area.stats.hp = Math.floor(Math.random() * 100) +1;
-            area.stats.ownership = 0;
+            area.stats.ownership = Math.floor(Math.random() * 2);
             
             // note: these are set here correctly
             area.renderable.x = x * area.renderable.width;
@@ -57,6 +57,11 @@ function areas (state, scenario) {
 
             // note: dev only, won't be there
             area.renderable.difficulty.text = area.stats.hp;
+
+            // dev: to differenciate between player & enemy; won't be like that
+            area.renderable.terrain.tint = (area.stats.ownership === 0)
+            ? 'blue'
+            : 'red';
         }
     }
 }
