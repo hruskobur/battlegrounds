@@ -1,7 +1,7 @@
 import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
 import { ActionSystem } from '../game/system/action.js';
-// import { InputSystem } from '../game/system/input.js';
+import { InputSystem } from '../game/system/input.js';
 import { RenderSystem } from '../game/system/render.js';
 import { TokenSystem } from '../game/system/token.js';
 
@@ -18,10 +18,10 @@ class BattlegroundsScene extends SceneBase {
      */
     render;
 
-    // /**
-    //  * @type {InputSystem}
-    //  */
-    // input;
+    /**
+     * @type {InputSystem}
+     */
+    input;
 
     /**
      * @type {TokenSystem}
@@ -43,7 +43,7 @@ class BattlegroundsScene extends SceneBase {
 
         this.state = null;
         this.render = null;
-        // this.input = null;
+        this.input = null;
         this.token = null;
         this.action = null;
     }
@@ -59,7 +59,7 @@ class BattlegroundsScene extends SceneBase {
 
         this.state = new GameState(scenario);
         this.render = new RenderSystem(this.events, this.state, this.container);
-        // this.input = new InputSystem(this.events, this.state);
+        this.input = new InputSystem(this.events, this.state);
         this.token = new TokenSystem(this.events, this.state);
         this.action = new ActionSystem(this.events, this.state,this.app.ticker);
 
@@ -85,8 +85,9 @@ class BattlegroundsScene extends SceneBase {
 
         // dev: to make systems available via developer's console
         window.state = this.state;
-        window.tokens = this.token;
-        window.actions = this.action;
+        window.token = this.token;
+        window.input = this.input;
+        window.action = this.action;
 
         return this;
     }
@@ -98,7 +99,7 @@ class BattlegroundsScene extends SceneBase {
      */
     on_destroy () {
         this.state = null;
-        // this.input = this.input.destructor();
+        this.input = this.input.destructor();
         this.render = this.render.destructor();
         this.token = this.token.destructor();
         this.action = this.action.destructor();

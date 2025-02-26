@@ -17,7 +17,7 @@ class InputSystem extends SystemBase {
 
         this.actor = null;
 
-        GameState.Query.iterator(
+        GameState.Iterator.all(
             this.state,
             (position, area, token, state) => {
                 area.renderable

@@ -3,6 +3,7 @@ import { TokenEntity } from '../entities/token.js';
 import { RenderEntity } from '../entities/render.js';
 
 import * as Init from './init.js';
+import * as Iterator from './iterator.js';
 import * as Query from './query.js';
 import * as Check from './check.js';
 import Event from './event.js';
@@ -24,6 +25,7 @@ import { GridEntity } from '../entities/grid.js';
  * dynamic component compositions.
  */
 class GameState {
+    static Iterator = Iterator;
     static Query = Query;
     static Check = Check;
     static Event = Event;

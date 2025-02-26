@@ -1,22 +1,53 @@
+/**
+ * @typedef {Object} AreaEffectDuration
+ * @property {Number} total
+ * @property {Number|null} tick
+ */
+
 class ActionEffectComponent {
     /**
      * @type {String}
      */
-    begin;
+    id;
+
+    /**
+     * @type {AreaEffectDuration}
+     */
+    duration;
 
     /**
      * @type {String}
      */
-    end;
+    on_start;
+
+    /**
+     * @type {String}
+     */
+    on_tick;
+
+    /**
+     * @type {String}
+     */
+    on_end;
 
     /**
      * 
-     * @param {String} begin 
-     * @param {String} end 
+     * @param {String} name 
+     * @param {Number} total 
+     * @param {Number|null} tick 
+     * @param {String} on_start 
+     * @param {String} on_tick 
+     * @param {String} on_end 
      */
-    constructor (begin, end) {
-        this.begin = begin;
-        this.end = end;
+    constructor (name, total, tick, on_start, on_tick, on_end) {
+        this.name = name;
+
+        this.duration.total = total;
+        this.duration.tick = tick;
+
+        this.on_start = on_start;
+        this.on_tick = on_tick;
+        this.on_end = on_end;
     }
 }
 

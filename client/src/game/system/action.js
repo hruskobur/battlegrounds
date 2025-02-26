@@ -66,6 +66,37 @@ class ActionSystem extends SystemBase {
     #on_tick = (ticker) => {
         const dt = ticker.elapsedMS;
 
+        const updated_queue = [];
+    
+        for (let q = 0; q < this.queue.length; ++q) {
+            const token = this.queue[q];
+            const state = token.state;
+            const effects = token.effects;
+            const effect = effects[state.active];
+            const duration = effect.duration;
+    
+            state.tick += dt;
+            state.total += dt;
+    
+            if (state.total == dt) {
+                console.log('start', performance.now());
+            }
+    
+            if (state.total >= duration.total) {
+                console.log('end', performance.now());
+    
+                state.tick = 0;
+                state.total = 0;
+    
+                continue;
+            }
+    
+            updated_queue.push(token);
+           
+        }
+    
+        this.queue = updated_queue;
+
         return this;
     }
 }

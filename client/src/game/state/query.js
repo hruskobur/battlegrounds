@@ -1,37 +1,14 @@
+import { DirectionCoordinates } from './constant.js';
+
 import { GameState } from './game.js';
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
-
-import { DirectionCoordinates, CoordinateLow } from './constant.js';
 
 // note: this will tightly couple the Check & Query modules
 // but since they are just a readability-extensions in the first place,
 // thats completly OK
 import * as Check from './check.js';
 import { PositionComponent } from '../components/position.js';
-import { GridEntity } from '../entities/grid.js';
-
-/**
- * Iterates over areas and tokens of the provided game state.
- * Note that this function REQUIRES already initialized game state.
- * @public
- * @checked
- * @param {GameState} state 
- * @param {Function} cb x, y, area, token, state
- */
-function iterator(state, cb) {
-    for (let y = CoordinateLow; y < state.grid.height; ++y) {
-        for (let x = CoordinateLow; x < state.grid.width; ++x) {
-            cb(
-                state.grid.positions[y][x],
-                state.areas[y][x],
-                state.tokens[y][x],
-                state
-            );
-        }
-    }
-}
-
 
 /**
  * @public
@@ -177,7 +154,6 @@ function path(state, o, fx, fy, tx, ty) {
 }
 
 export {
-    iterator,
     path, extend,
     point, coordinate, position
 };

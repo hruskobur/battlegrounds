@@ -53,7 +53,7 @@ class RenderSystem extends SystemBase {
             );
 
         // layers: do the "drawing"
-        GameState.Query.iterator(
+        GameState.Iterator.all(
             this.state,
             (position, area, token) => {
                 // draw area
