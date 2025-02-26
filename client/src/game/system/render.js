@@ -1,6 +1,5 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { GridEntity } from '../entities/grid.js';
 
 /**
  * @class RenderSystem
@@ -48,22 +47,22 @@ class RenderSystem extends SystemBase {
         areas.boundsArea =
             tokens.boundsArea = new Pixi.Rectangle(
                 0, 0,
-                72 * state.grid.width,
-                72 * state.grid.height
+                72 * state.width,
+                72 * state.height
             );
 
         // layers: do the "drawing"
         GameState.Iterator.all(
             this.state,
-            (position, area, token) => {
+            (zone, x, y, state) => {
                 // draw area
-                if(area != null) {
-                    this.draw(area);
+                if(zone.area != null) {
+                    this.draw(zone.area);
                 }
 
                 // draw token
-                if(token != null) {
-                    this.draw(token);
+                if(zone.token != null) {
+                    this.draw(zone.token);
                 }
             }
         );
@@ -76,7 +75,6 @@ class RenderSystem extends SystemBase {
             areas,
             tokens
         );
-
     }
 
     /**

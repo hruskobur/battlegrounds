@@ -1,10 +1,10 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { GridEntity } from '../entities/grid.js';
+import { GameZone } from '../state/zone.js';
 
 class InputSystem extends SystemBase {
     /**
-     * @type {GridEntity}
+     * @type {GameZone}
      */
     actor;
 
@@ -19,8 +19,8 @@ class InputSystem extends SystemBase {
 
         GameState.Iterator.all(
             this.state,
-            (position, area, token, state) => {
-                area.renderable
+            (zone, x, y, state) => {
+                zone.area.renderable
                 .on('pointerdown', this.#on_pointer_down)
                 .on('pointerd', this.#on_pointer_leave)
                 .on('pointerenter', this.#on_pointer_enter);

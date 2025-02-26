@@ -16,26 +16,26 @@ class TokenSystem extends SystemBase {
      * @returns {TokenSystem} this
      */
     create = (x, y) => {
+        // note: coordinates are outside of this map
         if(GameState.Check.coordinates(this.state, x, y) === false) {
             return this;
         }
-
-        if(this.state.tokens[y][x] !== null) {
+        
+        // note: safe to access directly
+        const zone = GameState.Query.coordinate(x, y);
+        
+        // note: cannot create token where another token already exist
+        if(zone.token !== null) {
             return this;
         }
 
+        // note: create new token
+        // todo: token will be generated & factory will be used
         const token = new TokenEntity();
-
-        token.position.x = x;
-        token.position.y = y;
-
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 
-        // todo: set other components
-        // . . .
-
-        this.state.tokens[y][x] = token;
+        zone.token = token;
 
         this.events.emit(GameState.Event.TokenCreated, token);
 
@@ -48,16 +48,21 @@ class TokenSystem extends SystemBase {
      * @returns {TokenSystem} this
      */
     destroy = (x, y) => {
+        // note: coordinates are outside of this map
         if(GameState.Check.coordinates(this.state, x, y) === false) {
             return this;
         }
 
-        const token = this.state.tokens[y][x];
-        if(token === null) {
+        // note: safe to access directly
+        const zone = GameState.Query.coordinate(x, y);
+
+        // note: no token to destroy
+        if(zone.token === null) {
             return this;
         }
 
-        this.state.tokens[y][x] = null;
+        const token = zone.token;
+        zone.token = null;
 
         this.events.emit(GameState.Event.TokenDestroyed, token);
 

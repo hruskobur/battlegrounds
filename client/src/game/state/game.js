@@ -1,13 +1,12 @@
-import { AreaEntity } from '../entities/area.js';
-import { TokenEntity } from '../entities/token.js';
 import { RenderEntity } from '../entities/render.js';
+import { GameScenario } from './scenario.js';
+import { GameZone } from './zone.js';
 
-import * as Init from './init.js';
 import * as Iterator from './iterator.js';
 import * as Query from './query.js';
 import * as Check from './check.js';
-import Event from './event.js';
-import { GridEntity } from '../entities/grid.js';
+import * as Event from './event.js';
+import * as Init from './init.js';
 
 /**
  * @class GameState
@@ -28,48 +27,36 @@ class GameState {
     static Iterator = Iterator;
     static Query = Query;
     static Check = Check;
-    static Event = Event;
+    static Event = Event.default;
 
     /**
-     * @type {*}
+     * @type {Number}
      */
-    scenario;
-    
-    /**
-     * @type {GridEntity}
-     */
-    grid;
+    width;
 
     /**
-     * @type {Array<Array<AreaEntity>>}
+     * @type {Number}
      */
-    areas;
+    height;
 
     /**
-     * @type {Array<Array<TokenEntity>>}
+     * @type {Array<Array<GameZone>>}
      */
-    tokens;
-
+    map;
+  
     /**
-     * @type {RenderEntity}
-     */
-    render;
-    
-    /**
-     * @param {*} scenario 
+     * @param {GameScenario} scenario 
      */
     constructor (scenario) {
-        this.scenario = scenario;
-
-        this.grid = new GridEntity();
-        this.areas = [];
-        this.tokens = [];
+        this.width = 0;
+        this.height = 0;
+        this.map = [];
 
         this.render = new RenderEntity();
 
-        Init.grid(this);
-        Init.areas(this);
-        Init.tokens(this);
+        Init.map(this, scenario);
+        Init.areas(this, scenario);
+        Init.tokens(this, scenario);
     }
 }
 

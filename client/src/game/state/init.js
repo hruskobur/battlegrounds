@@ -1,104 +1,78 @@
-import { GridEntity } from '../entities/grid.js';
-import { AreaEntity } from '../entities/area.js';
 import { GameState } from './game.js';
-import { PositionComponent } from '../components/position.js';
+import { GameScenario } from './scenario.js';
+import { GameZone } from './zone.js';
 
 /**
  * @public
  * @param {GameState} state
+ * @param {GameScenario} scenario 
  * @returns {void}
  */
-function grid (state) {
-    state.grid.width = state.scenario.width;
-    state.grid.height = state.scenario.height;
+function map (state, scenario) {
+    state.width = scenario.width;
+    state.height = scenario.height;
+    state.map = [];
 
-    state.grid.positions = [];
+    for(let y = 0; y < state.height; ++y) {
+        const _map = [];
+       
+        for(let x = 0; x < state.width; ++x) {
+            const zone = new GameZone();
 
-    for(let y = 0; y < state.grid.height; ++y) {
+            const position = zone.position;
+            position.x = x;
+            position.y = y;
 
-        const _position = [];
-        for(let x = 0; x < state.grid.width; ++x) {
-            _position.push(
-                new PositionComponent(x, y)
-            );
+            _map.push(zone);
         }
 
-        state.grid.positions.push(_position);
+        state.map.push(_map);
     }
-
-    return grid;
 }
 
 /**
  * @public
  * @param {GameState} state
+ * @param {GameScenario} scenario 
  * @returns {void}
  */
-function areas (state) {
-    state.areas = [];
-    
-    for(let y = 0; y < state.grid.height; ++y) {
-        const _areas = [];
-        for(let x = 0; x < state.grid.width; ++x) {
-            const area = new AreaEntity();
+function areas (state, scenario) {
+    for(let y = 0; y < state.height; ++y) {
+        for(let x = 0; x < state.width; ++x) {
+            const area = state.map[y][x].area;
 
+            // note: these will be set from scenario!
             area.terrain.difficulty = 1;
+            area.terrain.geography = Math.floor(Math.random() * 5);
+            area.stats.hp = Math.floor(Math.random() * 100) +1;
+            area.stats.ownership = 0;
             
-            // dev: this is just to illustrate geography without 
-            // existing sprites. A string-id will be used later.
-            area.terrain.geography = area.terrain.difficulty;
-
-            area.stats.hp = Math.floor(Math.random() * 100) + 1;
-            area.stats.ownership = Math.floor(Math.random() *2);
-
+            // note: these are set here correctly
             area.renderable.x = x * area.renderable.width;
             area.renderable.y = y * area.renderable.height;
-            area.renderable.terrain.alpha = (area.stats.hp / 100);
-            area.renderable.difficulty.text = area.stats.hp;
-                
-            // dev: this isn't the way ... setter has to be implemented
-            // area.renderable.border
-            // .clear()
-            // .rect(8, 8, 56, 56)
-            // .stroke({
-            //     width: 2,
-            //     color: area.stats.ownership === 0 ? 'blue' : 'red'
-            // });
-            // dev: this isn't the way either... 
-            // but since i dont have terrain sprites for now, everything's 
-            // white , and it looks confusing
-            area.renderable.terrain.tint = area.stats.ownership === 0
-            ? 'blue'
-            : 'red';
-            
-            _areas.push(area);
-        }
 
-        state.areas.push(_areas);
+            // note: this will be set from scenario!
+            // note: will be replaced by sprite id
+            area.renderable.terrain.alpha = (area.stats.hp / 100);
+
+            // note: dev only, won't be there
+            area.renderable.difficulty.text = area.stats.hp;
+        }
     }
 }
 
 /**
  * @public
  * @param {GameState} state
+ * @param {GameScenario} scenario 
  * @returns {void}
  */
-function tokens (state) {
-    state.tokens = [];
-    for(let y = 0; y < state.grid.height; ++y) {
-
-        const _tokens = [];
-        for(let x = 0; x < state.grid.width; ++x) {
-            _tokens.push(null);
-        }
-
-        state.tokens.push(_tokens);
-    }
-
-    return this;
+function tokens (state, scenario) {
+    // 1st: iterarate over scenario and create tokens
+    // . . .
 }
 
 export {
-    grid, 
+    map, 
     areas, tokens
 };
