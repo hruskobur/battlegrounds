@@ -36,7 +36,7 @@ class TokenSystem extends SystemBase {
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 
-        token.effects = this.effect_factory();
+        token.actions = this.effect_factory();
 
         zone.token = token;
 

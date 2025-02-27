@@ -110,38 +110,38 @@ class ScheduleSystem extends SystemBase {
             }
 
             const state = token.state;
-            const effects = token.effects;
+            const actions = token.actions;
 
-            // note: it makes no sense to have 0 effects in action,
+            // note: it makes no sense to have 0 action,
             // but let's support this case for now
-            const effects_total = effects.length;
-            if(effects_total == 0) {
+            const actions_total = actions.length;
+            if(actions_total == 0) {
                 state.idx = null;
                 continue;
             }
 
-            const effect = effects[state.idx];
-            const duration = effect.duration;
+            const action = actions[state.idx];
+            const duration = action.duration;
     
             state.tick += dt;
             state.total += dt;
     
             if (state.total == dt) {
-                // note: request execution only if effect exist
-                if(effect.on_start != null) {
+                // note: request execution only if action exist
+                if(action.on_start != null) {
                     this.events.emit(
                         GameState.Event.ActionExecute,
-                        effect.on_start, zone
+                        action.on_start, zone
                     );
                 }
             }
 
             if(duration.tick != null && state.tick >= duration.tick) {
-                // note: request execution only if effect exist
-                if(effect.on_tick != null) {
+                // note: request execution only if action exist
+                if(action.on_tick != null) {
                     this.events.emit(
                         GameState.Event.ActionExecute,
-                        effect.on_tick, zone
+                        action.on_tick, zone
                     );
                 }
 
@@ -149,11 +149,11 @@ class ScheduleSystem extends SystemBase {
             }
     
             if (state.total >= duration.total) {
-                // note: request execution only if effect exist
-                if(effect.on_end != null) {
+                // note: request execution only if action exist
+                if(action.on_end != null) {
                     this.events.emit(
                         GameState.Event.ActionExecute,
-                        effect.on_end, zone
+                        action.on_end, zone
                     );
                 }
     
@@ -161,7 +161,7 @@ class ScheduleSystem extends SystemBase {
                 state.total = 0;
                 state.idx += 1;
 
-                if(state.idx >= effects.length) {
+                if(state.idx >= actions.length) {
                     state.idx = null;
 
                     continue;

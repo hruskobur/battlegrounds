@@ -11,7 +11,7 @@ class TokenEntity {
     /**
      * @type {Array<ActionEffectComponent>}
      */
-    effects;
+    actions;
 
     /**
      * @type {ActionStateComponent}
@@ -21,7 +21,7 @@ class TokenEntity {
     constructor () {
         this.renderable = new TokenRenderableComponent();
         
-        this.effects = [];
+        this.actions = [];
         this.state = new ActionStateComponent();
     }
 }
