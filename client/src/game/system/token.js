@@ -1,6 +1,6 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { TokenEntity } from '../entities/token.js';
-import { ActionEffectComponent } from '../components/action/effect.js';
+import { ActionComponent } from '../components/action/action.js';
 
 class TokenSystem extends SystemBase {
     /**
@@ -14,9 +14,10 @@ class TokenSystem extends SystemBase {
     /**
      * @param {Number} x 
      * @param {Number} y 
+     * @param {Array<ActionComponent>} options
      * @returns {TokenSystem} this
      */
-    create = (x, y) => {
+    create = (x, y, options) => {
         // note: coordinates are outside of this map
         if(GameState.Check.coordinates(this.state, x, y) === false) {
             return this;
@@ -36,7 +37,7 @@ class TokenSystem extends SystemBase {
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 
-        token.actions = this.effect_factory();
+        token.actions = this.action_factory(options);
 
         zone.token = token;
 
@@ -73,33 +74,28 @@ class TokenSystem extends SystemBase {
     }
 
     /**
-     * @param {*} options not implemented yet
-     * @returns {Array<ActionEffectComponent>}
+     * @param {Array<ActionComponent>} options
+     * @returns {Array<ActionComponent>}
      */
-    effect_factory (options) {
-        const effect_count = Math.floor(Math.random() * 4);
-
-        const effects = [];
-        for(let e = 0; e < effect_count; ++e) {
-            let name = `effect.id.${e}`;
-            let total = (Math.floor(Math.random() * 10) * 1000) + 1000;
-            let tick = (Math.random() > 0.5) ? null : 1000;
-            let on_start = name + '.start';
-            let on_tick = (tick !== null) ? name + '.tick' : null;
-            let on_end = name + '.end';
-
-            effects.push(
-                new ActionEffectComponent(
-                    name,
-                    total, tick,
-                    on_start, on_tick, on_end
+    action_factory (options=[]) {
+        const actions = [];
+        
+        for(let o = 0; o < options.length; ++o) {
+            const option = options[o];
+            
+            actions.push(
+                new ActionComponent(
+                    option.name,
+                    option.duration,
+                    option.tick,
+                    option.cancelable
                 )
             );
         }
 
-        console.log('TokenSystem.effect_factory', effects);
+        console.log('TokenSystem.action_factory', actions);
 
-        return effects;
+        return actions;
     }
 }
 

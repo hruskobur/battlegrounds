@@ -1,4 +1,4 @@
-import { ActionEffectComponent } from '../components/action/effect.js';
+import { ActionComponent } from '../components/action/action.js';
 import { ActionStateComponent } from '../components/action/state.js';
 import { TokenRenderableComponent } from '../components/renderable/token.js';
 
@@ -9,7 +9,7 @@ class TokenEntity {
     renderable;
 
     /**
-     * @type {Array<ActionEffectComponent>}
+     * @type {Array<ActionComponent>}
      */
     actions;
 

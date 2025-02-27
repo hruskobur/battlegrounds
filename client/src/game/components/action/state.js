@@ -1,3 +1,5 @@
+import { ActionPhase } from '../../state/constant.js';
+
 class ActionStateComponent {
     /**
      * @type {Number}
@@ -7,7 +9,7 @@ class ActionStateComponent {
     /**
      * @type {Number}
      */
-    total;
+    duration;
     
     /**
      * @type {Number}
@@ -18,7 +20,7 @@ class ActionStateComponent {
      */
     constructor () {
         this.idx = null;
-        this.total = 0;
+        this.duration = 0;
         this.tick = 0;
     } 
 }

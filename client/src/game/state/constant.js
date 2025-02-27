@@ -28,7 +28,15 @@ const DirectionCoordinates = Object.freeze([
 
 const CoordinateLow = 0;
 
+const ActionPhase = Object.freeze({
+    Start: 'action.start',
+    TickStart: 'action.tick.start',
+    TickEnd: 'action.tick.end',
+    End: 'action.end'
+});
+
 export {
+    DirectionCoordinates,
     CoordinateLow,
-    DirectionCoordinates
+    ActionPhase
 };

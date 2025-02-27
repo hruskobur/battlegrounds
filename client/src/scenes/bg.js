@@ -88,7 +88,26 @@ class BattlegroundsScene extends SceneBase {
         window.action = this.action;
 
         // dev: sandbox
-        this.token.create(0, 0);
+        this.token.create(0, 0, [
+            {
+                name: 'start+end',
+                duration: 0,
+                tick: null,
+                cancelable: false
+            },
+            {
+                name: 'start+tick_start+tick_end+end',
+                duration: 0,
+                tick: 0,
+                cancelable: false
+            },
+            {
+                name: 'start+tick_start - tick_end+end',
+                duration: 5000,
+                tick: 1000,
+                cancelable: false
+            },
+        ]);
 
         return this;
     }
