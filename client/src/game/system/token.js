@@ -86,7 +86,7 @@ class TokenSystem extends SystemBase {
             let tick = (Math.random() > 0.5) ? null : 1000;
             let on_start = name + '.start';
             let on_tick = (tick !== null) ? name + '.tick' : null;
-            let on_end = name + '.start';
+            let on_end = name + '.end';
 
             effects.push(
                 new ActionEffectComponent(
