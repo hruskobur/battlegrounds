@@ -29,14 +29,17 @@ const DirectionCoordinates = Object.freeze([
 const CoordinateLow = 0;
 
 const ActionPhase = Object.freeze({
+    Cancel: 'action.cancel',
     Start: 'action.start',
     TickStart: 'action.tick.start',
     TickEnd: 'action.tick.end',
     End: 'action.end'
 });
 
+const ActionIdleIdx = null;
+
 export {
     DirectionCoordinates,
     CoordinateLow,
-    ActionPhase
+    ActionPhase, ActionIdleIdx
 };

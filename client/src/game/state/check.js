@@ -1,5 +1,5 @@
 import { TokenEntity } from '../entities/token.js';
-import { ActionPhase, CoordinateLow } from './constant.js';
+import { ActionIdleIdx, ActionPhase, CoordinateLow } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from './zone.js';
 
@@ -19,30 +19,6 @@ function coordinates (state, x, y) {
     );
 }
 
-/**
- * @public
- * @param {TokenEntity} token 
- * @returns {Boolean}
- */
-function active (token) {
-    return (token.state.idx > ActionPhase.Idle);
-}
-
-/**
- * @public
- * @param {TokenEntity} token 
- * @returns {Boolean}
- */
-function cancelable (token) {
-    const phase = token.state.idx;
-    if(phase <= ActionPhase.Idle) {
-        return false;
-    }
-
-    return (token.actions[phase].cancelable);
-}
-
 export {
-    coordinates,
-    active, cancelable
+    coordinates
 };

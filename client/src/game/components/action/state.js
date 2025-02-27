@@ -1,4 +1,4 @@
-import { ActionPhase } from '../../state/constant.js';
+import { ActionIdleIdx } from '../../state/constant.js';
 
 class ActionStateComponent {
     /**
@@ -19,7 +19,7 @@ class ActionStateComponent {
     /**
      */
     constructor () {
-        this.idx = null;
+        this.idx = ActionIdleIdx;
         this.duration = 0;
         this.tick = 0;
     } 

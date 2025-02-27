@@ -1,7 +1,7 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { GameZone } from '../state/zone.js';
-import { ActionPhase } from '../state/constant.js';
+import { ActionIdleIdx, ActionPhase } from '../state/constant.js';
 import { TokenEntity } from '../entities/token.js';
 import { ActionStateComponent } from '../components/action/state.js';
 import { ActionComponent } from '../components/action/action.js';
@@ -62,13 +62,14 @@ class ScheduleSystem extends SystemBase {
             return this;
         }
 
-        if(GameState.Check.active(token) === true) {
+        const state = token.state;
+        if(state.idx !== ActionIdleIdx) {
             console.error('ScheduleSystem.schedule', 'token already active');
 
             return this;
         }
 
-        token.state.idx = 0;
+        state.idx = 0;
 
         // note: yes, zone; not token
         // we want to keep a reference to the zone's token for cases,
@@ -93,17 +94,28 @@ class ScheduleSystem extends SystemBase {
             return this;
         }
 
-        if(GameState.Check.cancelable(token) === false) {
-            console.log('ScheduleSystem.cancel', 'action cannot be canceled');
+        const action = GameState.Query.action(token);
+        if(action === null) {
+            console.log('ScheduleSystem.cancel', 'action === null');
+            
+            return this;
+        }
+
+        if(action.cancelable === false) {
+            console.log('ScheduleSystem.cancel', 'action.cancelable === false');
 
             return this;
         }
 
-        token.state.idx = ActionPhase.Cancel;
+        const state = token.state;
+        state.idx = ActionIdleIdx;
+        state.duration = 0;
+        state.tick = 0;
 
+        console.log(action.name, ActionPhase.Cancel, performance.now());
+        
         return this;
     }
-
 
     /**
      * @private
@@ -125,6 +137,13 @@ class ScheduleSystem extends SystemBase {
                 continue;
             }
 
+            // note: when token gets canceled, the token state's idx is set to
+            // ActionIdleIdx - do not process such tokens any further
+            const state = token.state;
+            if(state.idx === ActionIdleIdx) {
+                continue;
+            }
+
             const actions = token.actions;
 
             // note: it makes no sense to have 0 action, but let's support this
@@ -134,12 +153,11 @@ class ScheduleSystem extends SystemBase {
                 continue;
             }
 
-            const state = token.state;
-            const action = actions[state.idx]
+            const action = actions[state.idx];
     
             state.tick += dt;
             state.duration += dt;
-
+             
             if(state.duration == dt) {
                 console.log(action.name, ActionPhase.Start, performance.now());
             }
@@ -192,16 +210,6 @@ class ScheduleSystem extends SystemBase {
         this.queue = updated_queue;
 
         return this;
-    }
-
-    /**
-     * 
-     * @param {TokenEntity} token 
-     * @param {ActionStateComponent} state 
-     * @param {ActionComponent} action 
-     */
-    on_end = (token, state, action) => {
-
     }
 }
 

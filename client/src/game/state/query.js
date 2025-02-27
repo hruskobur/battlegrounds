@@ -1,4 +1,7 @@
+import { ActionComponent } from '../components/action/action.js';
 import { PositionComponent } from '../components/position.js';
+import { TokenEntity } from '../entities/token.js';
+import { ActionIdleIdx } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from './zone.js';
 
@@ -40,6 +43,21 @@ function position (state, position) {
     return state.map[position.y][position.x];
 }
 
+/**
+ * 
+ * @param {TokenEntity} token 
+ * @returns {ActionComponent|null}
+ */
+function action (token) {
+    const idx = token.state.idx;
+    if(idx == ActionIdleIdx) {
+        return null;
+    }
+
+    return token.actions[idx];
+}
+
 export {
-    point, coordinate, position
+    point, coordinate, position,
+    action
 };
