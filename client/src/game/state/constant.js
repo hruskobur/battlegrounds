@@ -36,10 +36,11 @@ const ActionPhase = Object.freeze({
     End: 'action.end'
 });
 
-const ActionIdleIdx = null;
+const ActionIdxIdle = null;
+const ActionIdxStart = 0;
 
 export {
     DirectionCoordinates,
     CoordinateLow,
-    ActionPhase, ActionIdleIdx
+    ActionPhase, ActionIdxIdle, ActionIdxStart
 };

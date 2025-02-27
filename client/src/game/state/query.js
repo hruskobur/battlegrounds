@@ -1,7 +1,7 @@
 import { ActionComponent } from '../components/action/action.js';
 import { PositionComponent } from '../components/position.js';
 import { TokenEntity } from '../entities/token.js';
-import { ActionIdleIdx } from './constant.js';
+import { ActionIdxIdle } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from './zone.js';
 
@@ -50,7 +50,7 @@ function position (state, position) {
  */
 function action (token) {
     const idx = token.state.idx;
-    if(idx == ActionIdleIdx) {
+    if(idx == ActionIdxIdle) {
         return null;
     }
 

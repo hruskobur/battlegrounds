@@ -1,5 +1,5 @@
 import { TokenEntity } from '../entities/token.js';
-import { ActionIdleIdx, ActionPhase, CoordinateLow } from './constant.js';
+import { ActionIdxIdle, ActionPhase, CoordinateLow } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from './zone.js';
 

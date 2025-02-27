@@ -88,34 +88,29 @@ class BattlegroundsScene extends SceneBase {
         window.action = this.action;
 
         // dev: sandbox
-        this.token.create(0, 0, [
-            {
-                name: 'cast',
-                duration: 3500,
-                tick: null,
-                cancelable: true
-            },
-            {
-                name: 'damage',
-                duration: 0,
-                tick: null,
-                cancelable: false
-            },
-            {
-                name: 'cooldown',
-                duration: 5000,
-                tick: null,
-                cancelable: false
-            },
-        ]);
-
-        window.addEventListener('keyup', e => {
-            if(e.key === 'Escape') {
-                this.schedule.cancel(
-                    GameState.Query.coordinate(this.state, 0, 0)
-                );
-            }
-        })
+        this.token.create(
+            0, 0,
+            [
+                {
+                    name: 'cast',
+                    duration: 3500,
+                    tick: null,
+                    cancelable: true
+                },
+                {
+                    name: 'damage',
+                    duration: 0,
+                    tick: null,
+                    cancelable: false
+                },
+                {
+                    name: 'cooldown',
+                    duration: 5000,
+                    tick: null,
+                    cancelable: false
+                },
+            ]
+        );
 
         return this;
     }

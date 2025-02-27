@@ -1,4 +1,4 @@
-import { ActionIdleIdx } from '../../state/constant.js';
+import { ActionIdxIdle } from '../../state/constant.js';
 
 class ActionStateComponent {
     /**
@@ -19,7 +19,7 @@ class ActionStateComponent {
     /**
      */
     constructor () {
-        this.idx = ActionIdleIdx;
+        this.idx = ActionIdxIdle;
         this.duration = 0;
         this.tick = 0;
     } 

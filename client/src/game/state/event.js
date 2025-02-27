@@ -1,7 +1,7 @@
 const Event = Object.freeze({
     TokenCreated: 'token.created',
     TokenDestroyed: 'token.destroyed',
-    ActionExecute: 'action.execut',
+    ActionExecute: 'action.execute',
 
     DEV_INPUT: 'DEV.INPUT'
 });
