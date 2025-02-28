@@ -18,7 +18,20 @@ class ExecuteSystem extends SystemBase {
      * @returns {ActionPhase} this
      */
     execute (action) {
-        console.log('ExecuteSystem.execute', action, performance.now());
+        console.table(
+            {
+                timestamp: performance.now(),
+                action: action.name,
+                idx: action.idx,
+                phase: action.phase,
+                duration: action.duration,
+                tick: action.tick,
+                stage_name: action.stages[action.idx].name ?? null,
+                stage_duration: action.stages[action.idx].duration ?? null,
+                stage_tick: action.stages[action.idx].tick ?? null,
+                stage_cancelable: action.stages[action.idx].cancelable ?? null,
+            }
+        )
     }
 }
 
