@@ -11,7 +11,7 @@ import { GameZone } from './zone.js';
 function map (state, scenario) {
     state.width = scenario.width;
     state.height = scenario.height;
-    state.map = [];
+    state.zones = [];
 
     for(let y = 0; y < state.height; ++y) {
         const _map = [];
@@ -26,7 +26,7 @@ function map (state, scenario) {
             _map.push(zone);
         }
 
-        state.map.push(_map);
+        state.zones.push(_map);
     }
 }
 
@@ -39,7 +39,7 @@ function map (state, scenario) {
 function areas (state, scenario) {
     for(let y = 0; y < state.height; ++y) {
         for(let x = 0; x < state.width; ++x) {
-            const area = state.map[y][x].area;
+            const area = state.zones[y][x].area;
 
             // note: these will be set from scenario!
             area.terrain.difficulty = 1;

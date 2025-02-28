@@ -22,7 +22,7 @@ class InputSystem extends SystemBase {
             (zone, x, y, state) => {
                 zone.area.renderable
                 .on('pointerdown', this.#on_pointer_down)
-                .on('pointerd', this.#on_pointer_leave)
+                .on('pointerleave', this.#on_pointer_leave)
                 .on('pointerenter', this.#on_pointer_enter);
             }
         );
@@ -37,6 +37,15 @@ class InputSystem extends SystemBase {
      */
     destructor () {
         window.removeEventListener('keyup', this.#on_key_up);
+        GameState.Iterator.all(
+            this.state,
+            (zone, x, y, state) => {
+                zone.area.renderable
+                .removeAllListeners('pointerdown')
+                .removeAllListeners('pointerleave')
+                .removeAllListeners('pointerenter');
+            }
+        );
 
         this.actor = null;
 
@@ -88,10 +97,18 @@ class InputSystem extends SystemBase {
         const area = zone.area;
         if(area.stats.ownership != 0) {
             console.log('InputSystem.#on_pointer_down', 'cannot act as enemy');
+
+            return;
+        }
+
+        const token = zone.token;
+        if(token == null) {
+            console.log('InputSystem.#on_pointer_down', 'no action available');
+
             return;
         }
         
-        this.events.emit(GameState.Event.DEV_INPUT, zone);
+        this.events.emit(GameState.Event.DEV_INPUT, token.action);
 
         return;
     }

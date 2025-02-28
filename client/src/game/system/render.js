@@ -31,8 +31,8 @@ class RenderSystem extends SystemBase {
         this.container = container;
 
         // layers
-        const areas = this.state.render.areas;
-        const tokens = this.state.render.tokens;
+        const areas = this.state.layer.areas;
+        const tokens = this.state.layer.tokens;
 
         // layers: clean-up
         while (areas.children.length > 0) {
@@ -90,22 +90,22 @@ class RenderSystem extends SystemBase {
 
     /**
      * @public
-     * @param {*} entity 
+     * @param {import('../state/render_layers.js').RenderableInterface} entity 
      * @returns {RenderSystem} this
      */
     draw = (entity) => {
         const renderable = entity.renderable;
 
         this.state
-            .render[renderable.constructor.Layer]
-            .addChild(renderable);
+        .layer[renderable.constructor.Layer]
+        .addChild(renderable);
 
         return this;
     }
 
     /**
      * @public
-     * @param {*} entity 
+     * @param {import('../state/render_layers.js').RenderableInterface} entity 
      * @returns {RenderSystem} this
      */
     erase = (entity) => {

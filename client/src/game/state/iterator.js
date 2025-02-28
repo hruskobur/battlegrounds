@@ -13,7 +13,7 @@ function all(state, cb) {
     for (let y = CoordinateLow; y < state.height; ++y) {
         for (let x = CoordinateLow; x < state.width; ++x) {
             cb(
-                state.map[y][x],
+                state.zones[y][x],
                 x, y,
                 state
             );

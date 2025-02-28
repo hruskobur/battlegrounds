@@ -1,6 +1,7 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
+import { ActionComponent } from '../components/action.js';
 import { TokenEntity } from '../entities/token.js';
-import { ActionComponent } from '../components/action/action.js';
+import { ActionIdxIdle, ActionPhase } from '../state/constant.js';
 
 class TokenSystem extends SystemBase {
     /**
@@ -14,7 +15,7 @@ class TokenSystem extends SystemBase {
     /**
      * @param {Number} x 
      * @param {Number} y 
-     * @param {Array<ActionComponent>} options
+     * @param {Array<import('../components/action.js').ActionStage>} options
      * @returns {TokenSystem} this
      */
     create = (x, y, options) => {
@@ -37,7 +38,7 @@ class TokenSystem extends SystemBase {
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 
-        token.actions = this.action_factory(options);
+        this.action_factory(token, options);
 
         zone.token = token;
 
@@ -68,34 +69,41 @@ class TokenSystem extends SystemBase {
         const token = zone.token;
         zone.token = null;
 
+        // action reset
+        const action = token.action;
+        action.idx = ActionIdxIdle;
+        action.phase = ActionPhase.Start;
+        action.duration = 0;
+        action.tick = 0;
+        
         this.events.emit(GameState.Event.TokenDestroyed, token);
 
         return this;
     }
 
     /**
-     * @param {Array<ActionComponent>} options
-     * @returns {Array<ActionComponent>}
+     * @param {TokenEntity} token 
+     * @param {{name: String, stages: Array<*>}} options 
+     * @returns {TokenSystem} this
      */
-    action_factory (options=[]) {
-        const actions = [];
+    action_factory (token, options) {
+        const action = token.action;
         
-        for(let o = 0; o < options.length; ++o) {
-            const option = options[o];
-            
-            actions.push(
-                new ActionComponent(
-                    option.name,
-                    option.duration,
-                    option.tick,
-                    option.cancelable
-                )
-            );
+        action.name = options.name;
+        for(let s = 0; s < options.stages.length; ++s) {
+            const stage_option = options.stages[s];
+
+            const stage = {
+                name: stage_option.name,
+                duration: stage_option.duration,
+                tick: stage_option.tick,
+                cancelable: stage_option.cancelable
+            }
+
+            action.stages.push(stage);
         }
 
-        console.log('TokenSystem.action_factory', actions);
-
-        return actions;
+        return this;
     }
 }
 

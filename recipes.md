@@ -64,3 +64,38 @@ PixiApp.ticker.add(
 // start ticker
 PixiApp.ticker.start();
 ```
+
+## The ECS architecture
+
+### Component
+- data only
+- no nested components
+- no logic
+- no getters, no setters
+- initial values have to be set in the constructor
+- extension of component classes is allowed
+
+### Entity
+- contains multiple components
+- unlike the pure-ECS, entities are specialized - e.g. they have pre-defined
+set of components
+- no nested entities
+- no logic
+- no getters, no settersa
+- have their components' properties set to values, that represent uninitialized
+state (null, -1, Number.MIN_SAFE_INTEGER, '', {}, [], ...)
+- extension of entity classes is allowed
+
+### System
+- provides functionality to modify components of various system-relevant 
+entities
+- public API functions have every relevant input specified as argument
+- systems communicate among self using the event-emit functionality (observer
+pattern)
+
+### GameState
+- the "world" in the ECS terms
+- contains all entities and all systems
+- may contain addtional data
+- nested entities or nested components are represented as GameXYZ classes 
+here

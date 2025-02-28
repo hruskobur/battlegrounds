@@ -29,7 +29,6 @@ const DirectionCoordinates = Object.freeze([
 const CoordinateLow = 0;
 
 const ActionPhase = Object.freeze({
-    Cancel: 'action.cancel',
     Start: 'action.start',
     TickStart: 'action.tick.start',
     TickEnd: 'action.tick.end',
