@@ -1,5 +1,4 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { ActionComponent } from '../components/action.js';
 import { TokenEntity } from '../entities/token.js';
 import { ActionIdxIdle, ActionPhase } from '../state/constant.js';
 
@@ -15,10 +14,10 @@ class TokenSystem extends SystemBase {
     /**
      * @param {Number} x 
      * @param {Number} y 
-     * @param {Array<import('../components/action.js').ActionStage>} options
+     * @param {Object} actions
      * @returns {TokenSystem} this
      */
-    create = (x, y, options) => {
+    create = (x, y, actions) => {
         // note: coordinates are outside of this map
         if(GameState.Check.coordinates(this.state, x, y) === false) {
             return this;
@@ -38,7 +37,7 @@ class TokenSystem extends SystemBase {
         token.renderable.x = token.renderable.width * x;
         token.renderable.y = token.renderable.height * y;
 
-        this.action_factory(token, options);
+        this.action_factory(token, actions);
 
         zone.token = token;
 
@@ -82,28 +81,44 @@ class TokenSystem extends SystemBase {
     }
 
     /**
+     * 
      * @param {TokenEntity} token 
-     * @param {{name: String, stages: Array<*>}} options 
-     * @returns {TokenSystem} this
+     * @param {*} options 
      */
-    action_factory (token, options) {
-        const action = token.action;
-        
-        action.name = options.name;
-        for(let s = 0; s < options.stages.length; ++s) {
-            const stage_option = options.stages[s];
+    action_factory = (token, options) => {
+        token.action_rules.name = options.name;
 
-            const stage = {
-                name: stage_option.name,
-                duration: stage_option.duration,
-                tick: stage_option.tick,
-                cancelable: stage_option.cancelable
+        for(let s = 0; s < options.stages.length; ++s) {
+            const stage_opt = options.stages[s];
+
+            token.action_rules.stages.push(
+                {
+                    name: stage_opt.name,
+                    duration: stage_opt.duration,
+                    tick: stage_opt.tick,
+                    cancelable: stage_opt.cancelable
+                }
+            );
+
+            // note: action stage can have 'no targets'
+            if(stage_opt.targets == null) {
+                continue;
             }
 
-            action.stages.push(stage);
+            for(let t = 0; t < stage_opt.targets.length; ++t) {
+                const target_opt = stage_opt.targets[t];
+
+                token.action_rules.targets.push(
+                    {
+                        type: target_opt.type,
+                        rule: target_opt.rule,
+                        count: target_opt.count
+                    }
+                );
+            };
         }
 
-        return this;
+        console.log('TokenSystem.action_factory', token.action_rules);
     }
 }
 

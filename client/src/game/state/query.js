@@ -1,5 +1,7 @@
-import { ActionComponent } from '../components/action.js';
+import { ActionStageInterface } from '../components/action/stage.js';
 import { PositionComponent } from '../components/position.js';
+import { BuffEntity } from '../entities/buff.js';
+import { TokenEntity } from '../entities/token.js';
 import { ActionIdxIdle } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from './zone.js';
@@ -44,14 +46,15 @@ function position (state, position) {
 
 /**
  * 
- * @param {ActionComponent} action
+ * @param {TokenEntity|BuffEntity} entity
+ * @return {ActionStageInterface}
  */
-function action_stage (action) {
-    if(action.idx == ActionIdxIdle) {
+function action_stage (entity) {
+    if(entity.action_data.stage == ActionIdxIdle) {
         return null;
     }
 
-    return action.stages[action.idx];
+    return entity.action_rules.stages[entity.action_data.stage];
 }
 
 export {

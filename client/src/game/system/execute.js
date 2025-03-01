@@ -1,6 +1,7 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { ActionComponent } from '../components/action.js';
 import { ActionPhase } from '../state/constant.js';
+import { TokenEntity } from '../entities/token.js';
+import { BuffEntity } from '../entities/buff.js';
 
 class ExecuteSystem extends SystemBase {
     /**
@@ -14,24 +15,15 @@ class ExecuteSystem extends SystemBase {
 
     /**
      * 
-     * @param {ActionComponent} action 
+     * @param {TokenEntity|BuffEntity} entity 
      * @returns {ActionPhase} this
      */
-    execute (action) {
-        console.table(
-            {
-                timestamp: performance.now(),
-                action: action.name,
-                idx: action.idx,
-                phase: action.phase,
-                duration: action.duration,
-                tick: action.tick,
-                stage_name: action.stages[action.idx].name ?? null,
-                stage_duration: action.stages[action.idx].duration ?? null,
-                stage_tick: action.stages[action.idx].tick ?? null,
-                stage_cancelable: action.stages[action.idx].cancelable ?? null,
-            }
-        )
+    execute (entity) {
+        console.log(
+            'ExecuteSystem.execute',
+            performance.now(),
+            entity.action_data
+        );
     }
 }
 

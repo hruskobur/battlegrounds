@@ -1,9 +1,12 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { ActionIdxIdle, ActionIdxStart, ActionPhase } from '../state/constant.js';
-import { ActionComponent } from '../components/action.js';
+import { 
+    ActionIdxIdle, ActionIdxStart,
+    ActionPhase
+} from '../state/constant.js';
+import { TokenEntity } from '../entities/token.js';
+import { BuffEntity } from '../entities/buff.js';
 
 class ScheduleSystem extends SystemBase {
-
     /**
      * 
      * @param {EventEmitter} events 
@@ -15,11 +18,11 @@ class ScheduleSystem extends SystemBase {
 
     /**
      * @public
-     * @param {ActionComponent} action 
+     * @param {TokenEntity|BuffEntity} entity 
      * @returns {ScheduleSystem} this
      */
-    schedule = (action) => {
-        if(action.idx !== ActionIdxIdle) {
+    schedule = (entity) => {
+        if(entity.action_data.stage !== ActionIdxIdle) {
             console.error(
                 'ScheduleSystem.schedule',
                 'action in progress'
@@ -28,21 +31,21 @@ class ScheduleSystem extends SystemBase {
             return this;
         }
 
-        action.idx = ActionIdxStart;
-        this.state.queue.current.push(action);
+        entity.action_data.stage = ActionIdxStart;
+        this.state.queue.current.push(entity);
 
-        this.events.emit(GameState.Event.ActionScheduled, action);
+        this.events.emit(GameState.Event.ActionScheduled, entity);
 
         return this;
     }
 
     /**
      * @public
-     * @param {ActionComponent} action 
+     * @param {TokenEntity|BuffEntity} entity
      * @returns {UpdateSystem} this
      */
-    cancel = (action) => {
-        const stage = GameState.Query.action_stage(action);
+    cancel = (entity) => {
+        const stage = GameState.Query.action_stage(entity);
         if(stage == null) {
             console.error(
                 'ScheduleSystem.cancel',
@@ -59,13 +62,14 @@ class ScheduleSystem extends SystemBase {
             return this;
         }
 
-        // action reset
-        action.idx = ActionIdxIdle;
-        action.phase = ActionPhase.Start;
-        action.duration = 0;
-        action.tick = 0;
+        // todo: action reset function
+        entity.action_data.stage = ActionIdxIdle;
+        entity.action_data.phase = ActionPhase.Start;
+        entity.action_data.duration = 0;
+        entity.action_data.tick = 0;
+        entity.action_data.targets = [];
 
-        this.events.emit(GameState.Event.ActionCanceled, action);
+        this.events.emit(GameState.Event.ActionCanceled, entity);
         
         return this;
     }

@@ -38,8 +38,19 @@ const ActionPhase = Object.freeze({
 const ActionIdxIdle = null;
 const ActionIdxStart = 0;
 
+const TargetType = Object.freeze({
+    Self: 'target.type.self',
+    Ally: 'target.type.ally',
+    Enemy: 'target.type.enemy'
+});
+
+const TargetRule = Object.freeze({
+    Relaxed: 'target.rule.relaxed',
+    Strict: 'target.rule.strict'
+});
+
 export {
-    DirectionCoordinates,
-    CoordinateLow,
-    ActionPhase, ActionIdxIdle, ActionIdxStart
+    DirectionCoordinates, CoordinateLow,
+    ActionPhase, ActionIdxIdle, ActionIdxStart,
+    TargetType, TargetRule
 };

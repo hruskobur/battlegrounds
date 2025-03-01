@@ -108,7 +108,7 @@ class InputSystem extends SystemBase {
             return;
         }
         
-        this.events.emit(GameState.Event.DEV_INPUT, token.action);
+        this.events.emit(GameState.Event.DEV_INPUT, token);
 
         return;
     }

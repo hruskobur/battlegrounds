@@ -1,13 +1,14 @@
-import { ActionComponent } from '../components/action.js';
+import { BuffEntity } from '../entities/buff.js';
+import { TokenEntity } from '../entities/token.js';
 
 class GameActionsQueue {
     /**
-     * @type {Array<ActionComponent>}
+     * @type {Array<TokenEntity|BuffEntity>}
      */
     current;
 
     /**
-     * @type {Array<ActionComponent>}
+     * @type {Array<TokenEntity|BuffEntity>}
      */
     updated;
 

@@ -109,19 +109,28 @@ class BattlegroundsScene extends SceneBase {
                         name: 'cast',
                         duration: 3500,
                         tick: null,
-                        cancelable: true
+                        cancelable: true,
+                        targets: null
                     },
                     {
                         name: 'damage',
                         duration: 5000,
                         tick: 1000,
-                        cancelable: false
+                        cancelable: false,
+                        targets: [
+                            {
+                                type: 'enemy',
+                                count: 3,
+                                rule: 'relaxed'
+                            }
+                        ]
                     },
                     {
                         name: 'cooldown',
                         duration: 5000,
                         tick: null,
-                        cancelable: false
+                        cancelable: false,
+                        targets: null
                     }
                 ]
             }

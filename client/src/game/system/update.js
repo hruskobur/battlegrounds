@@ -1,7 +1,6 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { ActionIdxIdle, ActionPhase } from '../state/constant.js';
 import { GameActionsQueue } from '../state/actions_queue.js';
-import { ActionComponent } from '../components/action.js';
 
 class UpdateSystem extends SystemBase {
     /**
@@ -33,71 +32,80 @@ class UpdateSystem extends SystemBase {
 
     /**
      * @public
-     * @param {Number} dt
+     * @param {Number} dt 
      * @returns {UpdateSystem} this
      */
     update = (dt) => {
-        for (let u = 0; u < this.queue.current.length; ++u) {
-            const action = this.queue.current[u];
+        for(let e = 0; e < this.queue.current.length; ++e) {
+            const entity = this.queue.current[e];
+            
+            const action_data = entity.action_data;
+            const action_rules = entity.action_rules;
+            const action_stage = action_rules.stages[action_data.stage];
 
-            // note: when action gets canceled, its idx is set to ActionIdxIdle
-            // do not process actions with idle idx
-            if(action.idx === ActionIdxIdle) {
-                // reset duration & tick just to be sure
-                action.phase = ActionPhase.Start;
-                action.duration = 0;
-                action.tick = 0;
-                
+            // note: do the reset when action is idle or when it has become
+            // idle (for example it was canceled)
+            // note: do not update further after reset!
+            // note: should be reset function
+            if(action_data.stage === ActionIdxIdle) {
+                action_data.phase = ActionPhase.Start;
+                action_data.duration = 0;
+                action_data.tick = 0;
+                action_data.targets = [];
+
                 continue;
             }
 
-            const stage = action.stages[action.idx];
+            action_data.tick += dt;
+            action_data.duration += dt;
 
-            action.tick += dt;
-            action.duration += dt;
+            // the very first tick
+            if(action_data.duration == dt) {
+                action_data.phase = ActionPhase.Start;
 
-            // first tick
-            if(action.duration == dt) {
-                action.phase = ActionPhase.Start;
-                
-                this.events.emit(GameState.Event.ActionUpdate, action);
+                // todo: should emit data that explicitly specify what to do 
+                this.events.emit(GameState.Event.ActionUpdate, entity);
             }
 
             // subsequent ticks
-            if(stage.tick != null) {
-                if(action.tick <= dt) {
-                    action.phase = ActionPhase.TickStart;
+            if(action_stage.tick != null) {
+                if(action_data.tick <= dt) {
+                    action_data.phase = ActionPhase.TickStart;
                     
-                    this.events.emit(GameState.Event.ActionUpdate, action);
-                } 
-                
-                if(action.tick >= stage.tick) {
-                    action.phase = ActionPhase.TickEnd;
-                    action.tick = 0;
+                    // todo: should emit data that explicitly specify what to do 
+                    this.events.emit(GameState.Event.ActionUpdate, entity);
+                }
 
-                    this.events.emit(GameState.Event.ActionUpdate, action);
+                if(action_data.tick >= action_stage.tick) {
+                    action_data.phase = ActionPhase.TickEnd;
+                    action_data.tick = 0;
+
+                    // todo: should emit data that explicitly specify what to do 
+                    this.events.emit(GameState.Event.ActionUpdate, entity);
                 }
             }
 
-            // last tick
-            if(action.duration >= stage.duration) {
-                action.phase = ActionPhase.End;
+            // the very last tick
+            if(action_data.duration >= action_stage.duration) {
+                action_data.phase = ActionPhase.End;
 
-                this.events.emit(GameState.Event.ActionUpdate, action);
+                // todo: should emit data that explicitly specify what to do 
+                this.events.emit(GameState.Event.ActionUpdate, entity);
 
-                action.duration = 0;
-                action.tick = 0;
-                
-                action.idx += 1;
-                if(action.idx >= action.stages.length) {
-                    action.idx = ActionIdxIdle;
-                    action.phase = ActionPhase.Start;
+                action_data.duration = 0;
+                action_data.tick = 0;
+                action_data.stage += 1;
+
+                if(action_data.stage >= action_rules.stages.length) {
+                    action_data.idx = ActionIdxIdle;
+                    action_data.phase = ActionPhase.Start;
+                    action_data.targets = [];
 
                     continue;
                 }
             }
-    
-            this.queue.updated.push(action);
+
+            this.queue.updated.push(entity);
         }
 
         this.queue.current = this.queue.updated;
