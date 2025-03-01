@@ -97,7 +97,7 @@ class UpdateSystem extends SystemBase {
                 action_data.stage += 1;
 
                 if(action_data.stage >= action_rules.stages.length) {
-                    action_data.idx = ActionIdxIdle;
+                    action_data.stage = ActionIdxIdle;
                     action_data.phase = ActionPhase.Start;
                     action_data.targets = [];
 
