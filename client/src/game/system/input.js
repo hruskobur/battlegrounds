@@ -14,6 +14,7 @@ class InputSystem extends SystemBase {
     commander;
 
     /**
+     * Aaah, the perks of DIY approach . . .
      * @type {GameZone}
      */
     cache_actor;
