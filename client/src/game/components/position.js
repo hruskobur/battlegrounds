@@ -1,22 +1,13 @@
-class PositionComponent {
-    /**
-     * @type {Number}
-     */
-    x;
+import { Coordinate } from '../types/coordinate.js';
 
-    /**
-     * @type {Number}
-     */
-    y;
-
+class PositionComponent extends Coordinate {
     /**
      * 
      * @param {Number} x 
      * @param {Number} y 
      */
     constructor (x, y) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
     }
 }
 

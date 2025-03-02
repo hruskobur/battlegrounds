@@ -1,7 +1,7 @@
-import { BuffEntity } from '../entities/buff.js';
-import { TokenEntity } from '../entities/token.js';
+import { BuffEntity } from '../../entities/buff.js';
+import { TokenEntity } from '../../entities/token.js';
 
-class GameActionsQueue {
+class GameActions {
     /**
      * @type {Array<TokenEntity|BuffEntity>}
      */
@@ -19,5 +19,5 @@ class GameActionsQueue {
 }
 
 export {
-    GameActionsQueue
+    GameActions
 };

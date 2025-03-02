@@ -1,11 +1,6 @@
-import { BaseRenderableComponent } from '../components/renderable/base.js';
+import { BaseRenderableComponent } from '../../components/renderable/base.js';
 
-/**
- * @typedef {Object} RenderableInterface
- * @property {BaseRenderableComponent} renderable
- */
-
-class GameRenderLayers {
+class GameLayers {
     /**
      * @type {BaseRenderableComponent}
      */
@@ -32,5 +27,5 @@ class GameRenderLayers {
 }
 
 export {
-    GameRenderLayers
+    GameLayers
 };

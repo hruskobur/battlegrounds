@@ -1,4 +1,4 @@
-class ActionStageInterface {
+class ActionInterfaceStage {
     /**
      * @type {String}
      */
@@ -21,5 +21,5 @@ class ActionStageInterface {
 }
 
 export {
-    ActionStageInterface
+    ActionInterfaceStage
 };

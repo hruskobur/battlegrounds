@@ -1,5 +1,5 @@
-import { ActionStageInterface } from './stage.js';
-import { ActionTargetInterface } from './target.js';
+import { ActionInterfaceStage } from './interface/stage.js';
+import { ActionInterfaceTarget } from './interface/target.js';
 
 class ActionRulesComponent {
     /**
@@ -8,20 +8,20 @@ class ActionRulesComponent {
     name;
 
     /**
-     * @type {Array<ActionStageInterface>}
+     * @type {Array<ActionInterfaceStage>}
      */
     stages;
 
     /**
-     * @type {Array<ActionTargetInterface>}
+     * @type {Array<ActionInterfaceTarget>}
      */
     targets;
 
     /**
      * 
      * @param {String} name 
-     * @param {Array<ActionStageInterface>} stages 
-     * @param {Array<ActionTargetInterface>} targets 
+     * @param {Array<ActionInterfaceStage>} stages 
+     * @param {Array<ActionInterfaceTarget>} targets 
      */
     constructor (name, stages, targets) {
         this.name = name;

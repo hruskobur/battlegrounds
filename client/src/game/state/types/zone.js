@@ -1,6 +1,6 @@
-import { PositionComponent } from '../components/position.js';
-import { AreaEntity } from '../entities/area.js';
-import { TokenEntity } from '../entities/token.js';
+import { PositionComponent } from '../../components/position.js';
+import { AreaEntity } from '../../entities/area.js';
+import { TokenEntity } from '../../entities/token.js';
 
 class GameZone {
     /**

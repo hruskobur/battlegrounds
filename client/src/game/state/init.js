@@ -1,6 +1,6 @@
 import { GameState } from './game.js';
-import { GameScenario } from './scenario.js';
-import { GameZone } from './zone.js';
+import { GameScenario } from './types/scenario.js';
+import { GameZone } from '../state/types/zone.js';
 
 /**
  * @public

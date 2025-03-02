@@ -1,6 +1,6 @@
 import { TokenRenderableComponent } from '../components/renderable/token.js';
 import { ActionRulesComponent } from '../components/action/rules.js';
-import { ActionDataComponent } from '../components/action/data.js';
+import { ActionStateComponent } from '../components/action/state.js';
 
 class TokenEntity {
     /**
@@ -14,9 +14,9 @@ class TokenEntity {
     action_rules;
 
     /**
-     * @type {ActionDataComponent}
+     * @type {ActionStateComponent}
      */
-    action_data;
+    action_state;
 
     constructor () {
         this.renderable = new TokenRenderableComponent();
@@ -27,7 +27,7 @@ class TokenEntity {
             []
         );
 
-        this.action_data = new ActionDataComponent();
+        this.action_state = new ActionStateComponent();
     }
 }
 

@@ -1,6 +1,6 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { GameZone } from '../state/zone.js';
+import { GameZone } from '../state/types/zone.js';
 
 class InputSystem extends SystemBase {
     /**
@@ -92,6 +92,14 @@ class InputSystem extends SystemBase {
             this.state,
             event.target.x, event.target.y
         );
+
+        // todo: emit INFO event to show info about selected zone
+        console.log('SHOW_INFO', zone);
+
+        // todo: there will be a INFO layer in reder, where data are drawn
+        // todo: mark zone as actor: if same actor is selected twice in a row
+        // (double click), we transit to the taret selection
+        // otherwise
 
         // note: this will be done more systematicaly, not by checking the 0
         const area = zone.area;

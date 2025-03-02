@@ -1,5 +1,5 @@
 import { ActionRulesComponent } from '../components/action/rules.js';
-import { ActionDataComponent } from '../components/action/data.js';
+import { ActionStateComponent } from '../components/action/state.js';
 
 class BuffEntity {
     /**
@@ -8,7 +8,7 @@ class BuffEntity {
     action_rules;
 
     /**
-     * @type {ActionDataComponent}
+     * @type {ActionStateComponent}
      */
     action_data;
 
@@ -19,7 +19,7 @@ class BuffEntity {
             []
         );
 
-        this.action_data = new ActionDataComponent();
+        this.action_data = new ActionStateComponent();
     }
 }
 

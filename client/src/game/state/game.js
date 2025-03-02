@@ -1,7 +1,7 @@
-import { GameScenario } from './scenario.js';
-import { GameZone } from './zone.js';
-import { GameRenderLayers } from './render_layers.js';
-import { GameActionsQueue } from './actions_queue.js';
+import { GameScenario } from './types/scenario.js';
+import { GameZone } from './types/zone.js';
+import { GameLayers } from './types/layers.js';
+import { GameActions } from './types/actions.js';
 
 import * as Iterator from './iterator.js';
 import * as Query from './query.js';
@@ -46,14 +46,14 @@ class GameState {
     zones;
 
     /**
-     * @type {GameRenderLayers}
+     * @type {GameLayers}
      */
     layer;
 
     /**
-     * @type {GameActionsQueue}
+     * @type {GameActions}
      */
-    queue;
+    actions;
   
     /**
      * @param {GameScenario} scenario 
@@ -63,8 +63,8 @@ class GameState {
         this.height = 0;
         
         this.zones = [];
-        this.layer = new GameRenderLayers();
-        this.queue = new GameActionsQueue();
+        this.layer = new GameLayers();
+        this.actions = new GameActions();
 
         Init.map(this, scenario);
         Init.areas(this, scenario);

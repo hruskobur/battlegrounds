@@ -1,5 +1,7 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
+import { TokenEntity } from '../entities/token.js';
+import { BuffEntity } from '../entities/buff.js';
 
 /**
  * @class RenderSystem
@@ -90,11 +92,24 @@ class RenderSystem extends SystemBase {
 
     /**
      * @public
-     * @param {import('../state/render_layers.js').RenderableInterface} entity 
+     * @param {TokenEntity|BuffEntity} entity 
      * @returns {RenderSystem} this
      */
     draw = (entity) => {
         const renderable = entity.renderable;
+
+        // todo: something like this
+        // switch(renderable.constructor.Layer) {
+        //     case 'x': {
+        //         return fn_draw_x(); // returns this
+        //     }
+        //     case 'y': {
+        //         return fn_draw_y(); // returns this
+        //     }
+        //     default: {
+        //         return this;
+        //     }
+        // }
 
         this.state
         .layer[renderable.constructor.Layer]
@@ -105,7 +120,7 @@ class RenderSystem extends SystemBase {
 
     /**
      * @public
-     * @param {import('../state/render_layers.js').RenderableInterface} entity 
+     * @param {TokenEntity|BuffEntity} entity 
      * @returns {RenderSystem} this
      */
     erase = (entity) => {

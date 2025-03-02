@@ -3,9 +3,7 @@ import { GameState } from '../game/state/game.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
 import { InputSystem } from '../game/system/input.js';
-import { ExecuteSystem } from '../game/system/execute.js';
-import { ScheduleSystem } from '../game/system/schedule.js';
-import { UpdateSystem } from '../game/system/update.js';
+import { ActionSystem } from '../game/system/action/action.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -31,19 +29,9 @@ class BattlegroundsScene extends SceneBase {
     render;
 
     /**
-     * @type {ScheduleSystem}
+     * @type {ActionSystem}
      */
-    schedule;
-
-    /**
-     * @type {UpdateSystem}
-     */
-    update;
-    
-    /**
-     * @type {ExecuteSystem}
-     */
-    execute;
+    action;
 
     /**
      * 
@@ -60,9 +48,7 @@ class BattlegroundsScene extends SceneBase {
         this.input = null;
         this.render = null;
 
-        this.schedule = null;
-        this.update = null;
-        this.execute = null;
+        this.action = null;
     }
 
     /**
@@ -80,15 +66,13 @@ class BattlegroundsScene extends SceneBase {
         this.token = new TokenSystem(this.events, this.state);
         this.input = new InputSystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
-        this.schedule = new ScheduleSystem(this.events, this.state);
-        this.update = new UpdateSystem(this.events, this.state);
-        this.execute = new ExecuteSystem(this.events, this.state);
+        this.action = new ActionSystem(this.events, this.state);
        
         // events
         this.events.on(GameState.Event.TokenCreated, this.render.draw);
         this.events.on(GameState.Event.TokenDestroyed, this.render.erase);
-        this.events.on(GameState.Event.ActionUpdate, this.execute.execute);
-        this.events.on(GameState.Event.DEV_INPUT, this.schedule.schedule);
+        this.events.on(GameState.Event.ActionUpdate, this.action.execute);
+        this.events.on(GameState.Event.DEV_INPUT, this.action.schedule);
         console.log('BattlegroundsScene.on_create', this.events.eventNames());
 
         // gameloop
@@ -151,17 +135,16 @@ class BattlegroundsScene extends SceneBase {
         // events
         this.events.off(GameState.Event.TokenCreated, this.render.draw);
         this.events.off(GameState.Event.TokenDestroyed, this.render.erase);
-        this.events.off(GameState.Event.ActionUpdate, this.execute.execute);
-        this.events.off(GameState.Event.DEV_INPUT, this.schedule);
+        this.events.off(GameState.Event.ActionUpdate, this.action.execute);
+        this.events.off(GameState.Event.DEV_INPUT, this.action.schedule);
         console.log('BattlegroundsScene.on_destroy', this.events.eventNames());
 
         // systems
         this.state = null;
         this.token = this.token.destructor();
         this.render = this.render.destructor();
-        this.update = this.update.destructor();
         this.input = this.input.destructor();
-        this.execute = this.execute.destructor();
+        this.action = this.action.destructor();
 
         // base
         super.on_destroy();
@@ -180,7 +163,7 @@ class BattlegroundsScene extends SceneBase {
     on_update (ticker) {
         const dt = ticker.elapsedMS;
 
-        this.update.update(dt);
+        this.action.update(dt);
     }
 }
 

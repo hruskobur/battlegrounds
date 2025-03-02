@@ -1,7 +1,7 @@
 import { ActionIdxIdle, ActionPhase } from '../../state/constant.js';
-import { ActionSelectionInterface } from './selection.js';
+import { Coordinate } from '../../types/coordinate.js';
 
-class ActionDataComponent {
+class ActionStateComponent {
     /**
      * @type {Number}
      */
@@ -23,7 +23,7 @@ class ActionDataComponent {
     tick;
 
     /**
-     * @type {Array<ActionSelectionInterface>}
+     * @type {Array<Coordinate>}
      */
     targets;
 
@@ -37,5 +37,5 @@ class ActionDataComponent {
 }
 
 export {
-    ActionDataComponent
+    ActionStateComponent
 };
