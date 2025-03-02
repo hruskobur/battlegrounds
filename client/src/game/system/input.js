@@ -119,6 +119,10 @@ class InputSystem extends SystemBase {
                     // only commadner and zone argumetns are needed
                     // (and we got them from the event here)
                     // do the (cache) reset and provide those instead
+
+                    // IMPORTANT: maybe creating local GameTarget here
+                    // would be a better solution
+                    // for now, this works
                     targets.actor = null;
                     targets.targets = null;
 
