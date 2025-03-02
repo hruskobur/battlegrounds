@@ -1,9 +1,8 @@
-import { TokenEntity } from '../../entities/token.js';
 import { GameZone } from './zone.js';
 
 class GameTargets {
     /**
-     * @type {TokenEntity}
+     * @type {GameZone}
      */
     actor;
 

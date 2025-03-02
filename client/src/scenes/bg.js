@@ -93,19 +93,35 @@ class BattlegroundsScene extends SceneBase {
         );
 
         this.events.on(
-            GameState.Event.InputSelected,
-            (e) => console.log(GameState.Event.InputSelected, e)
+            GameState.Event.InputActorSelected,
+            this.action.select_actor,
+            this.action
+        );
+
+        this.events.on(
+            GameState.Event.InputTargetSelected,
+            this.action.select_target,
+            this.action
         );
 
         this.events.on(
             GameState.Event.InputAccepted,
-            (e) => console.log(GameState.Event.InputAccepted, e)
+            this.action.accept_target,
+            this.action
         );
 
         this.events.on(
             GameState.Event.InputCanceled,
-            (e) => console.log(GameState.Event.InputCanceled, e)
+            this.action.cancel_target,
+            this.action
         );
+
+        this.events.on(
+            GameState.Event.ActionInfo,
+            (commander, zone) => {
+                console.log(GameState.Event.ActionInfo, commander, zone);
+            }
+        )
 
         console.log('BattlegroundsScene.events', this.events.eventNames());
 
