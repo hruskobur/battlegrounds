@@ -13,7 +13,7 @@ class GameTargets {
 
     constructor () {
         this.actor = null;
-        this.targets = [];
+        this.targets = null;
     }
 }
 

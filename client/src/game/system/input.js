@@ -3,11 +3,16 @@ import { SystemBase, EventEmitter, GameState } from './base.js';
 import { GameCommander } from '../state/types/commander.js';
 import { GameZone } from '../state/types/zone.js';
 
+import select_actor from './input/actor.js';
+import select_target from './input/target.js';
+import accept_target  from './input/accept.js';
+import cancel_target from './input/cancel.js';
+
 /**
  * @class The input system for the player commander.
  * @note Bot input system will be implemented differently/
  */
-class InputSystem extends SystemBase {
+class PlayerInputSystem extends SystemBase {
     /**
      * @type {GameCommander}
      */
@@ -22,6 +27,11 @@ class InputSystem extends SystemBase {
         super(events, state);
 
         this.commander = commander;
+
+        this.select_actor = select_actor;
+        this.select_target = select_target;
+        this.accept_target = accept_target;
+        this.cancel_target = cancel_target;
 
         GameState.Iterator.all(
             this.state,
@@ -113,23 +123,10 @@ class InputSystem extends SystemBase {
             if(targets.targets == null) {
                 // actor == zone -> we got our actor
                 if(targets.actor === zone) {
-                    // IMPORTANT: yes, reset here
-                    // so far, these were used as a cache only
-                    // now, they will be set correctly, and as for the selection
-                    // only commadner and zone argumetns are needed
-                    // (and we got them from the event here)
-                    // do the (cache) reset and provide those instead
-
-                    // IMPORTANT: maybe creating local GameTarget here
-                    // would be a better solution
-                    // for now, this works
                     targets.actor = null;
                     targets.targets = null;
 
-                    this.events.emit(
-                        GameState.Event.InputActorSelected,
-                        this.commander, zone
-                    );
+                    this.select_actor(this.commander, zone);
     
                     return;
                 } 
@@ -148,10 +145,7 @@ class InputSystem extends SystemBase {
             } 
             // targets != null
             else {
-                this.events.emit(
-                    GameState.Event.InputTargetSelected,
-                    this.commander, zone
-                );
+                this.select_target(this.commander, zone);
             }
         }
     }
@@ -164,18 +158,12 @@ class InputSystem extends SystemBase {
     #on_key_up = event => {
         switch(event.key) {
             case 'Escape': {
-                this.events.emit(
-                    GameState.Event.InputCanceled,
-                    this.commander, null
-                );
+                this.cancel_target(this.commander, null);
 
                 return;
             }
             case 'Enter': {
-                this.events.emit(
-                    GameState.Event.InputAccepted,
-                    this.commander, null
-                );
+                this.accept_target(this.commander, null);
 
                 return;
             }
@@ -187,5 +175,5 @@ class InputSystem extends SystemBase {
 }
 
 export {
-    InputSystem
+    PlayerInputSystem
 }

@@ -2,7 +2,7 @@ import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
-import { InputSystem } from '../game/system/input.js';
+import { PlayerInputSystem } from '../game/system/input.js';
 import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
@@ -19,7 +19,7 @@ class BattlegroundsScene extends SceneBase {
     token;
 
     /**
-     * @type {InputSystem}
+     * @type {PlayerInputSystem}
      */
     input;
 
@@ -68,7 +68,7 @@ class BattlegroundsScene extends SceneBase {
         this.action = new ActionSystem(this.events, this.state);
 
         // note: player input
-        this.input = new InputSystem(
+        this.input = new PlayerInputSystem(
             this.events, this.state,
             this.state.player
         );
@@ -89,30 +89,6 @@ class BattlegroundsScene extends SceneBase {
         this.events.on(
             GameState.Event.ActionUpdate,
             this.action.execute,
-            this.action
-        );
-
-        this.events.on(
-            GameState.Event.InputActorSelected,
-            this.action.select_actor,
-            this.action
-        );
-
-        this.events.on(
-            GameState.Event.InputTargetSelected,
-            this.action.select_target,
-            this.action
-        );
-
-        this.events.on(
-            GameState.Event.InputAccepted,
-            this.action.accept_target,
-            this.action
-        );
-
-        this.events.on(
-            GameState.Event.InputCanceled,
-            this.action.cancel_target,
             this.action
         );
 
@@ -213,9 +189,6 @@ class BattlegroundsScene extends SceneBase {
         this.events.removeAllListeners(GameState.Event.TokenCreated);
         this.events.removeAllListeners(GameState.Event.TokenDestroyed);
         this.events.removeAllListeners(GameState.Event.ActionUpdate);
-        this.events.removeAllListeners(GameState.Event.InputSelected);
-        this.events.removeAllListeners(GameState.Event.InputAccepted);
-        this.events.removeAllListeners(GameState.Event.InputCanceled);
         console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // systems

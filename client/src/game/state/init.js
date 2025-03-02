@@ -57,10 +57,10 @@ function areas (state, scenario) {
             area.renderable.difficulty.text = area.terrain.difficulty;
 
             // DEV: hardcoded property
-            area.ownerhsip = Math.floor(Math.random() * 2);
+            area.ownership = Math.floor(Math.random() * 2);
 
             // dev: to differenciate between player & enemy; won't be like that
-            area.renderable.terrain.tint = (area.ownerhsip === 0)
+            area.renderable.terrain.tint = (area.ownership === 0)
             ? 'blue'
             : 'red';
         }
