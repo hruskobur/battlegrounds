@@ -14,12 +14,6 @@ class InputSystem extends SystemBase {
     commander;
 
     /**
-     * Aaah, the perks of DIY approach . . .
-     * @type {GameZone}
-     */
-    cache_actor;
-
-    /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
      * @param {GameCommander} commander 
@@ -28,7 +22,6 @@ class InputSystem extends SystemBase {
         super(events, state);
 
         this.commander = commander;
-        this.cache_actor = null;
 
         GameState.Iterator.all(
             this.state,
@@ -64,7 +57,6 @@ class InputSystem extends SystemBase {
         );
 
         this.commander = null;
-        this.cache_actor = null;
 
         return super.destructor();
     }
@@ -103,53 +95,60 @@ class InputSystem extends SystemBase {
         // todo: rework all this selection logic below to separate handler class
         const targets = this.commander.targets;
 
-        // step 1: select actor
+        // first click: actor == null & targets == null
         if(targets.actor === null) {
-            // first click
-            if(this.cache_actor === null) {
-                this.cache_actor = zone;
+            this.events.emit(
+                GameState.Event.ActionInfo,
+                this.commander, zone
+            );
 
-                this.events.emit(
-                    GameState.Event.ActionInfo,
-                    this.commander, zone
-                );
+            targets.actor = zone;
+            targets.targets = null;
 
-                return;
-            }
-
-            // second click
-            if(this.cache_actor !== null) {
-                // same zone: we have the actor
-                if(this.cache_actor === zone) {
-                    this.cache_actor = null;
-                    targets.actor = zone;
+            return;
+        }
+        // second click
+        else {
+            // targets == null
+            if(targets.targets == null) {
+                // actor == zone -> we got our actor
+                if(targets.actor === zone) {
+                    // IMPORTANT: yes, reset here
+                    // so far, these were used as a cache only
+                    // now, they will be set correctly, and as for the selection
+                    // only commadner and zone argumetns are needed
+                    // (and we got them from the event here)
+                    // do the (cache) reset and provide those instead
+                    targets.actor = null;
+                    targets.targets = null;
 
                     this.events.emit(
                         GameState.Event.InputActorSelected,
                         this.commander, zone
                     );
-
+    
                     return;
-                }
-                // different zone: reset
+                } 
+                // actor != zone -> first selection again
                 else {
-                    this.cache_actor = zone;
-
                     this.events.emit(
                         GameState.Event.ActionInfo,
                         this.commander, zone
                     );
-
+    
+                    targets.actor = zone;
+                    targets.targets = null;
+    
                     return;
                 }
+            } 
+            // targets != null
+            else {
+                this.events.emit(
+                    GameState.Event.InputTargetSelected,
+                    this.commander, zone
+                );
             }
-        } 
-        // step 2: select targets
-        else {
-            this.events.emit(
-                GameState.Event.InputTargetSelected,
-                this.commander, zone
-            );
         }
     }
 
@@ -161,8 +160,6 @@ class InputSystem extends SystemBase {
     #on_key_up = event => {
         switch(event.key) {
             case 'Escape': {
-                this.cache_actor = null;
-
                 this.events.emit(
                     GameState.Event.InputCanceled,
                     this.commander, null
@@ -171,8 +168,6 @@ class InputSystem extends SystemBase {
                 return;
             }
             case 'Enter': {
-                this.cache_actor = null;
-
                 this.events.emit(
                     GameState.Event.InputAccepted,
                     this.commander, null

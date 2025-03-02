@@ -1,8 +1,9 @@
+import { CommanderEntity } from '../../entities/commander.js';
 import { GameTargets } from './targets.js';
 
 class GameCommander {
     constructor () {
-        this.stats = {};
+        this.commander = new CommanderEntity();
         this.targets = new GameTargets();
     }
 }
