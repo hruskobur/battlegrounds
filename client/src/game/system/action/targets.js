@@ -12,6 +12,15 @@ import { ActionSystem } from '../action.js';
 function select_actor (commander, zone) {
     const targets = commander.targets;
 
+    if(zone.area.ownership !== commander.commander.idx) {
+        targets.actor = null;
+        targets.targets = null;
+
+        console.error('ActionSystem.select_actor', 'ownership != idx');
+        
+        return;
+    }
+
     if(zone.token == null) {
         targets.actor = null;
         targets.targets = null;
