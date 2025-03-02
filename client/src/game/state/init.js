@@ -89,7 +89,7 @@ function commanders (state, scenario) {
     state.player.commander.bio.name = 'player';
 
     state.bot.commander.ownership.faction = 1;
-    state.bot.commander.bio.name = 'player';
+    state.bot.commander.bio.name = 'bot';
 }
 
 
