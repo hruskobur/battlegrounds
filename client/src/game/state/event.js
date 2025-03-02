@@ -6,7 +6,9 @@ const Event = Object.freeze({
     TokenCreated: 'token.created',
     TokenDestroyed: 'token.destroyed',
 
-    DEV_INPUT: 'DEV.INPUT'
+    InputSelected: 'input.selected',
+    InputCanceled: 'input.canceled',
+    InputAccepted: 'input.accepted'
 });
 
 export default Event;

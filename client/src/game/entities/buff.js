@@ -10,7 +10,7 @@ class BuffEntity {
     /**
      * @type {ActionStateComponent}
      */
-    action_data;
+    action_state;
 
     constructor () {
         this.action_rules = new ActionRulesComponent(
@@ -19,7 +19,7 @@ class BuffEntity {
             []
         );
 
-        this.action_data = new ActionStateComponent();
+        this.action_state = new ActionStateComponent();
     }
 }
 

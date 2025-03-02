@@ -5,6 +5,7 @@ import { TokenEntity } from '../entities/token.js';
 import { ActionIdxIdle } from './constant.js';
 import { GameState } from './game.js';
 import { GameZone } from '../state/types/zone.js';
+import { ActionInterfaceTarget } from '../components/action/interface/target.js';
 
 /**
  * @public
@@ -57,7 +58,22 @@ function action_stage (entity) {
     return entity.action_rules.stages[entity.action_state.stage];
 }
 
+/**
+ * 
+ * @param {TokenEntity} entity 
+ * @returns {{
+ *  rules: Array<ActionInterfaceTarget>,
+ *  state: Array<ActionInterfaceTarget>
+ * }}
+ */
+function action_targets (entity) {
+    return {
+        rules: entity.action_rules.targets,
+        state: entity.action_state.targets
+    };
+}
+
 export {
     point, coordinate, position,
-    action_stage
+    action_stage, action_targets
 };

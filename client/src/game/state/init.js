@@ -42,10 +42,8 @@ function areas (state, scenario) {
             const area = state.zones[y][x].area;
 
             // note: these will be set from scenario!
-            area.terrain.difficulty = 1;
+            area.terrain.difficulty = Math.floor(Math.random() * 100) + 1;
             area.terrain.geography = Math.floor(Math.random() * 5);
-            area.stats.hp = Math.floor(Math.random() * 100) +1;
-            area.stats.ownership = Math.floor(Math.random() * 2);
             
             // note: these are set here correctly
             area.renderable.x = x * area.renderable.width;
@@ -53,13 +51,13 @@ function areas (state, scenario) {
 
             // note: this will be set from scenario!
             // note: will be replaced by sprite id
-            area.renderable.terrain.alpha = (area.stats.hp / 100);
+            area.renderable.terrain.alpha = (Math.random());
 
             // note: dev only, won't be there
-            area.renderable.difficulty.text = area.stats.hp;
+            area.renderable.difficulty.text = area.terrain.difficulty;
 
             // dev: to differenciate between player & enemy; won't be like that
-            area.renderable.terrain.tint = (area.stats.ownership === 0)
+            area.renderable.terrain.tint = (Math.floor(Math.random() * 2) === 0)
             ? 'blue'
             : 'red';
         }
@@ -76,6 +74,7 @@ function tokens (state, scenario) {
     // 1st: iterarate over scenario and create tokens
     // . . .
 }
+
 
 export {
     map, 

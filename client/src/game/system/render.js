@@ -1,7 +1,8 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { TokenEntity } from '../entities/token.js';
-import { BuffEntity } from '../entities/buff.js';
+
+import draw from './render/draw.js';
+import erase from './render/erase.js';
 
 /**
  * @class RenderSystem
@@ -18,11 +19,6 @@ import { BuffEntity } from '../entities/buff.js';
  */
 class RenderSystem extends SystemBase {
     /**
-     * @type {Pixi.Container}
-     */
-    container;
-
-    /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
      * @param {Pixi.Container} container 
@@ -30,7 +26,8 @@ class RenderSystem extends SystemBase {
     constructor(events, state, container) {
         super(events, state);
 
-        this.container = container;
+        this.draw = draw;
+        this.erase = erase;
 
         // layers
         const areas = this.state.layer.areas;
@@ -70,10 +67,10 @@ class RenderSystem extends SystemBase {
         );
 
         // layers: center
-        areas.x = tokens.x = (this.container.width - areas.width) / 2;
-        areas.y = tokens.y = (this.container.height - areas.height) / 2;
+        areas.x = tokens.x = (container.width - areas.width) / 2;
+        areas.y = tokens.y = (container.height - areas.height) / 2;
 
-        this.container.addChild(
+        container.addChild(
             areas,
             tokens
         );
@@ -85,54 +82,10 @@ class RenderSystem extends SystemBase {
      * @returns {null}
      */
     destructor() {
-        this.container = null;
+        this.draw = null;
+        this.erase = null;
 
         return super.destructor();
-    }
-
-    /**
-     * @public
-     * @param {TokenEntity|BuffEntity} entity 
-     * @returns {RenderSystem} this
-     */
-    draw = (entity) => {
-        const renderable = entity.renderable;
-
-        // todo: something like this
-        // switch(renderable.constructor.Layer) {
-        //     case 'x': {
-        //         return fn_draw_x(); // returns this
-        //     }
-        //     case 'y': {
-        //         return fn_draw_y(); // returns this
-        //     }
-        //     default: {
-        //         return this;
-        //     }
-        // }
-
-        this.state
-        .layer[renderable.constructor.Layer]
-        .addChild(renderable);
-
-        return this;
-    }
-
-    /**
-     * @public
-     * @param {TokenEntity|BuffEntity} entity 
-     * @returns {RenderSystem} this
-     */
-    erase = (entity) => {
-        const renderable = entity.renderable;
-
-        while (renderable.children.length > 0) {
-            renderable.removeChildAt(0);
-        }
-
-        renderable.removeFromParent();
-
-        return this;
     }
 }
 

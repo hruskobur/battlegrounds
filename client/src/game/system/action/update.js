@@ -1,10 +1,10 @@
 import { ActionIdxIdle, ActionPhase } from '../../state/constant.js';
 import { GameState } from '../base.js';
-import { ActionSystem } from './action.js';
+import { ActionSystem } from '../action.js';
 
 /**
- * @public
  * @this {ActionSystem}
+ * @public
  * @param {Number} dt 
  * @returns {ActionSystem} this
 */

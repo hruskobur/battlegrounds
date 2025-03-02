@@ -3,7 +3,7 @@ import { GameState } from '../game/state/game.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
 import { InputSystem } from '../game/system/input.js';
-import { ActionSystem } from '../game/system/action/action.js';
+import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -64,16 +64,50 @@ class BattlegroundsScene extends SceneBase {
         // systems
         this.state = new GameState(scenario);
         this.token = new TokenSystem(this.events, this.state);
-        this.input = new InputSystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
         this.action = new ActionSystem(this.events, this.state);
+
+        // note: player input
+        this.input = new InputSystem(
+            this.events, this.state,
+            this.state.player
+        );
        
         // events
-        this.events.on(GameState.Event.TokenCreated, this.render.draw);
-        this.events.on(GameState.Event.TokenDestroyed, this.render.erase);
-        this.events.on(GameState.Event.ActionUpdate, this.action.execute);
-        this.events.on(GameState.Event.DEV_INPUT, this.action.schedule);
-        console.log('BattlegroundsScene.on_create', this.events.eventNames());
+        this.events.on(
+            GameState.Event.TokenCreated,
+            this.render.draw,
+            this.render
+        );
+
+        this.events.on(
+            GameState.Event.TokenDestroyed,
+            this.render.erase,
+            this.render
+        );
+
+        this.events.on(
+            GameState.Event.ActionUpdate,
+            this.action.execute,
+            this.action
+        );
+
+        this.events.on(
+            GameState.Event.InputSelected,
+            (e) => console.log(GameState.Event.InputSelected, e)
+        );
+
+        this.events.on(
+            GameState.Event.InputAccepted,
+            (e) => console.log(GameState.Event.InputAccepted, e)
+        );
+
+        this.events.on(
+            GameState.Event.InputCanceled,
+            (e) => console.log(GameState.Event.InputCanceled, e)
+        );
+
+        console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // gameloop
         this.app.ticker.add(this.on_update, this);
@@ -87,7 +121,7 @@ class BattlegroundsScene extends SceneBase {
         this.token.create(
             0, 0,
             {
-                name: 'dev.spell',
+                name: 'fireball.dev',
                 stages: [
                     {
                         name: 'cast',
@@ -120,6 +154,33 @@ class BattlegroundsScene extends SceneBase {
             }
         );
 
+        this.token.create(
+            1, 1,
+            {
+                name: 'test.dev',
+                stages: [
+                    {
+                        name: 'gold.dmg',
+                        duration: 5000,
+                        tick: 1000,
+                        cancelable: true,
+                        targets: [
+                            {
+                                type: 'enemy',
+                                count: 3,
+                                rule: 'relaxed'
+                            },
+                            {
+                                type: 'player',
+                                count: 3,
+                                rule: 'relaxed'
+                            }
+                        ]
+                    }
+                ]
+            }
+        )
+
         return this;
     }
 
@@ -133,11 +194,13 @@ class BattlegroundsScene extends SceneBase {
         this.app.ticker.remove(this.on_update, this);
 
         // events
-        this.events.off(GameState.Event.TokenCreated, this.render.draw);
-        this.events.off(GameState.Event.TokenDestroyed, this.render.erase);
-        this.events.off(GameState.Event.ActionUpdate, this.action.execute);
-        this.events.off(GameState.Event.DEV_INPUT, this.action.schedule);
-        console.log('BattlegroundsScene.on_destroy', this.events.eventNames());
+        this.events.removeAllListeners(GameState.Event.TokenCreated);
+        this.events.removeAllListeners(GameState.Event.TokenDestroyed);
+        this.events.removeAllListeners(GameState.Event.ActionUpdate);
+        this.events.removeAllListeners(GameState.Event.InputSelected);
+        this.events.removeAllListeners(GameState.Event.InputAccepted);
+        this.events.removeAllListeners(GameState.Event.InputCanceled);
+        console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // systems
         this.state = null;

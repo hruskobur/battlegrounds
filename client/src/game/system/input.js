@@ -1,29 +1,38 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { GameZone } from '../state/types/zone.js';
+import { InputCache } from './input/cache.js';
+import { GameCommander } from '../state/types/commander.js';
 
 class InputSystem extends SystemBase {
     /**
-     * @type {GameZone}
+     * @type {InputCache}
      */
-    actor;
+    cache;
+
+    /**
+     * @type {GameCommander}
+     */
+    commander;
 
     /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
+     * @param {GameCommander} commander 
      */
-    constructor (events, state) {
+    constructor (events, state, commander) {
         super(events, state);
 
-        this.actor = null;
+        this.cache = new InputCache();
+        this.commander = commander;
 
         GameState.Iterator.all(
             this.state,
             (zone, x, y, state) => {
                 zone.area.renderable
                 .on('pointerdown', this.#on_pointer_down)
-                .on('pointerleave', this.#on_pointer_leave)
-                .on('pointerenter', this.#on_pointer_enter);
+                // .on('pointerleave', this.#on_pointer_leave)
+                // .on('pointerenter', this.#on_pointer_enter)
+                ;
             }
         );
 
@@ -37,27 +46,22 @@ class InputSystem extends SystemBase {
      */
     destructor () {
         window.removeEventListener('keyup', this.#on_key_up);
+        
         GameState.Iterator.all(
             this.state,
             (zone, x, y, state) => {
                 zone.area.renderable
-                .removeAllListeners('pointerdown')
-                .removeAllListeners('pointerleave')
-                .removeAllListeners('pointerenter');
+                // .removeAllListeners('pointerdown')
+                // .removeAllListeners('pointerleave')
+                .removeAllListeners('pointerenter')
+                ;
             }
         );
 
-        this.actor = null;
+        this.cache = null;
+        this.commander = null;
 
         return super.destructor();
-    }
-
-    /**
-     * @public
-     * @returns {InputSystem} this
-     */
-    clear () {
-        return this;
     }
 
     /**
@@ -86,37 +90,16 @@ class InputSystem extends SystemBase {
      * @returns {void}
      */
     #on_pointer_down = event => {
-        // note: no need for a check, because the event is emitted by
-        // zone, that has to have correct corrinates
+        // note: no need for a coordinates check, because the event is emitted
+        // by a zone, that has to have correct corrdinates
         const zone = GameState.Query.point(
             this.state,
             event.target.x, event.target.y
         );
 
-        // todo: emit INFO event to show info about selected zone
-        console.log('SHOW_INFO', zone);
+        this.cache.selected = zone;
 
-        // todo: there will be a INFO layer in reder, where data are drawn
-        // todo: mark zone as actor: if same actor is selected twice in a row
-        // (double click), we transit to the taret selection
-        // otherwise
-
-        // note: this will be done more systematicaly, not by checking the 0
-        const area = zone.area;
-        if(area.stats.ownership != 0) {
-            console.log('InputSystem.#on_pointer_down', 'cannot act as enemy');
-
-            return;
-        }
-
-        const token = zone.token;
-        if(token == null) {
-            console.log('InputSystem.#on_pointer_down', 'no action available');
-
-            return;
-        }
-        
-        this.events.emit(GameState.Event.DEV_INPUT, token);
+        this.events.emit(GameState.Event.InputSelected, zone, this.commander);
 
         return;
     }
@@ -127,10 +110,24 @@ class InputSystem extends SystemBase {
      * @returns {void}
      */
     #on_key_up = event => {
-        if(event.key === 'Escape') {
-            this.clear();
+        switch(event.key) {
+            case 'Escape': {
+                this.cache.selected = null;
 
-            return;
+                this.events.emit(GameState.Event.InputCanceled);
+
+                return;
+            }
+            case 'Enter': {
+                this.cache.selected = null;
+                
+                this.events.emit(GameState.Event.InputAccepted);
+
+                return;
+            }
+            default: {
+                return;
+            }
         }
     }
 }

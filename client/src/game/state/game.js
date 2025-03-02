@@ -2,6 +2,7 @@ import { GameScenario } from './types/scenario.js';
 import { GameZone } from './types/zone.js';
 import { GameLayers } from './types/layers.js';
 import { GameActions } from './types/actions.js';
+import { GameCommander } from './types/commander.js';
 
 import * as Iterator from './iterator.js';
 import * as Query from './query.js';
@@ -54,7 +55,17 @@ class GameState {
      * @type {GameActions}
      */
     actions;
-  
+
+    /**
+     * @type {GameCommander}
+     */
+    player;
+
+    /**
+     * @type {GameCommander}
+     */
+    bot;
+
     /**
      * @param {GameScenario} scenario 
      */
@@ -65,6 +76,9 @@ class GameState {
         this.zones = [];
         this.layer = new GameLayers();
         this.actions = new GameActions();
+
+        this.player = new GameCommander();
+        this.bot = new GameCommander();
 
         Init.map(this, scenario);
         Init.areas(this, scenario);
