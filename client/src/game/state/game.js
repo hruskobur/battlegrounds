@@ -80,17 +80,10 @@ class GameState {
         this.player = new GameCommander();
         this.bot = new GameCommander();
 
-        // todo: own Init.commanders() method
-        // . . .
-        this.player.commander.bio.name = 'player';
-        this.player.commander.idx = 0;
-
-        this.bot.commander.bio.name = 'player';
-        this.bot.commander.idx = 1;
-
         Init.map(this, scenario);
         Init.areas(this, scenario);
         Init.tokens(this. scenario);
+        Init.commanders(this, scenario);
     }
 }
 

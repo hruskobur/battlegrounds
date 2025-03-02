@@ -1,8 +1,10 @@
+import { OwnershipComponent } from '../components/ownership.js';
+
 class CommanderEntity {
     /**
-     * @type {Number}
+     * @type {OwnershipComponent}
      */
-    idx;
+    ownership;
 
     /**
      * @todo component
@@ -15,7 +17,9 @@ class CommanderEntity {
     stats;
 
     constructor () {
-        this.idx = 0;
+        this.ownership = new OwnershipComponent(
+            Number.MIN_SAFE_INTEGER
+        );
 
         this.bio = {
             name: 'name',

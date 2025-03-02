@@ -57,10 +57,10 @@ function areas (state, scenario) {
             area.renderable.difficulty.text = area.terrain.difficulty;
 
             // DEV: hardcoded property
-            area.ownership = Math.floor(Math.random() * 2);
+            area.ownership.faction = Math.floor(Math.random() * 2);
 
             // dev: to differenciate between player & enemy; won't be like that
-            area.renderable.terrain.tint = (area.ownership === 0)
+            area.renderable.terrain.tint = (area.ownership.faction === 0)
             ? 'blue'
             : 'red';
         }
@@ -78,8 +78,23 @@ function tokens (state, scenario) {
     // . . .
 }
 
+/**
+ * @public
+ * @param {GameState} state
+ * @param {GameScenario} scenario 
+ * @returns {void}
+ */
+function commanders (state, scenario) {
+    state.player.commander.ownership.faction = 0;
+    state.player.commander.bio.name = 'player';
+
+    state.bot.commander.ownership.faction = 1;
+    state.bot.commander.bio.name = 'player';
+}
+
 
 export {
     map, 
-    areas, tokens
+    areas, tokens,
+    commanders
 };

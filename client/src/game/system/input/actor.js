@@ -12,11 +12,13 @@ import { PlayerInputSystem } from '../input.js';
 function select_actor (commander, zone) {
     const targets = commander.targets;
 
-    if(zone.area.ownership !== commander.commander.idx) {
+    if(zone.area.ownership.faction !== commander.commander.ownership.faction) {
         targets.actor = null;
         targets.targets = null;
 
-        console.error('PlayerInputSystem.select_actor', 'ownership != idx');
+        console.error(
+            'PlayerInputSystem.select_actor', 'faction area != commander'
+        );
         
         return;
     }
