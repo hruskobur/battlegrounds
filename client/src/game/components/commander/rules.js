@@ -1,0 +1,11 @@
+class TokenStateRulesComponent {
+ 
+    /**
+     * 
+     */
+    targets;
+
+    constructor () {
+
+    }
+}

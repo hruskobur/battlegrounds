@@ -1,11 +1,10 @@
-import { BuffEntity } from '../../entities/buff.js';
 import { TokenEntity } from '../../entities/token.js';
 import { RenderSystem } from '../render.js';
 
 /**
  * @this {RenderSystem}
  * @public
- * @param {TokenEntity|BuffEntity} entity 
+ * @param {TokenEntity} entity 
  * @returns {RenderSystem} this
  */
 function draw (entity) {

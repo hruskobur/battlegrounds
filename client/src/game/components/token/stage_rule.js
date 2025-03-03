@@ -1,4 +1,4 @@
-class ActionInterfaceStage {
+class TokenStageRuleComponent {
     /**
      * @type {String}
      */
@@ -21,5 +21,5 @@ class ActionInterfaceStage {
 }
 
 export {
-    ActionInterfaceStage
+    TokenStageRuleComponent
 };

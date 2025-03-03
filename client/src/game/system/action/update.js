@@ -1,4 +1,4 @@
-import { ActionIdxIdle, ActionPhase } from '../../state/constant.js';
+import { TokenStateIdx_Idle, TokenPhase } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { ActionSystem } from '../action.js';
 
@@ -22,8 +22,8 @@ function update (dt) {
         // idle (for example it was canceled)
         // note: do not update further after reset!
         // note: should be reset function
-        if(action_data.stage === ActionIdxIdle) {
-            action_data.phase = ActionPhase.Start;
+        if(action_data.stage === TokenStateIdx_Idle) {
+            action_data.phase = TokenPhase.Start;
             action_data.duration = 0;
             action_data.tick = 0;
             action_data.targets = [];
@@ -36,7 +36,7 @@ function update (dt) {
 
         // the very first tick
         if(action_data.duration == dt) {
-            action_data.phase = ActionPhase.Start;
+            action_data.phase = TokenPhase.Start;
 
             // todo: should emit data that explicitly specify what to do 
             this.events.emit(GameState.Event.ActionUpdate, entity);
@@ -45,14 +45,14 @@ function update (dt) {
         // subsequent ticks
         if(action_stage.tick != null) {
             if(action_data.tick <= dt) {
-                action_data.phase = ActionPhase.TickStart;
+                action_data.phase = TokenPhase.TickStart;
                 
                 // todo: should emit data that explicitly specify what to do 
                 this.events.emit(GameState.Event.ActionUpdate, entity);
             }
 
             if(action_data.tick >= action_stage.tick) {
-                action_data.phase = ActionPhase.TickEnd;
+                action_data.phase = TokenPhase.TickEnd;
                 action_data.tick = 0;
 
                 // todo: should emit data that explicitly specify what to do 
@@ -62,7 +62,7 @@ function update (dt) {
 
         // the very last tick
         if(action_data.duration >= action_stage.duration) {
-            action_data.phase = ActionPhase.End;
+            action_data.phase = TokenPhase.End;
 
             // todo: should emit data that explicitly specify what to do 
             this.events.emit(GameState.Event.ActionUpdate, entity);
@@ -72,8 +72,8 @@ function update (dt) {
             action_data.stage += 1;
 
             if(action_data.stage >= action_rules.stages.length) {
-                action_data.stage = ActionIdxIdle;
-                action_data.phase = ActionPhase.Start;
+                action_data.stage = TokenStateIdx_Idle;
+                action_data.phase = TokenPhase.Start;
                 action_data.targets = [];
 
                 continue;

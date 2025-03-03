@@ -1,10 +1,10 @@
-import { BaseRenderableComponent, Pixi } from './base.js';
+import { RenderableComponent, Pixi } from '../renderable.js';
 
 /**
  * @note The 64 & 72 will be refactored to some graphical-constants.
  * These constants will also be scaled, when the responsivnes is implemented.
  */
-class TokenRenderableComponent extends BaseRenderableComponent {
+class TokenRenderableComponent extends RenderableComponent {
     static Layer = 'tokens';
 
     constructor () {

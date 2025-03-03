@@ -1,6 +1,6 @@
 import * as Pixi from 'pixi.js';
 
-class BaseRenderableComponent extends Pixi.Container {
+class RenderableComponent extends Pixi.Container {
     static Layer = '';
 
     /**
@@ -14,5 +14,5 @@ class BaseRenderableComponent extends Pixi.Container {
 
 export {
     Pixi,
-    BaseRenderableComponent
+    RenderableComponent
 };

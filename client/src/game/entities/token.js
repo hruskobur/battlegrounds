@@ -1,33 +1,62 @@
-import { TokenRenderableComponent } from '../components/renderable/token.js';
-import { ActionRulesComponent } from '../components/action/rules.js';
-import { ActionStateComponent } from '../components/action/state.js';
+import { DescriptionComponent } from '../components/description.js';
+import { PositionComponent } from '../components/position.js';
+import { TokenRenderableComponent } from '../components/token/renderable.js';
+import { TokenStageRuleComponent } from '../components/token/stage_rule.js';
+import { TokenStageComponent } from '../components/token/stage.js';
+import { TokenTargetRuleComponent } from '../components/token/target_rule.js'
 
 class TokenEntity {
+    /**
+     * @type {DescriptionComponent}
+     */
+    description;
+
     /**
      * @type {TokenRenderableComponent}
      */
     renderable;
 
     /**
-     * @type {ActionRulesComponent}
+     * Length of this array determines, how many stages does this token have.
+     * Each entry determines rule-set for that particular stage.
+     * @type {Array<TokenStageRuleComponent>}
      */
-    action_rules;
+    stage_rule;
 
     /**
-     * @type {ActionStateComponent}
+     * Length of this array determines, how many targets does this token need.
+     * Each entry determines rule-set for that particular target/
+     * @type {Array<TokenTargetRuleComponent>}
      */
-    action_state;
+    target_rule;
+
+    /**
+     * Currently active token stage.
+     * 
+     * @type {TokenStageComponent}
+     */
+    stage;
+
+    /**
+     * Targets that will be use for the execution
+     * If nothing is selected yet, the value is null.
+     * @type {Array<PositionComponent>|null}
+     */
+    target;
 
     constructor () {
-        this.renderable = new TokenRenderableComponent();
-
-        this.action_rules = new ActionRulesComponent(
+        this.description = new DescriptionComponent(
             '',
-            [],
-            []
+            ''
         );
 
-        this.action_state = new ActionStateComponent();
+        this.renderable = new TokenRenderableComponent();
+
+        this.stage_rule = new TokenStageRuleComponent();
+        this.target_rule = new TokenTargetRuleComponent();
+
+        this.stage = new TokenStageComponent();
+        this.target = null;
     }
 }
 

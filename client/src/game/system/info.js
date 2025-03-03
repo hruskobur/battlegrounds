@@ -7,6 +7,7 @@ import { SystemBase } from './base.js';
  * - which tragets have to be selected
  * - active action's relationship: a line from zone to target zone, representing
  * zones's dependency on that target, etc...
+ * - selection (highglight over area, token select. animation, ...)
  * 
  * Will have own render layer.
  */

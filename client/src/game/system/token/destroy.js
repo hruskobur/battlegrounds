@@ -1,39 +1,45 @@
-import { ActionIdxIdle, ActionPhase } from '../../state/constant.js';
+import { PositionComponent } from '../../components/position.js';
+import { TokenStateIdx_Idle, TokenPhase } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
 /**
- * @param {Number} x 
+ * @this {TokenSystem}
+ * @param {PositionComponent} position 
  * @param {Number} y 
  * @returns {TokenSystem} this
  */
-function destroy (x, y) {
-    // note: coordinates are outside of this map
-    if (GameState.Check.coordinates(this.state, x, y) === false) {
+function destroy (position) {
+    if(this.state.check(position) === false) {
+        // todo: relevant info handling
+        // . . .
+
         return this;
     }
 
-    // note: safe to access directly
-    const zone = GameState.Query.coordinate(this.state, x, y);
-
-    // note: no token to destroy
-    if (zone.token === null) {
-        return this;
-    }
-
+    const zone = this.state.query(position);
+    
     const token = zone.token;
-    zone.token = null;
+    if(token === null) {
+        // todo: relevant info handling
+        // . . .
 
-    // action reset
-    const action = token.action;
-    action.idx = ActionIdxIdle;
-    action.phase = ActionPhase.Start;
-    action.duration = 0;
-    action.tick = 0;
+        return this;
+    }
+
+    const stage = token.stage;
+    stage.idx = TokenStateIdx_Idle;
+    stage.phase = TokenPhase.Start;
+    stage.duration = 0;
+    stage.tick = 0;
+
+    token.target = [];
+
+    zone.token = null;
 
     this.events.emit(GameState.Event.TokenDestroyed, token);
 
-    return this;
+    // return this;
 }
 
 export default destroy;

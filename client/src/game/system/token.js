@@ -1,6 +1,4 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { TokenEntity } from '../entities/token.js';
-import { ActionIdxIdle, ActionPhase } from '../state/constant.js';
 
 import create from './token/create.js';
 import destroy from './token/destroy.js';
@@ -14,9 +12,20 @@ class TokenSystem extends SystemBase {
     constructor (events, state) {
         super(events, state);
 
+        // functionality
         this.create = create;
         this.destroy = destroy;
         this.cancel = cancel;
+
+        // initialization
+        const scenario = this.state.scenario;
+        this.state.iterate(
+            (zone, x, y) => {
+                // todo: create tokens from scenario, based on x,y
+                // for now, nothing
+                // . . .
+            }
+        )
     }
 }
 

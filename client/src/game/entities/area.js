@@ -1,17 +1,17 @@
-import { TerrainComponent } from '../components/terrain.js';
-import { AreaRenderableComponent } from '../components/renderable/area.js';
 import { OwnershipComponent } from '../components/ownership.js';
+import { AreaTerrainComponent } from '../components/area/terrain.js';
+import { AreaRenderableComponent } from '../components/area/renderable.js';
 
 class AreaEntity {
-    /**
-     * @type {TerrainComponent}
-     */
-    terrain;
-
     /**
      * @type {OwnershipComponent}
      */
     ownership;
+
+    /**
+     * @type {AreaTerrainComponent}
+     */
+    terrain;
 
     /**
      * @type {AreaRenderableComponent}
@@ -21,13 +21,14 @@ class AreaEntity {
     /**
      */
     constructor () {
-        this.terrain = new TerrainComponent(
-            '',
-            0
-        );
 
         this.ownership = new OwnershipComponent(
             Number.MIN_SAFE_INTEGER
+        );
+
+        this.terrain = new AreaTerrainComponent(
+            '',
+            0
         );
 
         this.renderable = new AreaRenderableComponent();

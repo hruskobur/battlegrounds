@@ -1,37 +1,39 @@
+import { PositionComponent } from '../../components/position.js';
 import { TokenEntity } from '../../entities/token.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
-import action_factory from './action.js';
 
 /**
  * @this {TokenSystem}
- * @param {Number} x 
- * @param {Number} y 
- * @param {Object} actions
+ * @param {PositionComponent} position
+ * @param {Object} options todo: create token options interface
  * @returns {TokenSystem} this
  */
-function create (x, y, actions) {
-    // note: coordinates are outside of this map
-    if (GameState.Check.coordinates(this.state, x, y) === false) {
+function create (position, options) {
+    if(this.state.check(position) === false) {
+        // tode: relevant error handling
+        // . . .
         return this;
     }
 
-    // note: safe to access directly
-    const zone = GameState.Query.coordinate(this.state, x, y);
+    const zone = this.state.query(position);
+    if(zone.token !== null) {
+        // tode: relevant error handling
+        // . . .
 
-    // note: cannot create token where another token already exist
-    if (zone.token !== null) {
         return this;
     }
 
-    // note: create new token
-    // todo: token will be generated & factory will be used
     const token = new TokenEntity();
-    token.renderable.x = token.renderable.width * x;
-    token.renderable.y = token.renderable.height * y;
+    token.description.name = options.name;
+    token.description.text = options.text;
+    token.renderable.x = token.renderable.width * position.x;
+    token.renderable.y = token.renderable.width * position.y;
 
-    action_factory(token, actions);
+    // todo: factory?
+    // token.stage_rule.push(...options.stage_rules);
+    // token.target_rule.push(...options.target_rules);
 
     zone.token = token;
 

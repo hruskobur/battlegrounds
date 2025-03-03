@@ -1,32 +1,42 @@
 import { OwnershipComponent } from '../components/ownership.js';
+import { DescriptionComponent } from '../components/description.js';
+import { CommanderStatsComponent } from '../components/commander/stats.js';
+import { CommanderTargetComponent } from '../components/commander/target.js';
 
 class CommanderEntity {
+    /**
+     * @type {DescriptionComponent}
+     */
+    description;
+
     /**
      * @type {OwnershipComponent}
      */
     ownership;
 
     /**
-     * @todo component
-     */
-    bio;
-
-    /**
-     * @todo component
+     * @type {CommanderStatsComponent}
      */
     stats;
+
+    /**
+     * @type {CommanderTargetComponent}
+     */
+    targets;
 
     constructor () {
         this.ownership = new OwnershipComponent(
             Number.MIN_SAFE_INTEGER
         );
 
-        this.bio = {
-            name: 'name',
-            descr: 'descr'
-        };
+        this.description = new DescriptionComponent(
+            '',
+            ''
+        );
 
-        this.stats = {}
+        this.stats = new CommanderStatsComponent();
+
+        this.targets = new CommanderTargetComponent();
     }
 }
 

@@ -1,14 +1,22 @@
-import { GameScenario } from './types/scenario.js';
-import { GameZone } from './types/zone.js';
-import { GameLayers } from './types/layers.js';
-import { GameActions } from './types/actions.js';
-import { GameCommander } from './types/commander.js';
+import { ScenarioEntity } from '../entities/scenario.js';
+import { LayersEntity } from '../entities/layers.js';
+import { AreaEntity } from '../entities/area.js';
+import { TokenEntity } from '../entities/token.js';
 
-import * as Iterator from './iterator.js';
-import * as Query from './query.js';
-import * as Check from './check.js';
-import * as Event from './event.js';
-import * as Init from './init.js';
+import { CoordinateLow } from './constant.js';
+import { PositionComponent } from '../components/position.js';
+
+/**
+ * @typedef {Object} GameStateZone
+ * @property {AreaEntity} area
+ * @property {TokenEntity|null} token
+ */
+
+/**
+ * @typedef {Object} GameStateUpdateQueue
+ * @property {Array<TokenEntity>} current
+ * @property {Array<TokenEntity>} updated
+ */
 
 /**
  * @class GameState
@@ -26,10 +34,16 @@ import * as Init from './init.js';
  * dynamic component compositions.
  */
 class GameState {
-    static Iterator = Iterator;
-    static Query = Query;
-    static Check = Check;
-    static Event = Event.default;
+    static Event = Object.freeze({
+        TokenCreated: 'token.created',
+        TokenCancel: 'token.cancel',
+        TokenDestroyed: 'token.destroyed'
+    });
+
+    /**
+     * @type {ScenarioEntity}
+     */
+    scenario;
 
     /**
      * @type {Number}
@@ -42,48 +56,104 @@ class GameState {
     height;
 
     /**
-     * @type {Array<Array<GameZone>>}
+     * @type {Array<Array<GameStateZone>>}
      */
     zones;
 
     /**
-     * @type {GameLayers}
+     * @type {LayersEntity}
      */
     layer;
 
     /**
-     * @type {GameActions}
+     * @type {GameStateUpdateQueue}
      */
-    actions;
+    queue;
 
     /**
-     * @type {GameCommander}
-     */
-    player;
-
-    /**
-     * @type {GameCommander}
-     */
-    bot;
-
-    /**
-     * @param {GameScenario} scenario 
+     * @param {ScenarioEntity} scenario 
      */
     constructor (scenario) {
-        this.width = 0;
-        this.height = 0;
-        
+        this.scenario = scenario;
+        this.width = scenario.width;
+        this.height = scenario.height;
+
         this.zones = [];
-        this.layer = new GameLayers();
-        this.actions = new GameActions();
+        {
+            for(let y = 0; y < this.height; ++y) {
+                const _zones = [];
 
-        this.player = new GameCommander();
-        this.bot = new GameCommander();
+                for(let x = 0; x < this.width; ++x) {
+                    _zones.push(
+                        {
+                            area: null,
+                            token: null
+                        }
+                    )
+                }
 
-        Init.map(this, scenario);
-        Init.areas(this, scenario);
-        Init.tokens(this. scenario);
-        Init.commanders(this, scenario);
+                this.zones.push(_zones);
+            }
+        }
+
+        this.layer = new LayersEntity();
+
+        this.queue = {
+            current: [],
+            updated: []
+        };
+    }
+
+    /**
+     * @public
+     * @param {PositionComponent} position
+     * @returns {Boolean}
+     */
+    check (position) {
+        const x = position.x;
+        const y = position.y;
+
+        return (
+            x >= CoordinateLow
+            && x < this.width
+            && y >= CoordinateLow
+            && y < this.height
+        );
+    }
+
+    /**
+     * @public
+     * @param {PositionComponent} position
+     * @returns {GameStateZone|null}
+     */
+    query (position) {
+        const x = position.x;
+        const y = position.y;
+
+        if(x < CoordinateLow
+           || x >= this.width
+           || y < CoordinateLow
+           || y >= this.height) {
+            return null;
+        }
+
+        return this.zones[y][x];
+    }
+
+    /**
+     * @public
+     * @param {Function} cb GameStateZone, x, y, GameState
+     */
+    iterate (cb) {
+        for (let y = CoordinateLow; y < this.height; ++y) {
+            for (let x = CoordinateLow; x < this.width; ++x) {
+                cb(
+                    this.zones[y][x],
+                    x, y,
+                    this
+                )
+            }
+        }
     }
 }
 

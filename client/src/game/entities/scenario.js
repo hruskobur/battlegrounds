@@ -1,4 +1,4 @@
-class GameScenario {
+class ScenarioEntity {
     /**
      * @type {Number}
      */
@@ -16,5 +16,5 @@ class GameScenario {
 }
 
 export {
-    GameScenario
+    ScenarioEntity
 };

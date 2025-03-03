@@ -1,6 +1,6 @@
 import { BuffEntity } from '../../entities/buff.js';
 import { TokenEntity } from '../../entities/token.js';
-import { ActionIdxIdle, ActionIdxStart } from '../../state/constant.js';
+import { TokenStateIdx_Idle, TokenStateIdx_Start } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { ActionSystem } from '../action.js';
 
@@ -11,7 +11,7 @@ import { ActionSystem } from '../action.js';
  * @returns {ActionSystem} this
  */
 function schedule (entity) {
-    if(entity.action_state.stage !== ActionIdxIdle) {
+    if(entity.action_state.stage !== TokenStateIdx_Idle) {
         console.error(
             'ScheduleSystem.schedule',
             'action in progress'
@@ -20,7 +20,7 @@ function schedule (entity) {
         return this;
     }
 
-    entity.action_state.stage = ActionIdxStart;
+    entity.action_state.stage = TokenStateIdx_Start;
     this.state.actions.current.push(entity);
 
     this.events.emit(GameState.Event.ActionScheduled, entity);

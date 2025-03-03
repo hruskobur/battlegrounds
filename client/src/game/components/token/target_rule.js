@@ -1,6 +1,6 @@
-import { TargetType, TargetRule } from '../../../state/constant.js';
+import { TargetType, TargetRule } from '../../state/constant.js';
 
-class ActionInterfaceTarget {
+class TokenTargetRuleComponent {
     /**
      * @type {TargetType}
      */
@@ -18,5 +18,5 @@ class ActionInterfaceTarget {
 }
 
 export {
-    ActionInterfaceTarget
+    TokenTargetRuleComponent
 };

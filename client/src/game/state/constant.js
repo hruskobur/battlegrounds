@@ -28,15 +28,15 @@ const DirectionCoordinates = Object.freeze([
 
 const CoordinateLow = 0;
 
-const ActionPhase = Object.freeze({
+const TokenPhase = Object.freeze({
     Start: 'action.start',
     TickStart: 'action.tick.start',
     TickEnd: 'action.tick.end',
     End: 'action.end'
 });
 
-const ActionIdxIdle = null;
-const ActionIdxStart = 0;
+const TokenStateIdx_Idle = null;
+const TokenStateIdx_Start = 0;
 
 const TargetType = Object.freeze({
     Self: 'target.type.self',
@@ -51,6 +51,6 @@ const TargetRule = Object.freeze({
 
 export {
     DirectionCoordinates, CoordinateLow,
-    ActionPhase, ActionIdxIdle, ActionIdxStart,
+    TokenPhase, TokenStateIdx_Idle, TokenStateIdx_Start,
     TargetType, TargetRule
 };

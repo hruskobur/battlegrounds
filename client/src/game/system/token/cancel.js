@@ -1,45 +1,56 @@
-import { ActionIdxIdle, ActionPhase } from '../../state/constant.js';
+import { PositionComponent } from '../../components/position.js';
+import { TokenStateIdx_Idle, TokenPhase } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
 /**
  * @this {TokenSystem}
- * @param {Number} x 
- * @param {Number} y 
+ * @param {PositionComponent} position
  * @returns {TokenSystem} this
  */
-function cancel (x, y) {
-    // note: coordinates are outside of this map
-    if (GameState.Check.coordinates(this.state, x, y) === false) {
-        return this;
-    }
-
-    // note: safe to access directly
-    const zone = GameState.Query.coordinate(this.state, x, y);
-
-    // note: no token to cancel
-    const token = zone.token;
-    if (token === null) {
-        return this;
-    }
-
-    const stage = GameState.Query.action_stage(token);
-    if (stage == null) {
-        return this;
-    }
-
-    if (stage.cancelable === false) {
-        // todo: inform user that action cannot be canceled at this stage
+function cancel (position) {
+    if(this.state.check(position) === false) {
+        // todo: relevant info handling
         // . . .
+
         return this;
     }
 
-    const state = token.action_state;
-    state.stage = ActionIdxIdle;
-    state.phase = ActionPhase.Start;
-    state.duration = 0;
-    state.tick = 0;
-    state.targets = [];
+    const zone = this.state.query(position);
+    
+    const token = zone.token;
+    if(token === null) {
+        // todo: relevant info handling
+        // . . .
+
+        return this;
+    }
+
+    const stage = token.stage;
+    const idx = stage.idx;
+
+    if(idx == TokenStateIdx_Idle) {
+        // todo: relevant info handling
+        // . . .
+
+        return this;
+    }
+
+    if(token.stage_rule[idx].cancelable === false) {
+        // todo: relevant info handling
+        // . . .
+
+        return this;
+    }
+
+    stage.idx = TokenStateIdx_Idle;
+    stage.phase = TokenPhase.Start;
+    stage.duration = 0;
+    stage.tick = 0;
+
+    token.target = [];
+
+    this.events.emit(GameState.Event.TokenCancel, token);
 
     return this;
 }

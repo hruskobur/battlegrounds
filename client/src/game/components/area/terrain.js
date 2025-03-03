@@ -1,4 +1,4 @@
-class TerrainComponent {
+class AreaTerrainComponent {
     /**
      * Geography id points to specific sprite in the sprite atlas.
      * @note For visual uses only.
@@ -23,5 +23,5 @@ class TerrainComponent {
 }
 
 export {
-    TerrainComponent
+    AreaTerrainComponent
 };

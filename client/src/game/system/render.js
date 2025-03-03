@@ -44,24 +44,24 @@ class RenderSystem extends SystemBase {
 
         // layers: size
         areas.boundsArea =
-            tokens.boundsArea = new Pixi.Rectangle(
-                0, 0,
-                72 * state.width,
-                72 * state.height
-            );
+        tokens.boundsArea =
+        new Pixi.Rectangle(
+            0, 0,
+            72 * state.width,
+            72 * state.height
+        );
 
         // layers: do the "drawing"
-        GameState.Iterator.all(
-            this.state,
-            (zone, x, y, state) => {
-                // draw area
-                if(zone.area != null) {
-                    this.draw(zone.area);
+        this.state.iterate(
+            (zone, x, y) => {
+                const area = zone.area;
+                if(area != null) {
+                    this.draw(area)
                 }
 
-                // draw token
-                if(zone.token != null) {
-                    this.draw(zone.token);
+                const token = zone.token;
+                if(token != null) {
+                    this.draw(token);
                 }
             }
         );
