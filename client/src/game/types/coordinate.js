@@ -1,4 +1,14 @@
-class PositionComponent {
+class Coordinate {
+    /**
+     * 
+     * @param {Coordinate} ca 
+     * @param {Coordinate} cb 
+     * @returns {Boolean}
+     */
+    static Compare(ca, cb) {
+        return (ca.x === cb.x && ca.y === cb.y);
+    }
+
     /**
      * @type {Number}
      */
@@ -21,5 +31,5 @@ class PositionComponent {
 }
 
 export {
-    PositionComponent
+    Coordinate
 };

@@ -1,11 +1,11 @@
-import { PositionComponent } from '../../components/position.js';
+import { Coordinate } from '../../types/coordinate.js';
 import { TokenStateIdx_Idle, TokenPhase } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
 /**
  * @this {TokenSystem}
- * @param {PositionComponent} position
+ * @param {Coordinate} position
  * @returns {TokenSystem} this
  */
 function cancel (position) {

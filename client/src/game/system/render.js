@@ -43,9 +43,7 @@ class RenderSystem extends SystemBase {
         }
 
         // layers: size
-        areas.boundsArea =
-        tokens.boundsArea =
-        new Pixi.Rectangle(
+        areas.boundsArea = tokens.boundsArea = new Pixi.Rectangle(
             0, 0,
             72 * state.width,
             72 * state.height

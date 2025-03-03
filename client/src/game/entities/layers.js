@@ -1,25 +1,24 @@
-import { AreaRenderableComponent } from '../components/area/renderable.js';
-import { TokenRenderableComponent } from '../components/token/renderable.js';
+import { RenderableComponent } from '../components/renderable.js';
 
 class LayersEntity {
     /**
-     * @type {AreaRenderableComponent}
+     * @type {RenderableComponent}
      */
     areas;
 
     /**
-     * @type {TokenRenderableComponent}
+     * @type {RenderableComponent}
      */
     tokens;
 
     constructor () {
-        this.areas = new AreaRenderableComponent({
+        this.areas = new RenderableComponent({
             eventMode: 'static',
             zIndex: 0,
             label: 'areas'
         });
 
-        this.tokens = new TokenRenderableComponent({
+        this.tokens = new RenderableComponent({
             eventMode: 'static',
             zIndex: 0,
             label: 'tokens'

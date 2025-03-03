@@ -1,5 +1,5 @@
 import { DescriptionComponent } from '../components/description.js';
-import { PositionComponent } from '../components/position.js';
+import { Coordinate } from '../types/coordinate.js';
 import { TokenRenderableComponent } from '../components/token/renderable.js';
 import { TokenStageRuleComponent } from '../components/token/stage_rule.js';
 import { TokenStageComponent } from '../components/token/stage.js';
@@ -40,7 +40,7 @@ class TokenEntity {
     /**
      * Targets that will be use for the execution
      * If nothing is selected yet, the value is null.
-     * @type {Array<PositionComponent>|null}
+     * @type {Array<Coordinate>|null}
      */
     target;
 

@@ -1,46 +1,37 @@
 import * as Pixi from 'pixi.js';
+import { Coordinate } from '../types/coordinate.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
-import { GameCommander } from '../state/types/commander.js';
-import { GameZone } from '../state/types/zone.js';
-
-import select_actor from './input/actor.js';
-import select_target from './input/target.js';
-import accept_target  from './input/accept.js';
-import cancel_target from './input/cancel.js';
+import { CommanderEntity } from '../entities/commander.js';
 
 /**
  * @class The input system for the player commander.
  * @note Bot input system will be implemented differently/
  */
-class PlayerInputSystem extends SystemBase {
+class PlayerControlSystem extends SystemBase {
     /**
-     * @type {GameCommander}
+     * @type {CommanderEntity}
      */
     commander;
 
     /**
+     * @type {[Coordinate, Coordinate]}
+     */
+    selection;
+
+    /**
      * @param {EventEmitter} events 
      * @param {GameState} state 
-     * @param {GameCommander} commander 
      */
-    constructor (events, state, commander) {
+    constructor (events, state) {
         super(events, state);
 
-        this.commander = commander;
+        this.commander = state.player;
+        this.selection = [];
 
-        this.select_actor = select_actor;
-        this.select_target = select_target;
-        this.accept_target = accept_target;
-        this.cancel_target = cancel_target;
-
-        GameState.Iterator.all(
-            this.state,
-            (zone, x, y, state) => {
+        this.state.iterate(
+            (zone, x, y) => {
                 zone.area.renderable
-                .on('pointerdown', this.#on_pointer_down)
-                // .on('pointerleave', this.#on_pointer_leave)
-                // .on('pointerenter', this.#on_pointer_enter)
-                ;
+                .on('pointerdown', this.#on_pointer_down);
             }
         );
 
@@ -55,38 +46,120 @@ class PlayerInputSystem extends SystemBase {
     destructor () {
         window.removeEventListener('keyup', this.#on_key_up);
         
-        GameState.Iterator.all(
-            this.state,
-            (zone, x, y, state) => {
+        this.state.iterate(
+            (zone, x, y) => {
                 zone.area.renderable
-                // .removeAllListeners('pointerdown')
-                // .removeAllListeners('pointerleave')
-                .removeAllListeners('pointerenter')
-                ;
+                .removeAllListeners('pointerdown', this.#on_pointer_down);
             }
         );
 
         this.commander = null;
+        this.selection = null;
 
         return super.destructor();
     }
 
     /**
-     * @private
-     * @param {Pixi.FederatedPointerEvent} event 
-     * @returns {void}
+     * @public
+     * @param {Coordinate} position 
+     * @returns {PlayerControlSystem} this
      */
-    #on_pointer_enter = event => {
-        return;
+    select = position => {
+        const zone = this.state.query(position);
+        if(zone == null) {
+            console.log('zone == null');
+
+            return this;
+        }
+
+        if(this.selection.length === 0) {
+            this.selection.push(position);
+
+            console.log('1st selection', zone);
+            console.log('---------- show info', zone);
+            
+            return this;
+        }
+
+        if(this.selection.length === 1) {
+            this.selection.push(position);
+
+            if(Coordinate.Compare(this.selection[0],this.selection[1])===false){
+                this.selection = [
+                    this.selection[1]
+                ];
+    
+                console.log('1st selection', zone);
+                console.log('---------- show info', zone);
+    
+                return this;
+            }
+        }
+
+        const targets = this.commander.targets;
+        if(targets.zones == null) {
+            console.log('2nd selection', zone);
+            console.log('---------- show info', zone);
+
+            if(zone.area.ownership.faction !==this.commander.ownership.faction){
+                console.log('area.ownership !== commander.ownership');
+
+                this.selection = [];
+
+                return this;
+            }
+
+            if(zone.token == null) {
+                console.log('zone.token == null');
+
+                this.selection = [];
+
+                return this;
+            }
+            
+            targets.token = position;
+            targets.zones = [];
+
+            console.log('token!', targets);
+
+            return this;
+        }
+
+        console.log('zone!');
+        targets.zones.push(position);
+
+        console.log('targets', targets);
+
+        return this;
     }
 
     /**
-     * @private
-     * @param {Pixi.FederatedPointerEvent} event 
-     * @returns {void}
+     * @public
+     * @returns {PlayerControlSystem} this
      */
-    #on_pointer_leave = event => {
-        return;
+    cancel = () => {
+        console.log('cancel', this.commander.targets);
+
+        this.selection = [];
+        this.commander.targets.token = null;
+        this.commander.targets.zones = null;
+
+        return this;
+
+    }
+
+    /**
+     * @public
+     * @returns {PlayerControlSystem} this
+     */
+    accept = () => {
+        console.log('accept', this.commander.targets);
+
+        this.selection = [];
+        this.commander.targets.token = null;
+        this.commander.targets.zones = null;
+
+        return this;
     }
 
     /**
@@ -95,61 +168,15 @@ class PlayerInputSystem extends SystemBase {
      * @returns {void}
      */
     #on_pointer_down = event => {
-        // note: no need for a coordinates check, because the event is emitted
-        // by a zone, that has to have correct corrdinates
-        const zone = GameState.Query.point(
-            this.state,
-            event.target.x, event.target.y
+        this.select(
+            new Coordinate(
+                Math.floor(event.target.x / 72),
+                Math.floor(event.target.y / 72)
+            )
         );
-
-        // todo: rework all this selection logic below to separate handler class
-        const targets = this.commander.targets;
-
-        // first click: actor == null & targets == null
-        if(targets.actor === null) {
-            this.events.emit(
-                GameState.Event.ActionInfo,
-                this.commander, zone
-            );
-
-            targets.actor = zone;
-            targets.targets = null;
-
-            return;
-        }
-        // second click
-        else {
-            // targets == null
-            if(targets.targets == null) {
-                // actor == zone -> we got our actor
-                if(targets.actor === zone) {
-                    targets.actor = null;
-                    targets.targets = null;
-
-                    this.select_actor(this.commander, zone);
-    
-                    return;
-                } 
-                // actor != zone -> first selection again
-                else {
-                    this.events.emit(
-                        GameState.Event.ActionInfo,
-                        this.commander, zone
-                    );
-    
-                    targets.actor = zone;
-                    targets.targets = null;
-    
-                    return;
-                }
-            } 
-            // targets != null
-            else {
-                this.select_target(this.commander, zone);
-            }
-        }
     }
 
+    
     /**
      * @private
      * @param {KeyboardEvent} event 
@@ -158,12 +185,12 @@ class PlayerInputSystem extends SystemBase {
     #on_key_up = event => {
         switch(event.key) {
             case 'Escape': {
-                this.cancel_target(this.commander, null);
+                this.cancel();
 
                 return;
             }
             case 'Enter': {
-                this.accept_target(this.commander, null);
+                this.accept();
 
                 return;
             }
@@ -172,8 +199,9 @@ class PlayerInputSystem extends SystemBase {
             }
         }
     }
+
 }
 
 export {
-    PlayerInputSystem
+    PlayerControlSystem
 }

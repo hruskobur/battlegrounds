@@ -4,7 +4,8 @@ import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 
 import { CoordinateLow } from './constant.js';
-import { PositionComponent } from '../components/position.js';
+import { Coordinate } from '../types/coordinate.js';
+import { CommanderEntity } from '../entities/commander.js';
 
 /**
  * @typedef {Object} GameStateZone
@@ -71,6 +72,11 @@ class GameState {
     queue;
 
     /**
+     * @type {CommanderEntity}
+     */
+    player;
+
+    /**
      * @param {ScenarioEntity} scenario 
      */
     constructor (scenario) {
@@ -82,7 +88,6 @@ class GameState {
         {
             for(let y = 0; y < this.height; ++y) {
                 const _zones = [];
-
                 for(let x = 0; x < this.width; ++x) {
                     _zones.push(
                         {
@@ -102,11 +107,15 @@ class GameState {
             current: [],
             updated: []
         };
+
+        this.player = new CommanderEntity();
+        this.player.description.name = 'player';
+        this.player.ownership.faction = 0;
     }
 
     /**
      * @public
-     * @param {PositionComponent} position
+     * @param {Coordinate} position
      * @returns {Boolean}
      */
     check (position) {
@@ -123,7 +132,7 @@ class GameState {
 
     /**
      * @public
-     * @param {PositionComponent} position
+     * @param {Coordinate} position
      * @returns {GameStateZone|null}
      */
     query (position) {

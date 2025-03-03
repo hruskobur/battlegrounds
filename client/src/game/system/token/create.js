@@ -1,4 +1,4 @@
-import { PositionComponent } from '../../components/position.js';
+import { Coordinate } from '../../types/coordinate.js';
 import { TokenEntity } from '../../entities/token.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
@@ -6,7 +6,7 @@ import { TokenSystem } from '../token.js';
 
 /**
  * @this {TokenSystem}
- * @param {PositionComponent} position
+ * @param {Coordinate} position
  * @param {Object} options todo: create token options interface
  * @returns {TokenSystem} this
  */

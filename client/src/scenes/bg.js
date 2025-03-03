@@ -3,8 +3,8 @@ import { GameState } from '../game/state/game.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
-import { PositionComponent } from '../game/components/position.js';
-// import { PlayerInputSystem } from '../game/system/input.js';
+import { Coordinate } from '../game/types/coordinate.js';
+import { PlayerControlSystem } from '../game/system/input.js';
 // import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
@@ -14,11 +14,6 @@ class BattlegroundsScene extends SceneBase {
      * @type {GameState}
      */
     state;
-   
-    /**
-     * @type {RenderSystem}
-     */
-    render;
 
     /**
      * @type {AreaSystem}
@@ -30,15 +25,20 @@ class BattlegroundsScene extends SceneBase {
      */
     token;
 
-    // /**
-    //  * @type {PlayerInputSystem}
-    //  */
-    // input;
+    /**
+     * @type {PlayerControlSystem}
+     */
+    player;
 
     // /**
     //  * @type {ActionSystem}
     //  */
     // action;
+   
+    /**
+     * @type {RenderSystem}
+     */
+    render;
 
     /**
      * 
@@ -49,12 +49,11 @@ class BattlegroundsScene extends SceneBase {
         super(app, events);
 
         this.state = null;
-        this.render = null;
         this.area = null;
         this.token = null;
-
-        // this.input = null;
+        this.player = null;
         // this.action = null;
+        this.render = null;
     }
 
     /**
@@ -64,7 +63,6 @@ class BattlegroundsScene extends SceneBase {
      * @returns {BattlegroundsScene} this
     */
     on_create(scenario) {
-        // base
         super.on_create();
 
         // systems
@@ -72,18 +70,10 @@ class BattlegroundsScene extends SceneBase {
         this.state = new GameState(scenario);
         this.area = new AreaSystem(this.events, this.state);
         this.token = new TokenSystem(this.events, this.state);
-        // todo: other systems go here
-        // . . .
+        this.player = new PlayerControlSystem(this.events, this.state);
+        // this.action = new ActionSystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
         
-        // this.action = new ActionSystem(this.events, this.state);
-
-        // // note: player input
-        // this.input = new PlayerInputSystem(
-        //     this.events, this.state,
-        //     this.state.player
-        // );
-       
         // events
         this.events.on(
             GameState.Event.TokenCreated,
@@ -120,10 +110,11 @@ class BattlegroundsScene extends SceneBase {
         window.state = this.state;
         window.area = this.area;
         window.token = this.token;
+        window.player = this.player;
 
         // scenario sim.
         this.token.create(
-            new PositionComponent(0, 0),
+            new Coordinate(9, 9),
             {
                 name: 'fireball.dev',
                 stages: [
@@ -158,32 +149,32 @@ class BattlegroundsScene extends SceneBase {
             }
         );
 
-        this.token.create(
-            new PositionComponent(1, 1),
-            {
-                name: 'test.dev',
-                stages: [
-                    {
-                        name: 'gold.dmg',
-                        duration: 5000,
-                        tick: 1000,
-                        cancelable: true,
-                        targets: [
-                            {
-                                type: 'enemy',
-                                count: 3,
-                                rule: 'relaxed'
-                            },
-                            {
-                                type: 'player',
-                                count: 3,
-                                rule: 'relaxed'
-                            }
-                        ]
-                    }
-                ]
-            }
-        )
+        // this.token.create(
+        //     new Coordinate(1, 1),
+        //     {
+        //         name: 'test.dev',
+        //         stages: [
+        //             {
+        //                 name: 'gold.dmg',
+        //                 duration: 5000,
+        //                 tick: 1000,
+        //                 cancelable: true,
+        //                 targets: [
+        //                     {
+        //                         type: 'enemy',
+        //                         count: 3,
+        //                         rule: 'relaxed'
+        //                     },
+        //                     {
+        //                         type: 'player',
+        //                         count: 3,
+        //                         rule: 'relaxed'
+        //                     }
+        //                 ]
+        //             }
+        //         ]
+        //     }
+        // );
 
         return this;
     }
@@ -208,11 +199,9 @@ class BattlegroundsScene extends SceneBase {
         this.state = null;
         this.token = this.token.destructor();
         this.area = this.area.destructor();
-        // todo: other systems go here
-        // . . .
-        this.render = this.render.destructor();
-        // this.input = this.input.destructor();
+        this.player = this.player.destructor();
         // this.action = this.action.destructor();
+        this.render = this.render.destructor();
 
         // base
         super.on_destroy();
@@ -221,6 +210,7 @@ class BattlegroundsScene extends SceneBase {
         delete window.state;
         delete window.area;
         delete window.token;
+        delete window.player;
         
         return this;
     }
