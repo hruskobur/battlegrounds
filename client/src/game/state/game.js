@@ -3,15 +3,10 @@ import { LayersEntity } from '../entities/layers.js';
 import { AreaEntity } from '../entities/area.js';
 import { TokenEntity } from '../entities/token.js';
 
+import { GameStateZone } from './game_zone.js';
 import { CoordinateLow } from './constant.js';
 import { Coordinate } from '../types/coordinate.js';
 import { CommanderEntity } from '../entities/commander.js';
-
-/**
- * @typedef {Object} GameStateZone
- * @property {AreaEntity} area
- * @property {TokenEntity|null} token
- */
 
 /**
  * @typedef {Object} GameStateUpdateQueue
@@ -37,7 +32,7 @@ import { CommanderEntity } from '../entities/commander.js';
 class GameState {
     static Event = Object.freeze({
         TokenCreated: 'token.created',
-        TokenCancel: 'token.cancel',
+        TokenReseted: 'token.reseted',
         TokenDestroyed: 'token.destroyed'
     });
 
@@ -91,6 +86,7 @@ class GameState {
                 for(let x = 0; x < this.width; ++x) {
                     _zones.push(
                         {
+                            position: new Coordinate(x, y),
                             area: null,
                             token: null
                         }
@@ -132,13 +128,11 @@ class GameState {
 
     /**
      * @public
-     * @param {Coordinate} position
+     * @param {Number} x 
+     * @param {Number} y 
      * @returns {GameStateZone|null}
      */
-    query (position) {
-        const x = position.x;
-        const y = position.y;
-
+    query (x, y) {
         if(x < CoordinateLow
            || x >= this.width
            || y < CoordinateLow

@@ -1,5 +1,4 @@
 /* imports ********************************************************************/
-
 // managers
 import * as Events from '../../src/core/emitter.js';
 import * as Scenes from '../../src/core/scenes.js';
@@ -7,11 +6,7 @@ import * as Scenes from '../../src/core/scenes.js';
 // scenes
 import { BattlegroundsScene } from '../../src/scenes/bg.js';
 
-// tests
-// . . .
-
 /* the "main" function ********************************************************/
-
 window.addEventListener(
     'load',
     async event => {

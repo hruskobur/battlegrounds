@@ -5,6 +5,12 @@ import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
 import { Coordinate } from '../game/types/coordinate.js';
 import { PlayerControlSystem } from '../game/system/input.js';
+import { 
+    TargetOriginType,
+    TargetSelectionType,
+    TargetThresholdType,
+    TokenStageFirstIdx
+} from '../game/state/constant.js';
 // import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
@@ -87,6 +93,8 @@ class BattlegroundsScene extends SceneBase {
             this.render
         );
 
+        this.events.on('DEV_TOKEN_CLEANUP', this.token.reset, this.token);
+
         // this.events.on(
         //     GameState.Event.ActionUpdate,
         //     this.action.execute,
@@ -114,67 +122,58 @@ class BattlegroundsScene extends SceneBase {
 
         // scenario sim.
         this.token.create(
-            new Coordinate(9, 9),
+            this.state.query(0, 0),
             {
-                name: 'fireball.dev',
+                name: 'firebolt.name',
+                text: 'firebolt.text',
                 stages: [
                     {
-                        name: 'cast',
-                        duration: 3500,
+                        name: 'name.0',
+                        duration: 1500,
+                        idx: TokenStageFirstIdx,
+                        next: 1,
                         tick: null,
                         cancelable: true,
-                        targets: null
-                    },
-                    {
-                        name: 'damage',
-                        duration: 5000,
-                        tick: 1000,
-                        cancelable: false,
                         targets: [
                             {
-                                type: 'enemy',
-                                count: 3,
-                                rule: 'relaxed'
+                                origin: TargetOriginType.Ally,
+                                selection: null,
+                                threshold: null,
+                                count: null
+                            },
+                            {
+                                origin: TargetOriginType.Enemy,
+                                selection: TargetSelectionType.Single,
+                                threshold: TargetThresholdType.Exact,
+                                count: 3
+                            },
+                            {
+                                origin: TargetOriginType.Ally,
+                                selection: TargetSelectionType.Single,
+                                threshold: TargetThresholdType.Exact,
+                                count: 2
                             }
                         ]
                     },
                     {
-                        name: 'cooldown',
+                        name: 'name.1',
+                        idx: 1,
+                        next: null,
                         duration: 5000,
-                        tick: null,
-                        cancelable: false,
-                        targets: null
+                        tick: 1000,
+                        cancelable: true,
+                        targets: [
+                            {
+                                origin: TargetOriginType.Enemy,
+                                selection: TargetSelectionType.Single,
+                                threshold: TargetThresholdType.Exact,
+                                count: 2
+                            }
+                        ]
                     }
                 ]
             }
         );
-
-        // this.token.create(
-        //     new Coordinate(1, 1),
-        //     {
-        //         name: 'test.dev',
-        //         stages: [
-        //             {
-        //                 name: 'gold.dmg',
-        //                 duration: 5000,
-        //                 tick: 1000,
-        //                 cancelable: true,
-        //                 targets: [
-        //                     {
-        //                         type: 'enemy',
-        //                         count: 3,
-        //                         rule: 'relaxed'
-        //                     },
-        //                     {
-        //                         type: 'player',
-        //                         count: 3,
-        //                         rule: 'relaxed'
-        //                     }
-        //                 ]
-        //             }
-        //         ]
-        //     }
-        // );
 
         return this;
     }

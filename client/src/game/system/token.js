@@ -1,8 +1,9 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
 
 import create from './token/create.js';
+import reset from './token/reset.js';
 import destroy from './token/destroy.js';
-import cancel from './token/cancel.js';
+import ability from './token/ability.js';
 
 class TokenSystem extends SystemBase {
     /**
@@ -14,8 +15,9 @@ class TokenSystem extends SystemBase {
 
         // functionality
         this.create = create;
+        this.reset = reset;
         this.destroy = destroy;
-        this.cancel = cancel;
+        this.ability = ability;
 
         // initialization
         const scenario = this.state.scenario;

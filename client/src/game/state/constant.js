@@ -35,22 +35,30 @@ const TokenPhase = Object.freeze({
     End: 'action.end'
 });
 
-const TokenStateIdx_Idle = null;
-const TokenStateIdx_Start = 0;
-
-const TargetType = Object.freeze({
-    Self: 'target.type.self',
-    Ally: 'target.type.ally',
-    Enemy: 'target.type.enemy'
+const TargetOriginType = Object.freeze({
+    Ally: 'target.origin.ally',
+    Enemy: 'target.origin.enemy'
 });
 
-const TargetRule = Object.freeze({
-    Relaxed: 'target.rule.relaxed',
-    Strict: 'target.rule.strict'
+const TargetSelectionType = Object.freeze({
+    Single: 'target.selection.single'
+    // extend
+    // path
 });
+
+const TargetThresholdType = Object.freeze({
+    Exact: 'target.count.exact'
+    // up to
+});
+
+const TokenStageFirstIdx = 0;
 
 export {
     DirectionCoordinates, CoordinateLow,
-    TokenPhase, TokenStateIdx_Idle, TokenStateIdx_Start,
-    TargetType, TargetRule
+    
+    TokenPhase,
+    
+    TargetOriginType, TargetSelectionType, TargetThresholdType,
+
+    TokenStageFirstIdx
 };

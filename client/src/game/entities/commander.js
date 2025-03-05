@@ -1,7 +1,6 @@
 import { OwnershipComponent } from '../components/ownership.js';
 import { DescriptionComponent } from '../components/description.js';
 import { CommanderStatsComponent } from '../components/commander/stats.js';
-import { CommanderTargetComponent } from '../components/commander/target.js';
 
 class CommanderEntity {
     /**
@@ -19,11 +18,6 @@ class CommanderEntity {
      */
     stats;
 
-    /**
-     * @type {CommanderTargetComponent}
-     */
-    targets;
-
     constructor () {
         this.ownership = new OwnershipComponent(
             Number.MIN_SAFE_INTEGER
@@ -35,8 +29,6 @@ class CommanderEntity {
         );
 
         this.stats = new CommanderStatsComponent();
-
-        this.targets = new CommanderTargetComponent();
     }
 }
 
