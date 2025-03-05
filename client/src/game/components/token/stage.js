@@ -1,17 +1,7 @@
 import { 
-    TargetOriginType,
-    TargetSelectionType,
-    TargetThresholdType
+    TargetOriginType
 } from '../../state/constant.js';
 import { Coordinate } from '../../types/coordinate.js';
-
-/**
- * @typedef {Object} TokenStageZoneTargetRule
- * @property {TargetOriginType} origin
- * @property {TargetSelectionType} selection
- * @property {TargetThresholdType} threshold
- * @property {Number} count
- */
 
 class TokenStageComponent {
     /**
@@ -45,7 +35,7 @@ class TokenStageComponent {
     cancelable = false;
 
     /**
-     * @type {Array<TokenStageZoneTargetRule>}
+     * @type {Array<TargetOriginType>}
      */
     targets = [];
 

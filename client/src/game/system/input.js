@@ -99,7 +99,7 @@ class PlayerControlSystem extends SystemBase {
         }
 
         if(this.selection.select(zone) === true) {
-            const token = this.selection.token;
+            const token = this.selection.target.token;
             
             console.log('-------------------- DONE --------------------');
             token.stages.forEach(stage => {
@@ -111,7 +111,7 @@ class PlayerControlSystem extends SystemBase {
 
             // dev: this simulates action execution, which will also do 
             // the token cleanup...
-            this.events.emit('DEV_TOKEN_CLEANUP', this.selection.target);
+            // this.events.emit('DEV_TOKEN_CLEANUP', this.selection.target);
             this.selection.reset();
         }
     }

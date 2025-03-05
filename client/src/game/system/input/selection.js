@@ -1,18 +1,20 @@
+import { v8_0_0 } from 'pixi.js';
 import { TokenStageComponent } from '../../components/token/stage.js';
 import { TokenEntity } from '../../entities/token.js';
-import { TokenStageFirstIdx } from '../../state/constant.js';
+import { TargetOriginType, FirstIdx } from '../../state/constant.js';
 import { GameStateZone } from '../../state/game_zone.js';
+import { Coordinate } from '../../types/coordinate.js';
 
 class PlayerControlSelection {
     /**
      * @type {GameStateZone}
      */
-    #cache_a;
+    #cache_1st;
 
     /**
      * @type {GameStateZone}
      */
-    #cache_b;
+    #cache_2nd;
 
     /**
      * @type {TokenStageComponent}
@@ -20,27 +22,30 @@ class PlayerControlSelection {
     #cache_s;
 
     /**
+     *@type {Number}
+     */
+    #cache_r;
+
+    /**
+     * @type {Object.<string, Array<Coordinate>}
+     */
+    #cache_targets;
+
+    /**
      * @type {GameStateZone}
      */
     target;
 
     constructor () {
-        this.#cache_a = null;
-        this.#cache_b = null;
+        this.#cache_1st = null;
+        this.#cache_2nd = null;
+
         this.#cache_s = null;
+        this.#cache_r = null;
+
+        this.#cache_targets = null;
 
         this.target = null;
-    }
-
-    /**
-     * Utility getter. Returns a TokenEntity from SelectedZone
-     */
-    get token () {
-        if(this.target == null) {
-            return null;
-        }
-
-        return this.target.token;
     }
 
     /**
@@ -62,9 +67,12 @@ class PlayerControlSelection {
      * @returns {PlayerControlSelection} this
      */
     reset = () => {
-        this.#cache_a = null;
-        this.#cache_b = null;
+        this.#cache_1st = null;
+        this.#cache_2nd = null;
+
         this.#cache_s = null;
+        this.#cache_r = null;
+        this.#cache_targets = null;
 
         this.target = null;
 
@@ -77,39 +85,37 @@ class PlayerControlSelection {
      * @returns {Boolean} 
      */
     #select_token = (zone) => {
-        if(this.#cache_a == null) {
-            this.#cache_a = zone;
+        if(this.#cache_1st == null) {
+            this.#cache_1st = zone;
 
             return false;
         }
 
-        this.#cache_b = zone;
+        this.#cache_2nd = zone;
 
-        if(this.#cache_a !== this.#cache_b) {
+        if(this.#cache_1st !== this.#cache_2nd) {
             this.reset();
 
             return false;
         }
 
-        if(this.#cache_b.token == null) {
+        if(this.#cache_2nd.token == null) {
             this.reset();
 
             return false;
         }
 
-        this.target = this.#cache_b;
-        this.#cache_s = this.target.token.stages.get(TokenStageFirstIdx);
+        this.target = this.#cache_2nd;
 
-        // note: no stages
-        if(this.#cache_s == null) {
-            this.reset();
+        this.#cache_s = this.target.token.stages.get(FirstIdx);
+        this.#cache_r = FirstIdx;
         
-            return false;
-        }
+        this.#cache_targets = this.#initialize_cache_target(this.target.token);
 
+        // note: dev info
         console.log(
-            'target rule',
-            this.#cache_s.targets[this.#cache_s.targeted.length]
+            `NEXT_SELECTION [${this.#cache_s.name}]`,
+            this.#cache_s.targets[this.#cache_r]
         );
 
         return true;
@@ -137,44 +143,46 @@ class PlayerControlSelection {
             return false;
         }
 
-        const targets = this.#cache_s.targets;
-        const targeted = this.#cache_s.targeted;
-        
-        // todo: do the checks!
-        // const idx = this.#cache_s.targeted.length;
-        // console.log('target comparison', targets[idx]);
+        // todo: check! let's assume that all checks have passed , for now
+        // . . . 
 
-        // todo: let's assume that all checks have passed
-        // . . .
+        const cached_targets = this.#cache_targets[this.#cache_s.idx];
+        this.#cache_r = cached_targets.push(zone.position);
+        if(cached_targets.length >= this.#cache_s.targets.length) {
+            this.#cache_s = token.stages.get(this.#cache_s.next);
+            this.#cache_r = 0;
+        }
 
-        // note: it is safe to add the target
-        targeted.push(zone.position);
-
-        // check: if we reached targeted limit
-        if(targeted.length >= targets.length) { // note: if so, move to next stage
-            const next_stage_idx = this.#cache_s.next;
-            if(next_stage_idx === null) {
-                return true;
-            }
-
-            this.#cache_s = token.stages.get(next_stage_idx);
-
-            // todo: do the checks!
+        if(this.#cache_s != null) {
+            // note: dev info
             console.log(
-                'target rule',
-                this.#cache_s.targets[this.#cache_s.targeted.length]
+                `NEXT_SELECTION [${this.#cache_s.name}]`,
+                this.#cache_s.targets[this.#cache_r]
             );
 
             return false;
         }
 
-        // todo: do the checks!
-        console.log(
-            'target rule',
-            this.#cache_s.targets[this.#cache_s.targeted.length]
-        );
+        // note: add cached targets to the token's real targets
+        token.stages.forEach(stage => {
+            stage.targeted = this.#cache_targets[stage.idx];
+        })
+        return true;
+    }
 
-        return this;
+    /**
+     * @private
+     * @param {TokenEntity} token
+     * @returns {Object.<string, Array<Coordinate>}
+     */
+    #initialize_cache_target = (token) => {
+        const targets = {};
+
+        token.stages.forEach(stage => {
+            targets[stage.idx] = [];
+        });
+
+        return targets;
     }
 }
 

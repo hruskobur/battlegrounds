@@ -40,25 +40,14 @@ const TargetOriginType = Object.freeze({
     Enemy: 'target.origin.enemy'
 });
 
-const TargetSelectionType = Object.freeze({
-    Single: 'target.selection.single'
-    // extend
-    // path
-});
-
-const TargetThresholdType = Object.freeze({
-    Exact: 'target.count.exact'
-    // up to
-});
-
-const TokenStageFirstIdx = 0;
+const FirstIdx = 0;
 
 export {
     DirectionCoordinates, CoordinateLow,
     
     TokenPhase,
     
-    TargetOriginType, TargetSelectionType, TargetThresholdType,
+    TargetOriginType,
 
-    TokenStageFirstIdx
+    FirstIdx
 };

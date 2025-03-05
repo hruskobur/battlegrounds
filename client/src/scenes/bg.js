@@ -1,16 +1,10 @@
 import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
+import { TargetOriginType, FirstIdx } from '../game/state/constant.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
-import { Coordinate } from '../game/types/coordinate.js';
 import { PlayerControlSystem } from '../game/system/input.js';
-import { 
-    TargetOriginType,
-    TargetSelectionType,
-    TargetThresholdType,
-    TokenStageFirstIdx
-} from '../game/state/constant.js';
 // import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
@@ -130,29 +124,15 @@ class BattlegroundsScene extends SceneBase {
                     {
                         name: 'name.0',
                         duration: 1500,
-                        idx: TokenStageFirstIdx,
+                        idx: FirstIdx,
                         next: 1,
                         tick: null,
                         cancelable: true,
                         targets: [
-                            {
-                                origin: TargetOriginType.Ally,
-                                selection: null,
-                                threshold: null,
-                                count: null
-                            },
-                            {
-                                origin: TargetOriginType.Enemy,
-                                selection: TargetSelectionType.Single,
-                                threshold: TargetThresholdType.Exact,
-                                count: 3
-                            },
-                            {
-                                origin: TargetOriginType.Ally,
-                                selection: TargetSelectionType.Single,
-                                threshold: TargetThresholdType.Exact,
-                                count: 2
-                            }
+                            TargetOriginType.Ally,
+                            TargetOriginType.Ally,
+                            TargetOriginType.Enemy,
+                            TargetOriginType.Enemy
                         ]
                     },
                     {
@@ -163,12 +143,10 @@ class BattlegroundsScene extends SceneBase {
                         tick: 1000,
                         cancelable: true,
                         targets: [
-                            {
-                                origin: TargetOriginType.Enemy,
-                                selection: TargetSelectionType.Single,
-                                threshold: TargetThresholdType.Exact,
-                                count: 2
-                            }
+                            TargetOriginType.Enemy,
+                            TargetOriginType.Ally,
+                            TargetOriginType.Enemy,
+                            TargetOriginType.Ally
                         ]
                     }
                 ]
