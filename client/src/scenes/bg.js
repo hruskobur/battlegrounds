@@ -4,7 +4,7 @@ import { TargetOriginType, FirstIdx } from '../game/state/constant.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
-import { PlayerControlSystem } from '../game/system/input.js';
+import { PlayerControlSystem } from '../game/system/player.js';
 // import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {

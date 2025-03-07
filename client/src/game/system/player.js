@@ -1,8 +1,7 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { CommanderEntity } from '../entities/commander.js';
-import { GameStateZone } from '../state/game_zone.js';
-import { PlayerControlSelection } from './input/selection.js';
+import { PlayerControlSelection } from './control/selection.js';
 
 /**
  * @class The input system for the player commander.
@@ -68,8 +67,13 @@ class PlayerControlSystem extends SystemBase {
      * @returns {PlayerControlSystem} this
      */
     cancel = () => {
-        const token = this.cache.token.get();
-        if(token == null) {
+        let to_cancel = this.selection.target;
+        if(to_cancel == null) {
+            return this;
+        }
+
+        to_cancel = to_cancel.token;
+        if(to_cancel == null) {
             return this;
         }
         
@@ -77,7 +81,7 @@ class PlayerControlSystem extends SystemBase {
         // we need to differenciate between REQUEST & RESPONSE,for example here:
         // - GameState.Event.TokenReset: request 
         // - GameState.Event.TokenResed: response
-        this.events.emit('DEV_TOKEN_CLEANUP', this.selection.target);
+        this.events.emit('DEV_TOKEN_CLEANUP', to_cancel);
         this.selection.reset();
 
         return this;

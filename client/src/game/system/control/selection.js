@@ -1,7 +1,6 @@
-import { v8_0_0 } from 'pixi.js';
 import { TokenStageComponent } from '../../components/token/stage.js';
 import { TokenEntity } from '../../entities/token.js';
-import { TargetOriginType, FirstIdx } from '../../state/constant.js';
+import { FirstIdx } from '../../state/constant.js';
 import { GameStateZone } from '../../state/game_zone.js';
 import { Coordinate } from '../../types/coordinate.js';
 
@@ -32,6 +31,11 @@ class PlayerControlSelection {
     #cache_targets;
 
     /**
+     * @type {Object.<string, Set<Coordinate>}
+     */
+    #cache_selections;
+
+    /**
      * @type {GameStateZone}
      */
     target;
@@ -44,6 +48,7 @@ class PlayerControlSelection {
         this.#cache_r = null;
 
         this.#cache_targets = null;
+        this.#cache_selections = null;
 
         this.target = null;
     }
@@ -73,6 +78,7 @@ class PlayerControlSelection {
         this.#cache_s = null;
         this.#cache_r = null;
         this.#cache_targets = null;
+        this.#cache_selections = null;
 
         this.target = null;
 
@@ -107,10 +113,7 @@ class PlayerControlSelection {
 
         this.target = this.#cache_2nd;
 
-        this.#cache_s = this.target.token.stages.get(FirstIdx);
-        this.#cache_r = FirstIdx;
-        
-        this.#cache_targets = this.#initialize_cache_target(this.target.token);
+        this.#initialize_cache(this.target.token);
 
         // note: dev info
         console.log(
@@ -172,17 +175,20 @@ class PlayerControlSelection {
 
     /**
      * @private
-     * @param {TokenEntity} token
-     * @returns {Object.<string, Array<Coordinate>}
+     * @param {TokenEntity} token 
+     * @returns {void}
      */
-    #initialize_cache_target = (token) => {
-        const targets = {};
+    #initialize_cache = token => {
+        this.#cache_s = token.stages.get(FirstIdx);
+        this.#cache_r = FirstIdx;
+
+        this.#cache_targets = {};
+        this.#cache_selections = {};
 
         token.stages.forEach(stage => {
-            targets[stage.idx] = [];
+            this.#cache_targets[stage.idx] = [];
+            this.#cache_selections[stage.idx] = new Set();
         });
-
-        return targets;
     }
 }
 
