@@ -1,31 +1,38 @@
-import { BuffEntity } from '../../entities/buff.js';
-import { TokenEntity } from '../../entities/token.js';
-import { TokenStateIdx_Idle, TokenStateIdx_Start } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { ActionSystem } from '../action.js';
+import { IdleStage, FirstStage } from '../../state/constant.js';
+import { GameStateZone } from '../../state/zone.js';
 
 /**
- * @this {ActionSystem}
  * @public
- * @param {TokenEntity|BuffEntity} entity 
+ * @this {ActionSystem}
+ * @param {GameStateZone} zone 
  * @returns {ActionSystem} this
  */
-function schedule (entity) {
-    if(entity.action_state.stage !== TokenStateIdx_Idle) {
-        console.error(
-            'ScheduleSystem.schedule',
-            'action in progress'
-        );
+function schedule (zone) {
+    const token = zone.token;
+    if(token == null) {
+        return this;
+    }
+
+    const stage = token.stage;
+    if(stage !== IdleStage) {
+        console.log('ActionSystem.schedule', 'stage !== IdleStage');
 
         return this;
     }
 
-    entity.action_state.stage = TokenStateIdx_Start;
-    this.state.actions.current.push(entity);
+    token.stage = token.stages.get(FirstStage);
 
-    this.events.emit(GameState.Event.ActionScheduled, entity);
+    this.state.queue.current.push(zone);
+
+    // dev: info
+    console.log(GameState.Event.ActionScheduled, zone);
+    
+    this.events.emit(GameState.Event.ActionScheduled, zone);
 
     return this;
 }
+
 
 export default schedule;

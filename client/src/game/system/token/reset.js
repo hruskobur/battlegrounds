@@ -1,4 +1,5 @@
-import { GameStateZone } from '../../state/game_zone.js';
+import { TokenPhase } from '../../state/constant.js';
+import { GameStateZone } from '../../state/zone.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
@@ -17,14 +18,20 @@ function reset (zone) {
     }
 
     token.stages.forEach(stage => {
-        stage.targeted = [];
+        const state = stage.state;
+        
+        state.phase = TokenPhase.Start;
+        state.targets = [];
+        state.duration = 0;
+        state.tick = 0;
     });
+
     token.stage = null;
 
-    // dev: just an info
-    console.log(GameState.Event.TokenReseted, token);
+    // dev: info
+    console.log(GameState.Event.TokenReseted, zone);
 
-    this.events.emit(GameState.Event.TokenReseted, token);
+    this.events.emit(GameState.Event.TokenReseted, zone);
 
     return this;
 }

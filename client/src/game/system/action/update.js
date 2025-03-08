@@ -1,86 +1,73 @@
-import { TokenStateIdx_Idle, TokenPhase } from '../../state/constant.js';
+import { TokenPhase, IdleStage } from '../../state/constant.js';
 import { GameState } from '../base.js';
 import { ActionSystem } from '../action.js';
 
 /**
- * @this {ActionSystem}
  * @public
+ * @this {ActionSystem}
  * @param {Number} dt 
  * @returns {ActionSystem} this
 */
 function update (dt) {
-    const actions = this.state.actions;
+    const actions = this.state.queue;
     
     for(let e = 0; e < actions.current.length; ++e) {
-        const entity = actions.current[e];
+        const zone = actions.current[e];
         
-        const action_data = entity.action_state;
-        const action_rules = entity.action_rules;
-        const action_stage = action_rules.stages[action_data.stage];
-
-        // note: do the reset when action is idle or when it has become
-        // idle (for example it was canceled)
-        // note: do not update further after reset!
-        // note: should be reset function
-        if(action_data.stage === TokenStateIdx_Idle) {
-            action_data.phase = TokenPhase.Start;
-            action_data.duration = 0;
-            action_data.tick = 0;
-            action_data.targets = [];
-
+        const token = zone.token;
+        if(token == null) {
             continue;
         }
 
-        action_data.tick += dt;
-        action_data.duration += dt;
-
-        // the very first tick
-        if(action_data.duration == dt) {
-            action_data.phase = TokenPhase.Start;
-
-            // todo: should emit data that explicitly specify what to do 
-            this.events.emit(GameState.Event.ActionUpdate, entity);
+        const stage = token.stage;
+        if(stage == IdleStage) {
+            continue;
         }
 
-        // subsequent ticks
-        if(action_stage.tick != null) {
-            if(action_data.tick <= dt) {
-                action_data.phase = TokenPhase.TickStart;
-                
-                // todo: should emit data that explicitly specify what to do 
-                this.events.emit(GameState.Event.ActionUpdate, entity);
+        const state = token.stage.state;
+
+        state.tick += dt;
+        state.duration += dt;
+
+        if(state.duration == dt) {
+            state.phase = TokenPhase.Start;
+
+            this.events.emit(GameState.Event.ActionUpdated, zone);
+        }
+
+        if(stage.tick != null) {
+            if(state.tick <= dt) {
+                state.phase = TokenPhase.TickStart;
+
+                this.events.emit(GameState.Event.ActionUpdated, zone);
             }
 
-            if(action_data.tick >= action_stage.tick) {
-                action_data.phase = TokenPhase.TickEnd;
-                action_data.tick = 0;
+            if(state.tick >= stage.tick) {
+                state.phase = TokenPhase.TickEnd;
+                state.tick = 0;
 
-                // todo: should emit data that explicitly specify what to do 
-                this.events.emit(GameState.Event.ActionUpdate, entity);
+                this.events.emit(GameState.Event.ActionUpdated, zone);
             }
         }
 
-        // the very last tick
-        if(action_data.duration >= action_stage.duration) {
-            action_data.phase = TokenPhase.End;
+        if(state.duration >= stage.duration) {
+            state.phase = TokenPhase.End;
 
-            // todo: should emit data that explicitly specify what to do 
-            this.events.emit(GameState.Event.ActionUpdate, entity);
+            this.events.emit(GameState.Event.ActionUpdated, zone);
 
-            action_data.duration = 0;
-            action_data.tick = 0;
-            action_data.stage += 1;
+            state.duration = 0;
+            state.tick = 0;
+            state.targets = [];
 
-            if(action_data.stage >= action_rules.stages.length) {
-                action_data.stage = TokenStateIdx_Idle;
-                action_data.phase = TokenPhase.Start;
-                action_data.targets = [];
+            token.stage = token.stages.get(token.stage.next);
+            if(token.stage == null) {
+                this.events.emit(GameState.Event.ActionUnscheduled, zone);
 
                 continue;
             }
         }
 
-        actions.updated.push(entity);
+        actions.updated.push(zone);
     }
 
     actions.current = actions.updated;

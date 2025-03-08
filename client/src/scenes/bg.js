@@ -1,11 +1,11 @@
 import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
-import { TargetOriginType, FirstIdx } from '../game/state/constant.js';
+import { TargetOriginType, FirstStage } from '../game/state/constant.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
 import { PlayerControlSystem } from '../game/system/player.js';
-// import { ActionSystem } from '../game/system/action.js';
+import { ActionSystem } from '../game/system/action.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -30,10 +30,10 @@ class BattlegroundsScene extends SceneBase {
      */
     player;
 
-    // /**
-    //  * @type {ActionSystem}
-    //  */
-    // action;
+    /**
+     * @type {ActionSystem}
+     */
+    action;
    
     /**
      * @type {RenderSystem}
@@ -52,7 +52,7 @@ class BattlegroundsScene extends SceneBase {
         this.area = null;
         this.token = null;
         this.player = null;
-        // this.action = null;
+        this.action = null;
         this.render = null;
     }
 
@@ -71,7 +71,7 @@ class BattlegroundsScene extends SceneBase {
         this.area = new AreaSystem(this.events, this.state);
         this.token = new TokenSystem(this.events, this.state);
         this.player = new PlayerControlSystem(this.events, this.state);
-        // this.action = new ActionSystem(this.events, this.state);
+        this.action = new ActionSystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
         
         // events
@@ -80,29 +80,40 @@ class BattlegroundsScene extends SceneBase {
             this.render.draw,
             this.render
         );
-
+     
         this.events.on(
             GameState.Event.TokenDestroyed,
             this.render.erase,
             this.render
         );
 
-        this.events.on('DEV_TOKEN_CLEANUP', this.token.reset, this.token);
+        this.events.on(
+            GameState.Event.ActionSchedule,
+            this.action.schedule,
+            this.action
+        );
 
-        // this.events.on(
-        //     GameState.Event.ActionUpdate,
-        //     this.action.execute,
-        //     this.action
-        // );
+        this.events.on(
+            GameState.Event.ActionCancel,
+            zone => {
+                this.token.reset(zone);
+                this.action.cancel(zone);
+            }
+        );
 
-        // this.events.on(
-        //     GameState.Event.ActionInfo,
-        //     (commander, zone) => {
-        //         console.log(GameState.Event.ActionInfo, commander, zone);
-        //     }
-        // )
+        this.events.on(
+            GameState.Event.ActionUnscheduled,
+            zone => {
+                this.token.reset(zone);
+            }
+        )
 
-        // console.log('BattlegroundsScene.events', this.events.eventNames());
+        this.events.on(
+            GameState.Event.ActionUpdated,
+            this.action.execute,
+            this.action
+        );
+        console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // gameloop
         this.app.ticker.add(this.on_update, this);
@@ -123,11 +134,11 @@ class BattlegroundsScene extends SceneBase {
                 stages: [
                     {
                         name: 'name.0',
-                        duration: 1500,
-                        idx: FirstIdx,
+                        duration: 5000,
+                        idx: FirstStage,
                         next: 1,
                         tick: null,
-                        cancelable: true,
+                        cancelable: false,
                         targets: [
                             TargetOriginType.Ally,
                             TargetOriginType.Ally,
@@ -139,7 +150,7 @@ class BattlegroundsScene extends SceneBase {
                         name: 'name.1',
                         idx: 1,
                         next: null,
-                        duration: 5000,
+                        duration: 25000,
                         tick: 1000,
                         cancelable: true,
                         targets: [
@@ -166,9 +177,9 @@ class BattlegroundsScene extends SceneBase {
         this.app.ticker.remove(this.on_update, this);
 
         // events
-        // this.events.removeAllListeners(GameState.Event.TokenCreated);
-        // this.events.removeAllListeners(GameState.Event.TokenDestroyed);
-        // this.events.removeAllListeners(GameState.Event.ActionUpdate);
+        Object.keys(GameState.Event).forEach(event => {
+            this.events.removeAllListeners(event);
+        });
         console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // systems
@@ -177,7 +188,7 @@ class BattlegroundsScene extends SceneBase {
         this.token = this.token.destructor();
         this.area = this.area.destructor();
         this.player = this.player.destructor();
-        // this.action = this.action.destructor();
+        this.action = this.action.destructor();
         this.render = this.render.destructor();
 
         // base
@@ -199,7 +210,7 @@ class BattlegroundsScene extends SceneBase {
     on_update (ticker) {
         const dt = ticker.elapsedMS;
 
-        // this.action.update(dt);
+        this.action.update(dt);
     }
 }
 

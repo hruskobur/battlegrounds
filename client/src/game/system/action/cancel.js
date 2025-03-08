@@ -7,19 +7,17 @@ import { ActionSystem } from '../action.js';
  * @param {GameStateZone} zone 
  * @returns {ActionSystem} this
  */
-function execute (zone) {
+function cancel (zone) {
     const token = zone.token;
     if(token == null) {
         return this;
     }
 
     console.log(
-        'ActionSystem.execute',
+        'ActionSystem.cancel',
         performance.now(),
-        token.stage
+        token
     );
-
-    return this;
 }
 
-export default execute;
+export default cancel;

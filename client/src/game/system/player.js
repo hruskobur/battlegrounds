@@ -2,7 +2,7 @@ import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { CommanderEntity } from '../entities/commander.js';
 import { PlayerControlSelection } from './control/selection.js';
-
+import cancel from './control/cancel.js';
 /**
  * @class The input system for the player commander.
  * @note Bot input system will be implemented differently/
@@ -27,7 +27,10 @@ class PlayerControlSystem extends SystemBase {
         super(events, state);
 
         this.commander = state.player;
+        
         this.selection = new PlayerControlSelection();
+        
+        this.cancel = cancel;
 
         this.state.iterate(
             (zone, x, y) => {
@@ -59,33 +62,11 @@ class PlayerControlSystem extends SystemBase {
         this.selection.reset();
         this.selection = null;
 
+        this.cancel = null;
+
         return super.destructor();
     }
 
-    /**
-     * @public
-     * @returns {PlayerControlSystem} this
-     */
-    cancel = () => {
-        let to_cancel = this.selection.target;
-        if(to_cancel == null) {
-            return this;
-        }
-
-        to_cancel = to_cancel.token;
-        if(to_cancel == null) {
-            return this;
-        }
-        
-        // todo: event naming is still a topic
-        // we need to differenciate between REQUEST & RESPONSE,for example here:
-        // - GameState.Event.TokenReset: request 
-        // - GameState.Event.TokenResed: response
-        this.events.emit('DEV_TOKEN_CLEANUP', to_cancel);
-        this.selection.reset();
-
-        return this;
-    }
 
     /**
      * @private
@@ -103,19 +84,17 @@ class PlayerControlSystem extends SystemBase {
         }
 
         if(this.selection.select(zone) === true) {
-            const token = this.selection.target.token;
+            const target = this.selection.target;
             
             console.log('-------------------- DONE --------------------');
-            token.stages.forEach(stage => {
-                stage.targeted.forEach(target => {
+            target.token.stages.forEach(stage => {
+                stage.state.targets.forEach(target => {
                     console.log(stage.name, target);
                 });
             });
             console.log('----------------------------------------------');
 
-            // dev: this simulates action execution, which will also do 
-            // the token cleanup...
-            // this.events.emit('DEV_TOKEN_CLEANUP', this.selection.target);
+            this.events.emit(GameState.Event.ActionSchedule, target);
             this.selection.reset();
         }
     }

@@ -1,17 +1,15 @@
 import { ScenarioEntity } from '../entities/scenario.js';
 import { LayersEntity } from '../entities/layers.js';
-import { AreaEntity } from '../entities/area.js';
-import { TokenEntity } from '../entities/token.js';
 
-import { GameStateZone } from './game_zone.js';
+import { GameStateZone } from './zone.js';
 import { CoordinateLow } from './constant.js';
 import { Coordinate } from '../types/coordinate.js';
 import { CommanderEntity } from '../entities/commander.js';
 
 /**
  * @typedef {Object} GameStateUpdateQueue
- * @property {Array<TokenEntity>} current
- * @property {Array<TokenEntity>} updated
+ * @property {Array<GameStateZone>} current
+ * @property {Array<GameStateZone>} updated
  */
 
 /**
@@ -32,8 +30,18 @@ import { CommanderEntity } from '../entities/commander.js';
 class GameState {
     static Event = Object.freeze({
         TokenCreated: 'token.created',
+        
+        TokenDestroyed: 'token.destroyed',
+        
         TokenReseted: 'token.reseted',
-        TokenDestroyed: 'token.destroyed'
+
+        ActionSchedule: 'action.schedule',
+        ActionScheduled: 'action.scheduled',
+        
+        ActionUpdated: 'action.updated',
+        ActionUnscheduled: 'action.unscheduled',
+        
+        ActionCancel: 'action.cancel'
     });
 
     /**

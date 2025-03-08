@@ -1,7 +1,15 @@
 import { 
-    TargetOriginType
+    TargetOriginType, TokenPhase
 } from '../../state/constant.js';
 import { Coordinate } from '../../types/coordinate.js';
+
+/**
+ * @typedef {Object} TokenStageState
+ * @property {TokenPhase} phase
+ * @property {Number} duration
+ * @property {Number} tick
+ * @property {Array<Coordinate>} targets
+ */
 
 class TokenStageComponent {
     /**
@@ -40,9 +48,9 @@ class TokenStageComponent {
     targets = [];
 
     /**
-     * @type {Array<Coordinate>}
+     * @type {TokenStageState}
      */
-    targeted = [];
+    state;
 }
 
 export {

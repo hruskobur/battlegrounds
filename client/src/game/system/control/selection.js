@@ -1,7 +1,7 @@
 import { TokenStageComponent } from '../../components/token/stage.js';
 import { TokenEntity } from '../../entities/token.js';
-import { FirstIdx } from '../../state/constant.js';
-import { GameStateZone } from '../../state/game_zone.js';
+import { FirstStage, IdleStage } from '../../state/constant.js';
+import { GameStateZone } from '../../state/zone.js';
 import { Coordinate } from '../../types/coordinate.js';
 
 class PlayerControlSelection {
@@ -53,6 +53,10 @@ class PlayerControlSelection {
         this.target = null;
     }
 
+    get first () {
+        return this.#cache_1st;
+    }
+
     /**
      * 
      * @param {GameStateZone} zone 
@@ -91,8 +95,10 @@ class PlayerControlSelection {
      * @returns {Boolean} 
      */
     #select_token = (zone) => {
-        if(this.#cache_1st == null) {
+        if(this.#cache_1st == null || this.#cache_1st !== zone) {
             this.#cache_1st = zone;
+
+            console.log('selected 1st', this.#cache_1st);
 
             return false;
         }
@@ -106,6 +112,12 @@ class PlayerControlSelection {
         }
 
         if(this.#cache_2nd.token == null) {
+            this.reset();
+
+            return false;
+        }
+
+        if(this.#cache_2nd.token.stage !== IdleStage) {
             this.reset();
 
             return false;
@@ -146,7 +158,8 @@ class PlayerControlSelection {
             return false;
         }
 
-        // todo: check! let's assume that all checks have passed , for now
+        // todo: do the checks!
+        // for now, let's assume that all checks have passed
         // . . . 
 
         const cached_targets = this.#cache_targets[this.#cache_s.idx];
@@ -168,8 +181,9 @@ class PlayerControlSelection {
 
         // note: add cached targets to the token's real targets
         token.stages.forEach(stage => {
-            stage.targeted = this.#cache_targets[stage.idx];
-        })
+            stage.state.targets = this.#cache_targets[stage.idx];
+        });
+        
         return true;
     }
 
@@ -179,8 +193,8 @@ class PlayerControlSelection {
      * @returns {void}
      */
     #initialize_cache = token => {
-        this.#cache_s = token.stages.get(FirstIdx);
-        this.#cache_r = FirstIdx;
+        this.#cache_s = token.stages.get(FirstStage);
+        this.#cache_r = FirstStage;
 
         this.#cache_targets = {};
         this.#cache_selections = {};

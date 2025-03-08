@@ -1,6 +1,7 @@
 import { DescriptionComponent } from '../components/description.js';
 import { TokenRenderableComponent } from '../components/token/renderable.js';
 import { TokenStageComponent } from '../components/token/stage.js';
+import { IdleStage } from '../state/constant.js';
 
 class TokenEntity {
     /**
@@ -32,7 +33,7 @@ class TokenEntity {
         this.renderable = new TokenRenderableComponent();
 
         this.stages = new Map();
-        this.stage = null;
+        this.stage = IdleStage;
     }
 }
 

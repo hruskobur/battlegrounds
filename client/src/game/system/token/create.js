@@ -1,8 +1,8 @@
-import { GameStateZone } from '../../state/game_zone.js';
+import { GameStateZone } from '../../state/zone.js';
 import { TokenEntity } from '../../entities/token.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
-import ability from './ability.js';
+import action_builder from './action_builder.js';
 
 /**
  * @this {TokenSystem}
@@ -26,7 +26,7 @@ function create (zone, options) {
     token.renderable.x = token.renderable.width * position.x;
     token.renderable.y = token.renderable.width * position.y;
 
-    ability(token, options);
+    action_builder(token, options);
 
     zone.token = token;
 

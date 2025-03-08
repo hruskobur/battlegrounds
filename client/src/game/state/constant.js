@@ -40,7 +40,8 @@ const TargetOriginType = Object.freeze({
     Enemy: 'target.origin.enemy'
 });
 
-const FirstIdx = 0;
+const IdleStage = null;
+const FirstStage = 0;
 
 export {
     DirectionCoordinates, CoordinateLow,
@@ -49,5 +50,5 @@ export {
     
     TargetOriginType,
 
-    FirstIdx
+    IdleStage, FirstStage
 };

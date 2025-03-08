@@ -2,8 +2,8 @@ import { TokenEntity } from '../../entities/token.js';
 import { RenderSystem } from '../render.js';
 
 /**
- * @this {RenderSystem}
  * @public
+ * @this {RenderSystem}
  * @param {TokenEntity} entity 
  * @returns {RenderSystem} this
  */

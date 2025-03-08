@@ -1,4 +1,4 @@
-import { GameStateZone } from '../../state/game_zone.js';
+import { GameStateZone } from '../../state/zone.js';
 import { GameState } from '../base.js';
 import { TokenSystem } from '../token.js';
 
