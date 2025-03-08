@@ -84,17 +84,11 @@ class PlayerControlSystem extends SystemBase {
         }
 
         if(this.selection.select(zone) === true) {
-            const target = this.selection.target;
+            this.events.emit(
+                GameState.Event.ActionSchedule,
+                this.selection.target
+            );
             
-            console.log('-------------------- DONE --------------------');
-            target.token.stages.forEach(stage => {
-                stage.state.targets.forEach(target => {
-                    console.log(stage.name, target);
-                });
-            });
-            console.log('----------------------------------------------');
-
-            this.events.emit(GameState.Event.ActionSchedule, target);
             this.selection.reset();
         }
     }

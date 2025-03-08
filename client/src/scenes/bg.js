@@ -83,8 +83,12 @@ class BattlegroundsScene extends SceneBase {
      
         this.events.on(
             GameState.Event.TokenDestroyed,
-            this.render.erase,
-            this.render
+            zone => {
+                // todo: this will be reworked to accept zone as argument!
+                this.render.erase(zone.token);
+                this.action.cancel(zone);
+                this.token.reset(zone);
+            }
         );
 
         this.events.on(
@@ -96,8 +100,8 @@ class BattlegroundsScene extends SceneBase {
         this.events.on(
             GameState.Event.ActionCancel,
             zone => {
-                this.token.reset(zone);
                 this.action.cancel(zone);
+                this.token.reset(zone);
             }
         );
 
@@ -134,7 +138,7 @@ class BattlegroundsScene extends SceneBase {
                 stages: [
                     {
                         name: 'name.0',
-                        duration: 5000,
+                        duration: 1500,
                         idx: FirstStage,
                         next: 1,
                         tick: null,
