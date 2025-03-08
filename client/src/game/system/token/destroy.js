@@ -17,9 +17,9 @@ function destroy (zone) {
         return this;
     }
 
+    this.events.emit(GameState.Event.TokenDestroyed, zone);
+    
     zone.token = null;
-
-    this.events.emit(GameState.Event.TokenDestroyed, token);
 
     // return this;
 }

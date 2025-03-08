@@ -77,24 +77,24 @@ class BattlegroundsScene extends SceneBase {
         // events
         this.events.on(
             GameState.Event.TokenCreated,
-            this.render.draw,
-            this.render
+            zone => {
+                this.render.draw(zone.token);
+            }
         );
      
         this.events.on(
             GameState.Event.TokenDestroyed,
             zone => {
-                // todo: this will be reworked to accept zone as argument!
                 this.render.erase(zone.token);
                 this.action.cancel(zone);
-                this.token.reset(zone);
             }
         );
 
         this.events.on(
             GameState.Event.ActionSchedule,
-            this.action.schedule,
-            this.action
+            zone => {
+                this.action.schedule(zone);
+            }
         );
 
         this.events.on(
@@ -114,8 +114,9 @@ class BattlegroundsScene extends SceneBase {
 
         this.events.on(
             GameState.Event.ActionUpdated,
-            this.action.execute,
-            this.action
+            zone => {
+                this.action.execute(zone);
+            }
         );
         console.log('BattlegroundsScene.events', this.events.eventNames());
 

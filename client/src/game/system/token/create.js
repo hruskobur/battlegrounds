@@ -30,7 +30,7 @@ function create (zone, options) {
 
     zone.token = token;
 
-    this.events.emit(GameState.Event.TokenCreated, token);
+    this.events.emit(GameState.Event.TokenCreated, zone);
 
     return this;
 }
