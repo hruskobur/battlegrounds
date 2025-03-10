@@ -7,6 +7,9 @@ import { RenderSystem } from '../game/system/render.js';
 import { PlayerControlSystem } from '../game/system/player.js';
 import { ActionSystem } from '../game/system/action.js';
 
+// dev
+import flood_selection from '../game/work_in_progress/flood_selection.js';
+
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
 
@@ -129,6 +132,7 @@ class BattlegroundsScene extends SceneBase {
         window.area = this.area;
         window.token = this.token;
         window.player = this.player;
+        window.flood_selection = flood_selection.bind(this.state);
 
         // scenario sim.
         this.token.create(
@@ -204,6 +208,7 @@ class BattlegroundsScene extends SceneBase {
         delete window.area;
         delete window.token;
         delete window.player;
+        delete window.flood_selection;
         
         return this;
     }

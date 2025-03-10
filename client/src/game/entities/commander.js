@@ -1,4 +1,4 @@
-import { OwnershipComponent } from '../components/ownership.js';
+import { FactionComponent } from '../components/faction.js';
 import { DescriptionComponent } from '../components/description.js';
 import { CommanderStatsComponent } from '../components/commander/stats.js';
 
@@ -9,9 +9,9 @@ class CommanderEntity {
     description;
 
     /**
-     * @type {OwnershipComponent}
+     * @type {FactionComponent}
      */
-    ownership;
+    faction;
 
     /**
      * @type {CommanderStatsComponent}
@@ -19,9 +19,7 @@ class CommanderEntity {
     stats;
 
     constructor () {
-        this.ownership = new OwnershipComponent(
-            Number.MIN_SAFE_INTEGER
-        );
+        this.faction = null
 
         this.description = new DescriptionComponent(
             '',

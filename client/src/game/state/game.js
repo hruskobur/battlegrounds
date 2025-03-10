@@ -5,6 +5,7 @@ import { GameStateZone } from './zone.js';
 import { CoordinateLow } from './constant.js';
 import { Coordinate } from '../types/coordinate.js';
 import { CommanderEntity } from '../entities/commander.js';
+import { FactionComponent } from '../components/faction.js';
 
 /**
  * @typedef {Object} GameStateUpdateQueue
@@ -80,12 +81,24 @@ class GameState {
     player;
 
     /**
+     * @type {FactionComponent}
+     */
+    faction_a;
+
+    /**
+     * @type {FactionComponent}
+     */
+    faction_b;
+
+    /**
      * @param {ScenarioEntity} scenario 
      */
     constructor (scenario) {
         this.scenario = scenario;
         this.width = scenario.width;
         this.height = scenario.height;
+        this.faction_a = new FactionComponent(0, 'good guys');
+        this.faction_b = new FactionComponent(1, 'bad guys');
 
         this.zones = [];
         {
@@ -113,8 +126,9 @@ class GameState {
         };
 
         this.player = new CommanderEntity();
+        this.player.faction = this.faction_a;
         this.player.description.name = 'player';
-        this.player.ownership.faction = 0;
+        this.player.faction.faction = 0;
     }
 
     /**

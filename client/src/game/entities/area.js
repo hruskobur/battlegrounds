@@ -1,12 +1,12 @@
-import { OwnershipComponent } from '../components/ownership.js';
+import { FactionComponent } from '../components/faction.js';
 import { AreaTerrainComponent } from '../components/area/terrain.js';
 import { AreaRenderableComponent } from '../components/area/renderable.js';
 
 class AreaEntity {
     /**
-     * @type {OwnershipComponent}
+     * @type {FactionComponent}
      */
-    ownership;
+    faction;
 
     /**
      * @type {AreaTerrainComponent}
@@ -22,8 +22,9 @@ class AreaEntity {
      */
     constructor () {
 
-        this.ownership = new OwnershipComponent(
-            Number.MIN_SAFE_INTEGER
+        this.faction = new FactionComponent(
+            Number.MIN_SAFE_INTEGER,
+            ''
         );
 
         this.terrain = new AreaTerrainComponent(

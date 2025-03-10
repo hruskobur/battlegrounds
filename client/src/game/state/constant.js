@@ -15,15 +15,15 @@ const DirectionCoordinates = Object.freeze([
     // sqrt(2) times more expensive
 
     // diagonal directions
-    ,
-    // north-east
-    { x: 1, y: -1 },
-    // south-east
-    { x: 1, y: 1 },
-    // southwest
-    { x: -1, y: 1 },
-    // northwest
-    { x: -1, y: -1 }
+    // ,
+    // // north-east
+    // { x: 1, y: -1 },
+    // // south-east
+    // { x: 1, y: 1 },
+    // // southwest
+    // { x: -1, y: 1 },
+    // // northwest
+    // { x: -1, y: -1 }
 ]);
 
 const CoordinateLow = 0;
