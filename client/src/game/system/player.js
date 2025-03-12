@@ -1,13 +1,15 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { CommanderEntity } from '../entities/commander.js';
-import { PlayerControlSelection } from './control/selection.js';
-import cancel from './control/cancel.js';
+import { GameStateZone } from '../state/zone.js';
+import { AbilityComponent } from '../components/ability.js';
+import { Coordinate } from '../types/coordinate.js';
+
 /**
  * @class The input system for the player commander.
  * @note Bot input system will be implemented differently/
  */
-class PlayerControlSystem extends SystemBase {
+class PlayerSystem extends SystemBase {
     /**
      * Commander controled by this control system.
      * @type {CommanderEntity}
@@ -15,9 +17,21 @@ class PlayerControlSystem extends SystemBase {
     commander;
 
     /**
-     * @type {PlayerControlSelection}
+     * @type {GameStateZone}
      */
-    selection;
+    zone;
+
+    /**
+     * @type {AbilityComponent}
+     */
+    ability;
+
+    /**
+     * @type {Array<Coordinate>}
+     */
+    targets;
+
+
 
     /**
      * @param {EventEmitter} events 
@@ -26,12 +40,14 @@ class PlayerControlSystem extends SystemBase {
     constructor (events, state) {
         super(events, state);
 
+        // note: who controls this system?
         this.commander = state.player;
-        
-        this.selection = new PlayerControlSelection();
-        
-        this.cancel = cancel;
 
+        // targeting
+        this.zone = null;
+        this.ability = null;
+        this.targets = [];
+        
         this.state.iterate(
             (zone, x, y) => {
                 zone.area.renderable
@@ -59,10 +75,9 @@ class PlayerControlSystem extends SystemBase {
 
         this.commander = null;
 
-        this.selection.reset();
-        this.selection = null;
-
-        this.cancel = null;
+        this.zone = null;
+        this.ability = null;
+        this.targets = null;
 
         return super.destructor();
     }
@@ -78,21 +93,44 @@ class PlayerControlSystem extends SystemBase {
             Math.floor(event.target.x / 72),
             Math.floor(event.target.y / 72)
         );
-        
-        if(zone == null) {
+
+        if(this.ability == null) {
+            if(zone.token == null) {
+                return;
+            }
+
+            this.clear();
+            this.zone = zone;
+
+            console.log('zone selected');
+
             return;
         }
 
-        if(this.selection.select(zone) === true) {
-            this.events.emit(
-                GameState.Event.ActionSchedule,
-                this.selection.target
-            );
-            
-            this.selection.reset();
+        this.targets.push(zone.position);
+        if(this.targets.length < 2) {
+            return;
         }
+
+        console.log('targets selected');
+
+        console.log(
+            'PlayerSystem.input',
+            this.zone,
+            this.ability,
+            this.targets
+        );
+
+        this.clear();
     }
 
+    clear = () => {
+        this.zone = null;
+        this.ability = null;
+        this.targets = [];
+
+        console.log('PlayerSystem.clear');
+    }
     
     /**
      * @private
@@ -100,13 +138,40 @@ class PlayerControlSystem extends SystemBase {
      * @returns {void}
      */
     #on_key_up = event => {
-        switch(event.key) {
+        let input = event.key;
+
+        switch(input) {
             case 'Escape': {
-                this.cancel();
+                this.clear();
 
                 return;
             }
             default: {
+                if(this.zone === null) {
+                    return;
+                }
+
+                input = Number(input);
+                if(Number.isNaN(input) === true) {
+                    return;
+                }
+
+                const token = this.zone.token;
+                if(token == null) {
+                    this.clear();
+
+                    return;
+                }
+
+                const ability = token.abilities[input];
+                if(ability == null) {
+                    this.clear();
+
+                    return;
+                }
+
+                this.ability = ability;
+
                 return;
             }
         }
@@ -114,5 +179,5 @@ class PlayerControlSystem extends SystemBase {
 }
 
 export {
-    PlayerControlSystem
+    PlayerSystem
 }

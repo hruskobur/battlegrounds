@@ -1,3 +1,5 @@
+const CoordinateLow = 0;
+
 class Coordinate {
     /**
      * @type {Number}
@@ -21,5 +23,6 @@ class Coordinate {
 }
 
 export {
+    CoordinateLow,
     Coordinate
 };

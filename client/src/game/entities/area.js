@@ -1,6 +1,5 @@
+import * as Pixi from 'pixi.js';
 import { FactionComponent } from '../components/faction.js';
-import { AreaTerrainComponent } from '../components/area/terrain.js';
-import { AreaRenderableComponent } from '../components/area/renderable.js';
 
 class AreaEntity {
     /**
@@ -9,30 +8,35 @@ class AreaEntity {
     faction;
 
     /**
-     * @type {AreaTerrainComponent}
-     */
-    terrain;
-
-    /**
-     * @type {AreaRenderableComponent}
+     * @type {Pixi.Container}
      */
     renderable;
 
     /**
      */
     constructor () {
-
         this.faction = new FactionComponent(
             Number.MIN_SAFE_INTEGER,
             ''
         );
 
-        this.terrain = new AreaTerrainComponent(
-            '',
-            0
-        );
+        this.renderable = new Pixi.Container({
+            children: [
+                new Pixi.Sprite(),
+                new Pixi.Text()
+            ]
+        });
+    }
 
-        this.renderable = new AreaRenderableComponent();
+    get sprite () {
+        return this.renderable.children[0];
+    }
+
+    /**
+     * @returns {Pixi.Text}
+     */
+    get text () {
+        return this.renderable.children[1];
     }
 }
 

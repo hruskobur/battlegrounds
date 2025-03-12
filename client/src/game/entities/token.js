@@ -1,7 +1,6 @@
+import * as Pixi from 'pixi.js';
 import { DescriptionComponent } from '../components/description.js';
-import { TokenRenderableComponent } from '../components/token/renderable.js';
-import { TokenStageComponent } from '../components/token/stage.js';
-import { IdleStage } from '../state/constant.js';
+import { AbilityComponent } from '../components/ability.js';
 
 class TokenEntity {
     /**
@@ -10,30 +9,37 @@ class TokenEntity {
     description;
 
     /**
-     * @type {TokenRenderableComponent}
+     * @type {Pixi.Container}
      */
     renderable;
 
     /**
-     * @type {Map<Number, TokenStageComponent>}
+     * @type {Array<AbilityComponent>}
      */
-    stages;
+    abilities;
 
     /**
-     * @type {TokenStageComponent|null}
      */
-    stage;
-
     constructor () {
         this.description = new DescriptionComponent(
             '',
             ''
         );
 
-        this.renderable = new TokenRenderableComponent();
+        this.renderable = new Pixi.Container({
+            children: [
+                new Pixi.Graphics()
+            ]
+        });
 
-        this.stages = new Map();
-        this.stage = IdleStage;
+        this.abilities = [];
+    }
+
+    /**
+     * @type {Pixi.Graphics}
+     */
+    get sprite () {
+        return this.renderable.children[0];
     }
 }
 

@@ -5,7 +5,6 @@ import { TokenSystem } from '../token.js';
 /**
  * @this {TokenSystem}
  * @param {GameStateZone} zone 
- * @param {Number} y 
  * @returns {TokenSystem} this
  */
 function destroy (zone) {
@@ -21,7 +20,7 @@ function destroy (zone) {
     
     zone.token = null;
 
-    // return this;
+    return this;
 }
 
 export default destroy;

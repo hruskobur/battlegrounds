@@ -1,24 +1,24 @@
-import { RenderableComponent } from '../components/renderable.js';
+import * as Pixi from 'pixi.js';
 
 class LayersEntity {
     /**
-     * @type {RenderableComponent}
+     * @type {Pixi.Container}
      */
     areas;
 
     /**
-     * @type {RenderableComponent}
+     * @type {Pixi.Container}
      */
     tokens;
 
     constructor () {
-        this.areas = new RenderableComponent({
+        this.areas = new Pixi.Container({
             eventMode: 'static',
             zIndex: 0,
             label: 'areas'
         });
 
-        this.tokens = new RenderableComponent({
+        this.tokens = new Pixi.Container({
             eventMode: 'static',
             zIndex: 0,
             label: 'tokens'

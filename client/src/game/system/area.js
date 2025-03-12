@@ -21,22 +21,11 @@ class AreaSystem extends SystemBase {
                 // defaults
                 // for now, all defaults
                 const area = new AreaEntity();
-                area.terrain.difficulty = Math.floor(Math.random() * 100) + 1;
-                area.terrain.geography = Math.floor(Math.random() * 5);
-                area.renderable.x = x * area.renderable.width;
-                area.renderable.y = y * area.renderable.height;
-                area.renderable.terrain.alpha = (area.terrain.difficulty / 100);
-                // area.renderable.difficulty.text = area.terrain.difficulty;
-                area.renderable.difficulty.text = `[${x},${y}]`;
-                
+
                 area.faction = Math.floor(Math.random() * 2) === 0 
                 ? this.state.faction_a
                 : this.state.faction_b;
                 
-                area.renderable.terrain.tint = (area.faction.id === 0)
-                ? 'blue'
-                : 'red';
-
                 zone.area = area;
             }
         );

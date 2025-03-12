@@ -1,8 +1,8 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 
-import draw from './render/draw.js';
-import erase from './render/erase.js';
+import * as AreaRender from './render/area.js';
+import * as TokenRender from './render/token.js';
 
 /**
  * @class RenderSystem
@@ -26,8 +26,10 @@ class RenderSystem extends SystemBase {
     constructor(events, state, container) {
         super(events, state);
 
-        this.draw = draw;
-        this.erase = erase;
+        this.area_draw = AreaRender.draw;
+        this.area_erase = AreaRender.erase;
+        this.token_draw = TokenRender.draw;
+        this.token_erase = TokenRender.erase;
 
         // layers
         const areas = this.state.layer.areas;
@@ -52,15 +54,8 @@ class RenderSystem extends SystemBase {
         // layers: do the "drawing"
         this.state.iterate(
             (zone, x, y) => {
-                const area = zone.area;
-                if(area != null) {
-                    this.draw(area)
-                }
-
-                const token = zone.token;
-                if(token != null) {
-                    this.draw(token);
-                }
+                this.area_draw(zone);
+                this.token_draw(zone);
             }
         );
 
@@ -80,8 +75,10 @@ class RenderSystem extends SystemBase {
      * @returns {null}
      */
     destructor() {
-        this.draw = null;
-        this.erase = null;
+        this.area_draw = null;
+        this.area_erase = null;
+        this.token_draw = null;
+        this.token_erase = null;
 
         return super.destructor();
     }

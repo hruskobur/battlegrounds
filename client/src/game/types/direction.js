@@ -1,4 +1,4 @@
-const DirectionCoordinates = Object.freeze([
+const Direction = Object.freeze([
     // cardinal directions
     // north
     { x: 0, y: -1 },
@@ -26,29 +26,6 @@ const DirectionCoordinates = Object.freeze([
     // { x: -1, y: -1 }
 ]);
 
-const CoordinateLow = 0;
-
-const TokenPhase = Object.freeze({
-    Start: 'action.start',
-    TickStart: 'action.tick.start',
-    TickEnd: 'action.tick.end',
-    End: 'action.end'
-});
-
-const TargetOriginType = Object.freeze({
-    Ally: 'target.origin.ally',
-    Enemy: 'target.origin.enemy'
-});
-
-const IdleStage = null;
-const FirstStage = 0;
-
 export {
-    DirectionCoordinates, CoordinateLow,
-    
-    TokenPhase,
-    
-    TargetOriginType,
-
-    IdleStage, FirstStage
+    Direction
 };

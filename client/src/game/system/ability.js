@@ -1,10 +1,9 @@
 import { EventEmitter, GameState, SystemBase } from './base.js';
-import schedule from './action/schedule.js';
-import update from './action/update.js';
-import cancel from './action/cancel.js';
-import execute from './action/execute.js';
+import schedule from './ability/schedule.js';
+import update from './ability/update.js';
+import cancel from './ability/cancel.js';
 
-class ActionSystem extends SystemBase {
+class AbilitySystem extends SystemBase {
     /**
      * 
      * @param {EventEmitter} events 
@@ -16,7 +15,6 @@ class ActionSystem extends SystemBase {
         this.schedule = schedule;
         this.update = update;
         this.cancel = cancel;
-        this.execute = execute;
     }
 
     /**
@@ -28,12 +26,11 @@ class ActionSystem extends SystemBase {
         this.schedule = null;
         this.update = null;
         this.cancel = null;
-        this.execute = null;
 
         return super.destructor();
     }
 }
 
 export {
-    ActionSystem
+    AbilitySystem
 };

@@ -1,7 +1,6 @@
 import { SystemBase, EventEmitter, GameState } from './base.js';
 
 import create from './token/create.js';
-import reset from './token/reset.js';
 import destroy from './token/destroy.js';
 
 class TokenSystem extends SystemBase {
@@ -14,7 +13,6 @@ class TokenSystem extends SystemBase {
 
         // functionality
         this.create = create;
-        this.reset = reset;
         this.destroy = destroy;
 
         // initialization
@@ -35,7 +33,6 @@ class TokenSystem extends SystemBase {
      */
     destructor () {
         this.create = null;
-        this.reset = null;
         this.destroy = null;
         
         return super.destructor();

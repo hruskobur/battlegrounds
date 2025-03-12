@@ -1,14 +1,9 @@
 import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
-import { TargetOriginType, FirstStage } from '../game/state/constant.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
 import { RenderSystem } from '../game/system/render.js';
-import { PlayerControlSystem } from '../game/system/player.js';
-import { ActionSystem } from '../game/system/action.js';
-
-// dev
-import flood_selection from '../game/work_in_progress/flood_selection.js';
+import { PlayerSystem } from '../game/system/player.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -29,14 +24,9 @@ class BattlegroundsScene extends SceneBase {
     token;
 
     /**
-     * @type {PlayerControlSystem}
+     * @type {PlayerSystem}
      */
     player;
-
-    /**
-     * @type {ActionSystem}
-     */
-    action;
    
     /**
      * @type {RenderSystem}
@@ -55,7 +45,6 @@ class BattlegroundsScene extends SceneBase {
         this.area = null;
         this.token = null;
         this.player = null;
-        this.action = null;
         this.render = null;
     }
 
@@ -73,52 +62,21 @@ class BattlegroundsScene extends SceneBase {
         this.state = new GameState(scenario);
         this.area = new AreaSystem(this.events, this.state);
         this.token = new TokenSystem(this.events, this.state);
-        this.player = new PlayerControlSystem(this.events, this.state);
-        this.action = new ActionSystem(this.events, this.state);
+        this.player = new PlayerSystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
         
         // events
-        this.events.on(
+        this.events
+        .on(
             GameState.Event.TokenCreated,
-            zone => {
-                this.render.draw(zone.token);
-            }
-        );
-     
-        this.events.on(
-            GameState.Event.TokenDestroyed,
-            zone => {
-                this.render.erase(zone.token);
-                this.action.cancel(zone);
-            }
-        );
-
-        this.events.on(
-            GameState.Event.ActionSchedule,
-            zone => {
-                this.action.schedule(zone);
-            }
-        );
-
-        this.events.on(
-            GameState.Event.ActionCancel,
-            zone => {
-                this.action.cancel(zone);
-                this.token.reset(zone);
-            }
-        );
-
-        this.events.on(
-            GameState.Event.ActionUnscheduled,
-            zone => {
-                this.token.reset(zone);
+            e => {
+                this.render.token_draw(e);
             }
         )
-
-        this.events.on(
-            GameState.Event.ActionUpdated,
-            zone => {
-                this.action.execute(zone);
+        .on(
+            GameState.Event.TokenDestroyed,
+            e => {
+                this.render.token_erase(e);
             }
         );
         console.log('BattlegroundsScene.events', this.events.eventNames());
@@ -131,46 +89,10 @@ class BattlegroundsScene extends SceneBase {
         window.state = this.state;
         window.area = this.area;
         window.token = this.token;
-        window.player = this.player;
-        window.flood_selection = flood_selection.bind(this.state);
 
-        // scenario sim.
+        // sandbox
         this.token.create(
-            this.state.query(0, 0),
-            {
-                name: 'firebolt.name',
-                text: 'firebolt.text',
-                stages: [
-                    {
-                        name: 'name.0',
-                        duration: 1500,
-                        idx: FirstStage,
-                        next: 1,
-                        tick: null,
-                        cancelable: false,
-                        targets: [
-                            TargetOriginType.Ally,
-                            TargetOriginType.Ally,
-                            TargetOriginType.Enemy,
-                            TargetOriginType.Enemy
-                        ]
-                    },
-                    {
-                        name: 'name.1',
-                        idx: 1,
-                        next: null,
-                        duration: 25000,
-                        tick: 1000,
-                        cancelable: true,
-                        targets: [
-                            TargetOriginType.Enemy,
-                            TargetOriginType.Ally,
-                            TargetOriginType.Enemy,
-                            TargetOriginType.Ally
-                        ]
-                    }
-                ]
-            }
+            this.state.query(0, 0)
         );
 
         return this;
@@ -186,7 +108,9 @@ class BattlegroundsScene extends SceneBase {
         this.app.ticker.remove(this.on_update, this);
 
         // events
-        Object.keys(GameState.Event).forEach(event => {
+        Object
+        .keys(GameState.Event)
+        .forEach(event => {
             this.events.removeAllListeners(event);
         });
         console.log('BattlegroundsScene.events', this.events.eventNames());
@@ -194,10 +118,9 @@ class BattlegroundsScene extends SceneBase {
         // systems
         // note: order matters!
         this.state = null;
-        this.token = this.token.destructor();
         this.area = this.area.destructor();
+        this.token = this.token.destructor();
         this.player = this.player.destructor();
-        this.action = this.action.destructor();
         this.render = this.render.destructor();
 
         // base
@@ -207,8 +130,6 @@ class BattlegroundsScene extends SceneBase {
         delete window.state;
         delete window.area;
         delete window.token;
-        delete window.player;
-        delete window.flood_selection;
         
         return this;
     }
@@ -219,8 +140,6 @@ class BattlegroundsScene extends SceneBase {
      */
     on_update (ticker) {
         const dt = ticker.elapsedMS;
-
-        this.action.update(dt);
     }
 }
 

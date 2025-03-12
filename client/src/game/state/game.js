@@ -1,17 +1,10 @@
+import { CoordinateLow, Coordinate } from '../types/coordinate.js';
 import { ScenarioEntity } from '../entities/scenario.js';
 import { LayersEntity } from '../entities/layers.js';
-
-import { GameStateZone } from './zone.js';
-import { CoordinateLow } from './constant.js';
-import { Coordinate } from '../types/coordinate.js';
 import { CommanderEntity } from '../entities/commander.js';
 import { FactionComponent } from '../components/faction.js';
-
-/**
- * @typedef {Object} GameStateUpdateQueue
- * @property {Array<GameStateZone>} current
- * @property {Array<GameStateZone>} updated
- */
+import { GameStateZone } from './zone.js';
+import { GameStateAbilityQueue } from './queue.js';
 
 /**
  * @class GameState
@@ -31,18 +24,8 @@ import { FactionComponent } from '../components/faction.js';
 class GameState {
     static Event = Object.freeze({
         TokenCreated: 'token.created',
-        
         TokenDestroyed: 'token.destroyed',
-        
-        TokenReseted: 'token.reseted',
-
-        ActionSchedule: 'action.schedule',
-        ActionScheduled: 'action.scheduled',
-        
-        ActionUpdated: 'action.updated',
-        ActionUnscheduled: 'action.unscheduled',
-        
-        ActionCancel: 'action.cancel'
+        AbilitySelected: 'ability.selected'
     });
 
     /**
@@ -61,6 +44,16 @@ class GameState {
     height;
 
     /**
+     * @type {FactionComponent}
+     */
+    faction_a;
+
+    /**
+     * @type {FactionComponent}
+     */
+    faction_b;
+
+    /**
      * @type {Array<Array<GameStateZone>>}
      */
     zones;
@@ -71,7 +64,7 @@ class GameState {
     layer;
 
     /**
-     * @type {GameStateUpdateQueue}
+     * @type {GameStateAbilityQueue}
      */
     queue;
 
@@ -81,14 +74,10 @@ class GameState {
     player;
 
     /**
-     * @type {FactionComponent}
+     * @type {CommanderEntity}
      */
-    faction_a;
+    bot;
 
-    /**
-     * @type {FactionComponent}
-     */
-    faction_b;
 
     /**
      * @param {ScenarioEntity} scenario 
@@ -120,15 +109,16 @@ class GameState {
 
         this.layer = new LayersEntity();
 
-        this.queue = {
-            current: [],
-            updated: []
-        };
+        this.queue = new GameStateAbilityQueue();
 
         this.player = new CommanderEntity();
         this.player.faction = this.faction_a;
         this.player.description.name = 'player';
-        this.player.faction.faction = 0;
+
+        this.bot = new CommanderEntity();
+        this.bot.faction = this.faction_b;
+        this.bot.description.name = 'bot';
+
     }
 
     /**
