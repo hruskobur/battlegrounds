@@ -123,13 +123,11 @@ class GameState {
 
     /**
      * @public
-     * @param {Coordinate} position
+     * @param {Number} x 
+     * @param {Number} y
      * @returns {Boolean}
      */
-    check (position) {
-        const x = position.x;
-        const y = position.y;
-
+    check (x, y) {
         return (
             x >= CoordinateLow
             && x < this.width

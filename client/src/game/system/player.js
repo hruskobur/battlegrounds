@@ -2,8 +2,7 @@ import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 import { CommanderEntity } from '../entities/commander.js';
 import { GameStateZone } from '../state/zone.js';
-import { AbilityComponent } from '../components/ability.js';
-import { Coordinate } from '../types/coordinate.js';
+import { PlayerAbilityTargeter } from './player/targeter.js';
 
 /**
  * @class The input system for the player commander.
@@ -11,27 +10,9 @@ import { Coordinate } from '../types/coordinate.js';
  */
 class PlayerSystem extends SystemBase {
     /**
-     * Commander controled by this control system.
-     * @type {CommanderEntity}
+     * @type {PlayerAbilityTargeter}
      */
-    commander;
-
-    /**
-     * @type {GameStateZone}
-     */
-    zone;
-
-    /**
-     * @type {AbilityComponent}
-     */
-    ability;
-
-    /**
-     * @type {Array<Coordinate>}
-     */
-    targets;
-
-
+    targeter;
 
     /**
      * @param {EventEmitter} events 
@@ -40,13 +21,7 @@ class PlayerSystem extends SystemBase {
     constructor (events, state) {
         super(events, state);
 
-        // note: who controls this system?
-        this.commander = state.player;
-
-        // targeting
-        this.zone = null;
-        this.ability = null;
-        this.targets = [];
+        this.targeter = new PlayerAbilityTargeter(state.player);
         
         this.state.iterate(
             (zone, x, y) => {
@@ -73,11 +48,7 @@ class PlayerSystem extends SystemBase {
             }
         );
 
-        this.commander = null;
-
-        this.zone = null;
-        this.ability = null;
-        this.targets = null;
+        this.targeter = null;
 
         return super.destructor();
     }
@@ -94,34 +65,18 @@ class PlayerSystem extends SystemBase {
             Math.floor(event.target.y / 72)
         );
 
-        if(this.ability == null) {
-            if(zone.token == null) {
-                return;
-            }
+        console.log('PlayerSystem.info', zone);
 
-            this.clear();
-            this.zone = zone;
+        const payload = this.targeter
+        .set_zone(zone)
+        .set_targets(zone)
+        .payload();
 
-            console.log('zone selected');
+        if(payload !== null) {
+            this.targeter.reset();
 
-            return;
+            console.log('PlayerSystem.action', payload);
         }
-
-        this.targets.push(zone.position);
-        if(this.targets.length < 2) {
-            return;
-        }
-
-        console.log('targets selected');
-
-        console.log(
-            'PlayerSystem.input',
-            this.zone,
-            this.ability,
-            this.targets
-        );
-
-        this.clear();
     }
 
     clear = () => {
@@ -142,35 +97,27 @@ class PlayerSystem extends SystemBase {
 
         switch(input) {
             case 'Escape': {
-                this.clear();
+                this.targeter.reset();
+
+                return;
+            }
+            case 'Enter': {
+                // todo: check , if it is possible to provide ability at this
+                // state
+                // . . .
+
+                // dev: for now, just reset
+                this.targeter.reset();
 
                 return;
             }
             default: {
-                if(this.zone === null) {
-                    return;
-                }
-
                 input = Number(input);
                 if(Number.isNaN(input) === true) {
                     return;
                 }
 
-                const token = this.zone.token;
-                if(token == null) {
-                    this.clear();
-
-                    return;
-                }
-
-                const ability = token.abilities[input];
-                if(ability == null) {
-                    this.clear();
-
-                    return;
-                }
-
-                this.ability = ability;
+                this.targeter.set_ability(input);
 
                 return;
             }

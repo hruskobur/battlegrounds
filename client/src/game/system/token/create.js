@@ -36,6 +36,9 @@ function create (zone) {
             {
                 duration: 2000,
                 tick: 500
+            },
+            {
+                count: 2
             }
         )
     );

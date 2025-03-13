@@ -3,6 +3,7 @@ import { AbilityStageId, AbilityStagePhase } from '../../components/ability.js';
 import { AbilitySystem } from '../ability.js';
 
 /**
+ * @public
  * @this {AbilitySystem}
  * @param {GameStateAbilityQueue} queue 
  * @param {Number} dt 
@@ -134,6 +135,4 @@ function update (dt) {
     }
 }
 
-export {
-    update
-};
+export default update;

@@ -22,6 +22,7 @@ const AbilityStageId = Object.freeze({
 
 /**
  * @typedef {Object} AbilityTargetRule
+ * @property {Number} count
  */
 
 /**
