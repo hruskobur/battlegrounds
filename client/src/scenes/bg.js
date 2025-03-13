@@ -2,8 +2,9 @@ import { SceneBase, Pixi } from '../core/scene.js';
 import { GameState } from '../game/state/game.js';
 import { AreaSystem } from '../game/system/area.js';
 import { TokenSystem } from '../game/system/token.js';
-import { RenderSystem } from '../game/system/render.js';
 import { PlayerSystem } from '../game/system/player.js';
+import { AbilitySystem } from '../game/system/ability.js';
+import { RenderSystem } from '../game/system/render.js';
 
 class BattlegroundsScene extends SceneBase {
     static Id = 'bg';
@@ -27,6 +28,11 @@ class BattlegroundsScene extends SceneBase {
      * @type {PlayerSystem}
      */
     player;
+
+    /**
+     * @type {AbilitySystem}
+     */
+    ability;
    
     /**
      * @type {RenderSystem}
@@ -45,6 +51,7 @@ class BattlegroundsScene extends SceneBase {
         this.area = null;
         this.token = null;
         this.player = null;
+        this.ability = null;
         this.render = null;
     }
 
@@ -63,6 +70,7 @@ class BattlegroundsScene extends SceneBase {
         this.area = new AreaSystem(this.events, this.state);
         this.token = new TokenSystem(this.events, this.state);
         this.player = new PlayerSystem(this.events, this.state);
+        this.ability = new AbilitySystem(this.events, this.state);
         this.render = new RenderSystem(this.events, this.state, this.container);
         
         // events
@@ -78,7 +86,19 @@ class BattlegroundsScene extends SceneBase {
             e => {
                 this.render.token_erase(e);
             }
-        );
+        )
+        .on(
+            GameState.Event.AbilitySchedule,
+            (e, id) => {
+                this.ability.schedule(e, id);
+            }
+        )
+        .on(
+            'DEV_INFO',
+            (...e) => {
+                console.log('DEV_INFO', ...e);
+            }
+        )
         console.log('BattlegroundsScene.events', this.events.eventNames());
 
         // gameloop
@@ -140,6 +160,8 @@ class BattlegroundsScene extends SceneBase {
      */
     on_update (ticker) {
         const dt = ticker.elapsedMS;
+
+        this.ability.update(dt);
     }
 }
 

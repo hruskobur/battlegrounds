@@ -25,7 +25,7 @@ class GameState {
     static Event = Object.freeze({
         TokenCreated: 'token.created',
         TokenDestroyed: 'token.destroyed',
-        AbilitySelected: 'ability.selected'
+        AbilitySchedule: 'ability.schedule'
     });
 
     /**

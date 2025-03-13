@@ -21,7 +21,7 @@ class PlayerSystem extends SystemBase {
     constructor (events, state) {
         super(events, state);
 
-        this.targeter = new PlayerAbilityTargeter(state.player);
+        this.targeter = new PlayerAbilityTargeter(events, state.player);
         
         this.state.iterate(
             (zone, x, y) => {
@@ -65,28 +65,22 @@ class PlayerSystem extends SystemBase {
             Math.floor(event.target.y / 72)
         );
 
-        console.log('PlayerSystem.info', zone);
-
         const payload = this.targeter
-        .set_zone(zone)
+        .select_zone(zone)
         .set_targets(zone)
         .payload();
 
         if(payload !== null) {
             this.targeter.reset();
 
-            console.log('PlayerSystem.action', payload);
+            this.events.emit(
+                GameState.Event.AbilitySchedule,
+                payload.zone,
+                payload.ability
+            );
         }
     }
 
-    clear = () => {
-        this.zone = null;
-        this.ability = null;
-        this.targets = [];
-
-        console.log('PlayerSystem.clear');
-    }
-    
     /**
      * @private
      * @param {KeyboardEvent} event 

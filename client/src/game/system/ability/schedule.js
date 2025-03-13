@@ -13,21 +13,21 @@ import { AbilityStageId } from '../../components/ability.js';
 function schedule (zone, id) {
     const token = zone.token;
     if(token == null) {
-        console.warn('AbilitySystem.schedule', 'no token');
+        console.log('AbilitySystem.schedule', 'no token');
 
         return this;
     }
 
     const ability = token.abilities[id];
     if(ability == null) {
-        console.warn('AbilitySystem.schedule', 'no such ability');
+        console.log('AbilitySystem.schedule', 'no such ability');
 
         return this;
     }
 
     if(ability.stage.id !== AbilityStageId.Idle) {
         // todo: failure info
-        console.warn('AbilitySystem.schedule', 'stage is not idle');
+        console.log('AbilitySystem.schedule', 'stage is not idle');
 
         return this;
     }
@@ -36,7 +36,7 @@ function schedule (zone, id) {
     this.state.queue.current.push(ability);
 
     // todo: scheduled event
-    console.warn('AbilitySystem.schedule', 'okay');
+    console.log('AbilitySystem.schedule', ability);
 
     return this;
 }

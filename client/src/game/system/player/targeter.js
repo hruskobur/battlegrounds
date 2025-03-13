@@ -2,6 +2,7 @@ import { Coordinate } from '../../types/coordinate.js';
 import { AbilityComponent, AbilityStageId } from '../../components/ability.js';
 import { GameStateZone } from '../../state/zone.js';
 import { CommanderEntity } from '../../entities/commander.js';
+import EventEmitter from 'eventemitter3';
 
 class PlayerAbilityTargeter {
     /**
@@ -31,9 +32,11 @@ class PlayerAbilityTargeter {
 
     /**
      * 
+     * @param {EventEmitter} events 
      * @param {CommanderEntity} commander 
      */
-    constructor (commander) {
+    constructor (events, commander) {
+        this.events = events;
         this.commadner = commander;
 
         this.zone = null;
@@ -49,11 +52,8 @@ class PlayerAbilityTargeter {
      * @param {GameStateZone} zone 
      * @returns {PlayerAbilityTargeter} this
      */
-    set_zone = zone => {
-        // if(zone.area.faction !== this.commadner.faction) {
-        //     console.log(`not a commander's zone!`);
-        //     return this;
-        // }
+    select_zone = zone => {
+        this.events.emit('DEV_INFO', 'info: data', zone);
 
         if(this.ability !== null) {
             return this;
@@ -61,14 +61,14 @@ class PlayerAbilityTargeter {
 
         const token = zone.token;
         if(token == null) {
-            console.log(`there's no token to act!`);
+            this.events.emit('DEV_INFO', 'error: no token here', zone);
 
             return this.reset();
         }   
 
         this.zone = zone;
 
-        console.log('PlayerAbilityTargeter.set_zone', this.zone);
+        this.events.emit('DEV_INFO', 'info: zone selected', zone);
 
         return this;
     }
@@ -81,7 +81,7 @@ class PlayerAbilityTargeter {
     set_ability = id => {
         const token = this.zone.token;
         if(token == null) {
-            console.log(`there's no token to act!`);
+            this.events.emit('DEV_INFO', 'error: no token here', id);
 
             return this.reset();
         }
@@ -92,14 +92,14 @@ class PlayerAbilityTargeter {
             const ability = abilities[a];
 
             if(ability.stage.id != AbilityStageId.Idle) {
-                console.log(`token's already acting!`);
+                this.events.emit('DEV_INFO', 'error: already acting', id);
 
                 return this.reset();
             }
         }
 
         if(id < 0 || id >= length) {
-            console.log(`there's no such ability!`);
+            this.events.emit('DEV_INFO', 'error: no such ability', id);
     
             return this.reset();
         }
@@ -107,7 +107,7 @@ class PlayerAbilityTargeter {
         this.ability = abilities[id];
         this.id = id;
             
-        console.log('PlayerAbilityTargeter.set_ability', this.id);
+        this.events.emit('DEV_INFO', 'info: ability selected', id);
 
         return this;
     }
@@ -127,16 +127,16 @@ class PlayerAbilityTargeter {
         }
 
         if(this.targets.length >= this.ability.target_rules.count) {
-            console.log(`target's threshold crossed`);
+            this.events.emit('DEV_INFO', 'error: too much targetrs');
 
             return this.reset();
         }
 
         this.targets.push(target.position);
-        console.log('PlayerAbilityTargeter.set_target', target.position);
-
         if(this.targets.length === this.ability.target_rules.count) {
             this.ability.target = this.targets;
+
+            this.events.emit('DEV_INFO', 'info: targets selected');
         }
 
         return this;
@@ -154,7 +154,7 @@ class PlayerAbilityTargeter {
 
         this.targets = null;
 
-        console.log('PlayerAbilityTargeter.reset');
+        this.events.emit('DEV_INFO', 'info: reset selected');
 
         return this;
     }

@@ -105,7 +105,7 @@ function update (dt) {
                 stage.id = AbilityStageId.Idle;
 
                 console.log(
-                    ability.name,
+                    ability,
                     'finished',
                     Date.now()
                 );
