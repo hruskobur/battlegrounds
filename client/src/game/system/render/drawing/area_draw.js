@@ -1,6 +1,6 @@
 import * as Pixi from 'pixi.js';
-import { GameStateZone } from '../../state/zone.js';
-import { RenderSystem } from '../render.js';
+import { RenderSystem } from '../../render.js';
+import { GameStateZone } from '../../../state/zone.js';
 
 /**
  * Draws a new AreaEntity.
@@ -10,7 +10,7 @@ import { RenderSystem } from '../render.js';
  * @param {GameStateZone} zone 
  * @returns {RenderSystem} this
  */
-function draw (zone) {
+function area_draw (zone) {
     const area = zone.area;
     if(area == null) {
         return this;
@@ -40,9 +40,7 @@ function draw (zone) {
     // todo: yet to be determined by some area-related-component
     // todo; for now, like that - will change!
     sprite.texture = Pixi.Texture.WHITE;
-    sprite.tint = (area.faction.id === 0)
-    ? 'blue'
-    : 'red';
+    sprite.tint = area.faction.color;
 
     const text = area.text;
     text.anchor = 0.5;
@@ -57,27 +55,4 @@ function draw (zone) {
     return this;
 }
 
-/**
- * Erases an existing AreaEntity.
- * 
- * @public
- * @this {RenderSystem}
- * @param {GameStateZone} zone 
- * @returns {RenderSystem} this
- */
-function erase (zone) {
-    const area = zone.area;
-    if(area == null) {
-        return this;
-    }
-
-    const renderable = area.renderable;
-
-    renderable.removeFromParent();
-
-    return this;
-}
-
-export {
-    draw, erase
-};
+export default area_draw;

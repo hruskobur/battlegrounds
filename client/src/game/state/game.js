@@ -4,7 +4,16 @@ import { LayersEntity } from '../entities/layers.js';
 import { CommanderEntity } from '../entities/commander.js';
 import { FactionComponent } from '../components/faction.js';
 import { GameStateZone } from './zone.js';
-import { GameStateAbilityQueue } from './queue.js';
+import anime from 'animejs';
+// import { GameStateAbilityQueue } from './queue.js';
+
+/**
+ * @callback GameStateZoneIterator
+ * @param {GameStateZone} zone
+ * @param {Number} x
+ * @param {Number} y
+ * @param {GameState} state
+ */
 
 /**
  * @class GameState
@@ -23,9 +32,7 @@ import { GameStateAbilityQueue } from './queue.js';
  */
 class GameState {
     static Event = Object.freeze({
-        TokenCreated: 'token.created',
-        TokenDestroyed: 'token.destroyed',
-        AbilitySchedule: 'ability.schedule'
+        AreaFactionChanged: 'area.faction'
     });
 
     /**
@@ -44,14 +51,9 @@ class GameState {
     height;
 
     /**
-     * @type {FactionComponent}
+     * @type {[FactionComponent, FactionComponent]}
      */
-    faction_a;
-
-    /**
-     * @type {FactionComponent}
-     */
-    faction_b;
+    factions;
 
     /**
      * @type {Array<Array<GameStateZone>>}
@@ -63,10 +65,15 @@ class GameState {
      */
     layer;
 
+    // /**
+    //  * @type {GameStateAbilityQueue}
+    //  */
+    // queue;
+
     /**
-     * @type {GameStateAbilityQueue}
+     * @type {Array<anime.AnimeInstance>}
      */
-    queue;
+    animations;
 
     /**
      * @type {CommanderEntity}
@@ -83,42 +90,39 @@ class GameState {
      * @param {ScenarioEntity} scenario 
      */
     constructor (scenario) {
+        // note: the "system" entities
+        this.layer = new LayersEntity();
+        // this.queue = new GameStateAbilityQueue();
+        this.animations = [];
+
+        // todo: belongs to the scenario entity
         this.scenario = scenario;
         this.width = scenario.width;
         this.height = scenario.height;
-        this.faction_a = new FactionComponent(0, 'good guys');
-        this.faction_b = new FactionComponent(1, 'bad guys');
+        this.factions = [
+            new FactionComponent(0, 'good guys', 'blue'),
+            new FactionComponent(1, 'bad guys', 'red')
+        ];
 
+        // note: the "model" entities
         this.zones = [];
-        {
-            for(let y = 0; y < this.height; ++y) {
-                const _zones = [];
-                for(let x = 0; x < this.width; ++x) {
-                    _zones.push(
-                        {
-                            position: new Coordinate(x, y),
-                            area: null,
-                            token: null
-                        }
-                    )
-                }
-
-                this.zones.push(_zones);
+        for(let y = 0; y < this.height; ++y) {
+            const _zones = [];
+            for(let x = 0; x < this.width; ++x) {
+                _zones.push(new GameStateZone());
             }
+            this.zones.push(
+                _zones
+            );
         }
 
-        this.layer = new LayersEntity();
-
-        this.queue = new GameStateAbilityQueue();
-
         this.player = new CommanderEntity();
-        this.player.faction = this.faction_a;
+        this.player.faction = this.factions[0];
         this.player.description.name = 'player';
 
         this.bot = new CommanderEntity();
-        this.bot.faction = this.faction_b;
+        this.bot.faction = this.factions[1];
         this.bot.description.name = 'bot';
-
     }
 
     /**
@@ -155,7 +159,7 @@ class GameState {
 
     /**
      * @public
-     * @param {Function} cb GameStateZone, x, y, GameState
+     * @param {GameStateZoneIterator} cb
      */
     iterate (cb) {
         for (let y = CoordinateLow; y < this.height; ++y) {
@@ -164,7 +168,7 @@ class GameState {
                     this.zones[y][x],
                     x, y,
                     this
-                )
+                );
             }
         }
     }

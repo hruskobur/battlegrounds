@@ -26,16 +26,19 @@ function create (zone) {
         new AbilityComponent(
             'ability.dev',
             {
-                duration: 1500,
-                tick: null
-            },
-            {
-                duration: 0,
-                tick: null
+                duration: 2000,
+                tick: null,
+                animation: 'animation.dev.once'
             },
             {
                 duration: 2000,
-                tick: 500
+                tick: 500,
+                animation: null
+            },
+            {
+                duration: 1000,
+                tick: null,
+                animation: 'animation.dev.tick'
             },
             {
                 count: 2

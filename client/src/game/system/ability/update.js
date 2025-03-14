@@ -33,106 +33,66 @@ function update (dt) {
 
         // get: the current stage rule
         const rule = rules[
-            // stage.id
             Number(stage.id)
         ];
 
-        // update: update stage duration
-        stage.duration += dt;
-        stage.tick += dt;
-
-        // stage: *the 1st* update
-        if(stage.duration == dt) {
+        if(stage.duration == 0) {
             stage.phase = AbilityStagePhase.Start;
 
-            console.log(
-                ability.name,
-                stage.id,
-                stage.phase,
-                Date.now()
-            );
+            this.events.emit('DEV_ABILITY', ability);
         }
 
-        // stage-tick: does this stage tick?
         if(rule.tick != null) {
-            // stage-tick: *the 1st* tick-update
-            if(stage.tick == dt) {
+            if(stage.tick == 0) {
                 stage.phase = AbilityStagePhase.TickStart;
 
-                console.log(
-                    ability.name,
-                    stage.id,
-                    stage.phase,
-                    Date.now()
-                );
+                this.events.emit('DEV_ABILITY', ability);
             }
 
-            // stage-tick: tick-update
-            // "updates" happend here, but only these events are handled:
-            // AbilityStagePhase.TickStart
-            // AbilityStagePhase.TickEnd
-
-            // stage-tick: *the last* tick-update
             if(stage.tick >= rule.tick) {
                 stage.phase = AbilityStagePhase.TickEnd;
+            
+                this.events.emit('DEV_ABILITY', ability);
+            
                 stage.tick = 0;
 
-                console.log(
-                    ability.name,
-                    stage.id,
-                    stage.phase,
-                    Date.now()
-                );
+            } else {
+                stage.tick += dt;
             }
         }
 
-        // stage: *the last* update
         if(stage.duration >= rule.duration) {
             stage.phase = AbilityStagePhase.End;
+            
+            this.events.emit('DEV_ABILITY', ability);
+
             stage.duration = 0;
             stage.tick = 0;
-
-            console.log(
-                ability.name,
-                stage.id,
-                stage.phase,
-                Date.now()
-            );
-
-            // stage: progress to the next phase OR end
+            
+            
             stage.id += 1;
             if(stage.id >= rules.length) {
                 stage.id = AbilityStageId.Idle;
-
-                console.log(
-                    ability,
-                    'finished',
-                    Date.now()
-                );
-
-                // update: this ability has reached its last stage - do not
-                // schedule it for the next update
+                // stage.duration = 0;
+                // stage.tick = 0;
+                
+                // console.log('finish');
                 removed.push(ability);
 
                 continue;
             }
+        } else {
+            stage.duration += dt;
         }
-
-        // stage: 
-        // "updates" happend here, but only these events are handled:
-        // AbilityStagePhase.Start
-        // AbilityStagePhase.TickStart
-        // AbilityStagePhase.TickEnd
-        // AbilityStagePhase.End
-
+       
         // update: schedule this ability for next update
         updated.push(
             ability
         );
-
-        queue.current = updated;
-        queue.updated = [];
     }
+    
+    queue.current = updated;
+    queue.updated = [];
 }
 
 export default update;

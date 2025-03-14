@@ -36,7 +36,7 @@ function schedule (zone, id) {
     this.state.queue.current.push(ability);
 
     // todo: scheduled event
-    console.log('AbilitySystem.schedule', ability);
+    console.log('----- schedule', ability);
 
     return this;
 }

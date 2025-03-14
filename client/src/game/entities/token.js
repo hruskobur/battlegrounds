@@ -1,6 +1,5 @@
 import * as Pixi from 'pixi.js';
 import { DescriptionComponent } from '../components/description.js';
-import { AbilityComponent } from '../components/ability.js';
 
 class TokenEntity {
     /**
@@ -14,7 +13,7 @@ class TokenEntity {
     renderable;
 
     /**
-     * @type {Array<AbilityComponent>}
+     * @type {Array<String>}
      */
     abilities;
 
@@ -26,11 +25,13 @@ class TokenEntity {
             ''
         );
 
-        this.renderable = new Pixi.Container({
-            children: [
-                new Pixi.Graphics()
-            ]
-        });
+        this.renderable = new Pixi.Container(
+            {
+                children: [
+                    new Pixi.Graphics()
+                ]
+            }
+        );
 
         this.abilities = [];
     }

@@ -1,8 +1,9 @@
 import * as Pixi from 'pixi.js';
 import { SystemBase, EventEmitter, GameState } from './base.js';
 
-import * as AreaRender from './render/area.js';
-import * as TokenRender from './render/token.js';
+import area_draw from './render/drawing/area_draw.js';
+import area_erase from './render/drawing/area_erase.js';
+import area_faction_change from './render/animations/area_faction_change.js';
 
 /**
  * @class RenderSystem
@@ -26,10 +27,9 @@ class RenderSystem extends SystemBase {
     constructor(events, state, container) {
         super(events, state);
 
-        this.area_draw = AreaRender.draw;
-        this.area_erase = AreaRender.erase;
-        this.token_draw = TokenRender.draw;
-        this.token_erase = TokenRender.erase;
+        this.area_draw = area_draw;
+        this.area_erase = area_erase;
+        this.area_faction_change = area_faction_change;
 
         // layers
         const areas = this.state.layer.areas;
@@ -55,7 +55,6 @@ class RenderSystem extends SystemBase {
         this.state.iterate(
             (zone, x, y) => {
                 this.area_draw(zone);
-                this.token_draw(zone);
             }
         );
 
@@ -81,6 +80,29 @@ class RenderSystem extends SystemBase {
         this.token_erase = null;
 
         return super.destructor();
+    }
+
+    /**
+     * DEVELOPMENT
+     * @param {Number} time 
+     */
+    update = (time) => {
+        const current = this.state.animations;
+        const updated = [];
+
+        const length = current.length;
+        for(let a = 0; a < length; ++a) {
+            const animation = current[a];
+
+            animation.tick(time);
+            if(animation.completed === true) {
+                continue;
+            }
+
+            updated.push(animation);
+        }
+
+        this.state.animations = updated;
     }
 }
 
